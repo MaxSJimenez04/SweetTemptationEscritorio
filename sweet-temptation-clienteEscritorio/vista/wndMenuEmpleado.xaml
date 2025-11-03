@@ -21,8 +21,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
-                <Button x:Name="btnRegresar" Width="50" Height="65" HorizontalAlignment="Left"
-            Margin="25,10,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Button x:Name="btnRegresar" Width="45" Height="55" HorizontalAlignment="Left"
+            Margin="25,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
                     <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
                 </Button>
             </StackPanel>
@@ -35,18 +35,18 @@
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
 
-                <Button x:Name="btnProductos" Width="65" Height="65" HorizontalAlignment="Right"
-                    Margin="150,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Button x:Name="btnProductos" Width="45" Height="55" HorizontalAlignment="Right"
+                    Margin="200,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
                     <svgc:SvgViewbox Source="/resources/icons/icon_productos.svg"/>
                 </Button>
 
-                <Button x:Name="btnPedidoCustom" Width="65" Height="65" HorizontalAlignment="Right"
-                    Margin="50,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Button x:Name="btnPedidoCustom" Width="45" Height="55" HorizontalAlignment="Right"
+                    Margin="50,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
                     <svgc:SvgViewbox Source="/resources/icons/icon_customPedidos.svg"/>
                 </Button>
 
-                <Button x:Name="btnPerfil" Width="70" Height="70" HorizontalAlignment="Right"
-                    Margin="50,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Button x:Name="btnPerfil" Width="45" Height="55" HorizontalAlignment="Right"
+                    Margin="50,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
                     <svgc:SvgViewbox Source="/resources/icons/ph_perfil.svg"/>
                 </Button>
             </StackPanel>
