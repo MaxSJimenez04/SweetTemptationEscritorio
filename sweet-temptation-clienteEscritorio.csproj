@@ -9,4 +9,79 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="resources\icons\icon_agregar.svg" />
+    <None Remove="resources\icons\icon_buscar.svg" />
+    <None Remove="resources\icons\icon_carrito.svg" />
+    <None Remove="resources\icons\icon_customPedidos.svg" />
+    <None Remove="resources\icons\icon_descargar.svg" />
+    <None Remove="resources\icons\icon_editar.svg" />
+    <None Remove="resources\icons\icon_eliminar.svg" />
+    <None Remove="resources\icons\icon_empleados.svg" />
+    <None Remove="resources\icons\icon_historial.svg" />
+    <None Remove="resources\icons\icon_menu.svg" />
+    <None Remove="resources\icons\icon_productos.svg" />
+    <None Remove="resources\icons\icon_regresar.svg" />
+    <None Remove="resources\icons\logo_sweettemptation.png" />
+    <None Remove="resources\icons\ph_perfil.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\icons\icon_customPedidos.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_empleados.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\icons\icon_editar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\icons\icon_agregar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_buscar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_carrito.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_descargar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_eliminar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_estadisticas.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_historial.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_menu.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_productos.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\icon_regresar.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\images\logo_sweettemptation.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icons\ph_perfil.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpVectors" Version="1.8.5" />
+  </ItemGroup>
+
 </Project>

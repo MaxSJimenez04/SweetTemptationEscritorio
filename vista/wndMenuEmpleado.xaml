@@ -1,0 +1,56 @@
+﻿<Window x:Class="sweet_temptation_clienteEscritorio.vista.wndMenuEmpleado"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+        mc:Ignorable="d"
+        Title="wndMenuEmpleado" Height="800" Width="1280">
+    <Grid Background="#FFF7F7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#FFFFD2F7" Grid.Row="0" Width="1280" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="340"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <Button x:Name="btnRegresar" Width="50" Height="65" HorizontalAlignment="Left"
+            Margin="25,10,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                    <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"  Orientation="Horizontal">
+                <Image Source="/resources/images/logo_sweettemptation.png" Stretch="Uniform" Margin="10"/>
+                <Label FontFamily="French Script MT" FontSize="40" Foreground="HotPink"
+           VerticalAlignment="Center" HorizontalAlignment="Left">Sweet Temptation</Label>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+
+                <Button x:Name="btnProductos" Width="65" Height="65" HorizontalAlignment="Right"
+                    Margin="150,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                    <svgc:SvgViewbox Source="/resources/icons/icon_productos.svg"/>
+                </Button>
+
+                <Button x:Name="btnPedidoCustom" Width="65" Height="65" HorizontalAlignment="Right"
+                    Margin="50,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                    <svgc:SvgViewbox Source="/resources/icons/icon_customPedidos.svg"/>
+                </Button>
+
+                <Button x:Name="btnPerfil" Width="70" Height="70" HorizontalAlignment="Right"
+                    Margin="50,5,0,5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                    <svgc:SvgViewbox Source="/resources/icons/ph_perfil.svg"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Frame Grid.Row="1" Name="fmPrincipal" NavigationUIVisibility="Hidden" />
+    </Grid>
+</Window>
