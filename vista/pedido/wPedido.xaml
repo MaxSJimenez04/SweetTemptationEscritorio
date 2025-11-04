@@ -1,0 +1,26 @@
+﻿<Page x:Class="sweet_temptation_clienteEscritorio.vista.pedido.wPedido"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.pedido"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1280"
+      Title="wPedido">
+    <Grid Background="#FFF7F7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Name="spProductos" Grid.Row="0" Orientation="Horizontal"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                <Label x:Name="lbSubtotal" FontFamily="Javanese Text" FontSize="25" Height="50">Subtotal: $</Label>
+                <Label x:Name="lbImpuesto" FontFamily="Javanese Text" FontSize="25" Height="50">IVA: </Label>
+                <Label x:Name="lbTotal" FontFamily="Javanese Text" FontSize="30" Height="50">Total: $</Label>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
