@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sweet_temptation_clienteEscritorio.vista.pedido;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,17 @@ namespace sweet_temptation_clienteEscritorio.vista
         public wndMenuCliente()
         {
             InitializeComponent();
+            
+        }
+
+        private void btnClickPedido(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wPedido());
+        }
+
+        private void btnClickRegresar(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

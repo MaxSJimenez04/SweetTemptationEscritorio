@@ -11,5 +11,6 @@ namespace sweet_temptation_clienteEscritorio.resources
         public static string PUERTO = "8080";
         public static string IP = "localhost";
         public static string URL = "http://" + IP + ":" + PUERTO + "/";
+        public static int IVA = 16;
     }
 }
