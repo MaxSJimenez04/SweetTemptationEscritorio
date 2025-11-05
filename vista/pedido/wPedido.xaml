@@ -9,18 +9,32 @@
       Title="wPedido">
     <Grid Background="#FFF7F7">
         <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
+        
+        <Label Grid.Row="0" FontSize="50" Margin="5"> Tu Pedido</Label>
+        <Label x:Name="lbIdPedido" Grid.Row="0" FontSize="15" Margin="10"/>
 
-        <StackPanel Name="spProductos" Grid.Row="0" Orientation="Horizontal"/>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                <Label x:Name="lbSubtotal" FontFamily="Javanese Text" FontSize="25" Height="50">Subtotal: $</Label>
-                <Label x:Name="lbImpuesto" FontFamily="Javanese Text" FontSize="25" Height="50">IVA: </Label>
-                <Label x:Name="lbTotal" FontFamily="Javanese Text" FontSize="30" Height="50">Total: $</Label>
+        <StackPanel Name="spProductos" Grid.Row="1" Orientation="Horizontal"/>
+        
+
+        <Grid Grid.Row="2" >
+            <StackPanel Orientation="Vertical" Margin="10,0,0,10">
+                <Label x:Name="lbSubtotal" FontSize="25" Height="45">Subtotal: $</Label>
+                <Label x:Name="lbImpuesto" FontSize="25" Height="45">IVA: </Label>
+                <Label x:Name="lbTotal" FontSize="30" Height="50">Total: $</Label>
             </StackPanel>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnCancelar" Content="Cancelar" Background="#FEDFE3"
+                        Height="90" Width="250" Margin="15" FontSize="30" 
+                        Click="btnClickCancelar"/>
+                <Button x:Name="btnRealizarPedido" Content="Realizar Pedido" Background="#FBA1B7"
+                        Height="90" Width="250" Margin="15" FontSize="30" 
+                        Click="btnClickRealizar"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
