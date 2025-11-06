@@ -91,8 +91,11 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                     VaciarDatosPedido();
                     MessageBox.Show("Pedido cancelado con éxito");
                     break;
-                case HttpStatusCode.Conflict:
-                    MessageBox.Show($"ERROR: {respuesta.mensaje}");
+                case HttpStatusCode.BadRequest:
+                    MessageBox.Show("ERROR: ID no válido");
+                    break;
+                case HttpStatusCode.NotFound:
+                    MessageBox.Show("ERROR: No se encontró el pedido actual");
                     break;
             }
         }
