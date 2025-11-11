@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sweet_temptation_clienteEscritorio.model
 {
-    internal class ProductoPedido
+    public class ProductoPedido
     {
         public int Id { get; set; }
         public Decimal Subtotal { get; set; }

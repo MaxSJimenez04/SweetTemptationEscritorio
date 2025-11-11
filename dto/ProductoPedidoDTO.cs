@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace sweet_temptation_clienteEscritorio.dto
 {
-    internal class ProductoPedidoDTO
+    public class ProductoPedidoDTO
     {
+        public int Id { get; set; }
+        public Decimal Subtotal { get; set; }
+        public int Cantidad { get; set; }
+        public int IdPedido { get; set; }
+        public int IdProducto { get; set; }
     }
 }
