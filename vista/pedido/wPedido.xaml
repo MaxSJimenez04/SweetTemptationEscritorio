@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.pedido"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="wPedido">
@@ -13,12 +14,37 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Label FontSize="50" Margin="5">Tu Pedido</Label>
+            <Button x:Name="btnEditar" Margin="8,8,25,8" Height="50" 
+                    Width="50" HorizontalAlignment="Right" Background="{x:Null}" 
+                    BorderBrush="{x:Null}" Foreground="{x:Null}" Click="btnClickEditar" >
+                <svgc:SvgViewbox Source="/resources/icons/icon_editar.svg"/>
+            </Button>
+            <Button x:Name="btnGuardar" Margin="8,8,25,8" Height="50"
+                    Width="100" HorizontalAlignment="Right" Background="#FEDFE3"
+                    BorderBrush="{x:Null}" Visibility="Collapsed"
+                    FontSize="20" Click="BtnClickGuardar"> Guardar
+            </Button>
+        </Grid>
+
+
+        <StackPanel x:Name="spError" Grid.Row="1" Orientation="Vertical" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Label FontSize="25">No hay productos seleccionados. Empieza seleccionando un producto</Label>
+            <Button x:Name="btnProductos" Content="Productos" FontSize="25"
+                    Height="40" Width="250" Background="#FBA1B7" 
+                    Click="BtnClickProductos">
+            </Button>
+        </StackPanel>
+
+        <ScrollViewer x:Name="svProductos" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled" Visibility="Collapsed">
+            <WrapPanel Name="wpProductos" Grid.Row="1" Orientation="Horizontal" 
+                       Margin="10" ItemHeight="275" ItemWidth="175"/>
+        </ScrollViewer>
         
-        <Label Grid.Row="0" FontSize="50" Margin="5"> Tu Pedido</Label>
-        <Label x:Name="lbIdPedido" Grid.Row="0" FontSize="15" Margin="10"/>
-
-
-        <StackPanel Name="spProductos" Grid.Row="1" Orientation="Horizontal"/>
         
 
         <Grid Grid.Row="2" >
