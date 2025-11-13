@@ -37,6 +37,22 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
+        public async Task<(PedidoDTO pedidoActualizado, HttpStatusCode codigo, string mensaje)> CambiarTotalPedidoAsync(int idPedido, Decimal total)
+        {
+            var respuesta = await _httpClient.PutAsJsonAsync<Decimal>($"pedido/{idPedido}/recalcular?idPedido={idPedido}", total);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var pedido = await respuesta.Content.ReadFromJsonAsync<PedidoDTO>();
+                return (pedido, respuesta.StatusCode, null);
+            }
+            else
+            {
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return(null, respuesta.StatusCode, mensaje);
+            }
+        }
+
         public async Task<bool> CrearPedidoClienteAsync(int idCliente)
         {
             var respuesta = await _httpClient.PostAsync($"pedido/nuevo?idCliente={idCliente}", null);

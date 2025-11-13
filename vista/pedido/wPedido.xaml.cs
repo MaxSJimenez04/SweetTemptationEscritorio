@@ -45,7 +45,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             };
             
         }
-        public void CalcularTotal()
+        public async void CalcularTotal()
         {
             Decimal resultado = 0;
             foreach (var item in _detallesProductos)
@@ -55,7 +55,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
             lbSubtotal.Content += $"{resultado}";
             Decimal total = resultado + Constantes.IVA;
-            _pedido.total = total;
+            await CambiarTotalPedidoAsync(total);
             LlenarDatosPedido();
         }
 
@@ -221,6 +221,20 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 svProductos.Visibility = Visibility.Collapsed;
                 wpProductos.Visibility = Visibility.Collapsed;
                 
+            }
+        }
+
+        public async Task CambiarTotalPedidoAsync(Decimal total)
+        {
+            var respuesta = await _servicioPedido.CambiarTotalPedidoAsync(_pedido.id, total);
+
+            if (respuesta.pedidoActualizado != null)
+            {
+                _pedido.total = respuesta.pedidoActualizado.total;
+            }
+            else
+            {
+                MessageBox.Show("ERROR: " + respuesta.mensaje);
             }
         }
 
