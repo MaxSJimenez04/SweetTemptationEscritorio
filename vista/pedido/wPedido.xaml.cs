@@ -31,19 +31,29 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         private int _idUsuario = 3;
         private List<DetallesProducto> _detallesProductos;
 
-        public wPedido()
+        public wPedido(Pedido pedido)
         {
             InitializeComponent();
             _servicioPedido = new PedidoService(new HttpClient());
             _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
-            _pedido = new Pedido();
+            _pedido = pedido;
             _detallesProductos = new List<DetallesProducto>();
-            Loaded += async (s, e) =>
+            if(pedido.id == 0)
             {
-                await ObtenerPedidoActualAsync();
-                await ObtenerProductosAsync();
-            };
-            
+                Loaded += async (s, e) =>
+                {
+                    await ObtenerPedidoActualAsync();
+                    await ObtenerProductosAsync();
+                };
+            }
+            else
+            {
+                Loaded += async (s, e) =>
+                {
+                    await ObtenerProductosAsync();
+                };
+            }
+
         }
         public async void CalcularTotal()
         {
@@ -98,7 +108,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void btnClickRealizar(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Navegar a WPago
         }
 
         private void btnClickEditar(object sender, RoutedEventArgs e)
@@ -133,7 +143,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void BtnClickProductos(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Navegar a WProductos
         }
 
         public async Task ObtenerPedidoActualAsync()

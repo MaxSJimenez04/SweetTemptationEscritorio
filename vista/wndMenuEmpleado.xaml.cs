@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sweet_temptation_clienteEscritorio.vista.pedido;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ namespace sweet_temptation_clienteEscritorio.vista
         public wndMenuEmpleado()
         {
             InitializeComponent();
+            fmPrincipal.Navigate(new wPedidos());
         }
+
+
     }
 }
