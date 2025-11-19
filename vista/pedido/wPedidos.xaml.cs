@@ -63,6 +63,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private async Task ObtenerPedidosAsync()
         {
+            _pedidos.Clear();
             var respuesta = await _servicio.ObtenerPedidosAsync(_idUsuario);
             if (respuesta.pedidos != null)
             {
