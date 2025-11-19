@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="sweet_temptation_clienteEscritorio.resources.usercontrolers.ucPedido"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.resources.usercontrolers"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d" 
+             d:DesignHeight="110" d:DesignWidth="1210">
+    <Grid Margin="10">
+        <Border BorderThickness="5" BorderBrush="#FBA1B7" Background="White" CornerRadius="15">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                
+                
+                
+                <Label x:Name="lbId" Grid.Column="0"  Content="Orden: " FontSize="35" VerticalAlignment="Center"/>
+                <Label x:Name="lbTotal" Grid.Column="1" Content="Total: $" FontSize="35" VerticalAlignment="Center"/>
+                
+                
+
+                <Button x:Name="btnEditar" Grid.Column="2" Margin="5" Width="90"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnClickEditar" >
+                    <svgc:SvgViewbox Source="/resources/icons/icon_editar.svg" Width="50" Height="50"/>
+                </Button>
+
+                <Button x:Name="btnEliminar" Grid.Column="3" Margin="5" Width="90"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnClickEliminar" >
+                    <svgc:SvgViewbox Source="/resources/icons/icon_eliminar.svg" Width="50" Height="50"/>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

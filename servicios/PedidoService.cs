@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace sweet_temptation_clienteEscritorio.servicios
 {
@@ -37,6 +38,21 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
+        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ObtenerPedidosAsync(int idEmpleado)
+        {
+            var respuesta = await _httpClient.GetAsync($"pedido/pedidos?idCliente={idEmpleado}");
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var pedidos = await respuesta.Content.ReadFromJsonAsync<List<PedidoDTO>>();
+                return (pedidos, respuesta.StatusCode, null);
+            }
+            else
+            {
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return (null, respuesta.StatusCode, mensaje);
+            }
+        }
+
         public async Task<(PedidoDTO pedidoActualizado, HttpStatusCode codigo, string mensaje)> CambiarTotalPedidoAsync(int idPedido, Decimal total)
         {
             var respuesta = await _httpClient.PutAsJsonAsync<Decimal>($"pedido/{idPedido}/recalcular?idPedido={idPedido}", total);
@@ -61,6 +77,21 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return true;
             }
             return false;
+        }
+
+        public async Task<(PedidoDTO pedido, HttpStatusCode codigo, string mensaje)> CrearPedidoEmpleadoAsync(int idEmpleado)
+        {
+            var respuesta = await _httpClient.PostAsync($"pedido/?idEmpleado={idEmpleado}", null);
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var pedido = await respuesta.Content.ReadFromJsonAsync<PedidoDTO>();
+                return (pedido, respuesta.StatusCode, null);
+            }
+            else
+            {
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return (null, respuesta.StatusCode, mensaje);
+            }
         }
 
         public async Task<(HttpStatusCode codigo, string mensaje)> EliminarPedidoAsync(int idPedido)
