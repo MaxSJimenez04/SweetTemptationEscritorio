@@ -26,6 +26,12 @@ namespace sweet_temptation_clienteEscritorio.vista
             fmPrincipal.Navigate(new wPedidos());
         }
 
-
+        private void BtnClickRegresar(object sender, RoutedEventArgs e)
+        {
+            if (fmPrincipal.CanGoBack)
+            {
+                fmPrincipal.GoBack();
+            }
+        }
     }
 }

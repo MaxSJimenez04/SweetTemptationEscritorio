@@ -34,7 +34,10 @@ namespace sweet_temptation_clienteEscritorio.vista
 
         private void btnClickRegresar(object sender, RoutedEventArgs e)
         {
-            
+            if (fmPrincipal.CanGoBack)
+            {
+                fmPrincipal.GoBack();
+            }
         }
     }
 }
