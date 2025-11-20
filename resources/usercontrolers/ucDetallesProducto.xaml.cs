@@ -31,6 +31,10 @@ namespace sweet_temptation_clienteEscritorio.resources.usercontrolers
             detalles = _detallesProducto;
         }
 
+        public void ColocarImagen(BitmapImage imagen)
+        {
+            imgProducto.Source = imagen;
+        }
 
         private void LlenarDatos()
         {

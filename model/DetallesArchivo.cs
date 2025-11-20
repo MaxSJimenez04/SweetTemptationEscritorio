@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sweet_temptation_clienteEscritorio.dto
+namespace sweet_temptation_clienteEscritorio.model
 {
-    internal class ArchivoDTO
+    public class DetallesArchivo
     {
         public int id { get; set; }
         public DateTime fechaRegistro { get; set; }
         public string extension { get; set; }
-        public byte[] datos { get; set; }
+        public string ruta { get; set; }
     }
 }
