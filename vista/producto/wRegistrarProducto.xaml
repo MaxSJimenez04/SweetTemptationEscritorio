@@ -3,11 +3,281 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.producto"
+      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.producto" 
+      xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1280"
       Title="wRegistrarProducto">
     <Grid Background="#FFF7F7">
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Barra de opciones-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <fa:IconImage Icon="CakeCandles"
+                              Height="40"
+                              Width="40"
+                              Foreground="#000000"
+                              Margin="35,0,10,0"/>
+                <TextBlock Text="Sweet Temptation"
+                           Foreground="#000000"
+                           FontSize="30"
+                           FontFamily="Montserrat"
+                           FontWeight="Medium"
+                           VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+            <!--Opciones para el usuario-->
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        FlowDirection="RightToLeft"
+                        VerticalAlignment="Center"
+                        Margin="0,0,20,0">
+
+                <Button Style="{StaticResource iconButton}"
+                    Tag="{StaticResource color1}">
+                    <fa:IconImage Icon="AngleDown" Style="{StaticResource iconButtonIcon}"/>
+                </Button>
+
+                <TextBlock Text="Usuario"
+                           Foreground="{DynamicResource letterColor1}"
+                           FontFamily="Montserrat"
+                           FontSize="30"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"/>
+
+                <Ellipse Height="80" Width="80"
+                         Stroke="{DynamicResource letterColor3}"
+                         StrokeThickness="2"
+                         Margin="0,0,10,0">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/resources/images/FotoUsuario.png"/>
+                    </Ellipse.Fill>
+
+                </Ellipse>
+
+                <Button Style="{StaticResource iconButton}"
+                        Margin="5,0,12,0"
+                    Tag="{StaticResource color1}">
+                    <fa:IconImage Icon="Bell" Style="{StaticResource iconButtonIcon}"/>
+                </Button>
+
+                <Button Style="{StaticResource iconButton}"
+                        Margin="12,0,12,0"
+                    Tag="{StaticResource color1}">
+                    <fa:IconImage Icon="Bookmark" Style="{StaticResource iconButtonIcon}"/>
+                </Button>
+
+                <Button Style="{StaticResource iconButton}"
+                        Margin="12,0,0,0"
+                    Tag="{StaticResource color1}">
+                    <fa:IconImage Icon="House" Style="{StaticResource iconButtonIcon}"/>
+                </Button>
+
+            </StackPanel>
+
+
+        </Grid>
+
+        <Border BorderBrush="{DynamicResource color3}"
+                BorderThickness="0 0 0 3"
+                Margin="5,0,10,-2">
+            <StackPanel Grid.Row="0"
+                Orientation="Vertical">
+
+            </StackPanel>
+        </Border>
+
+
+
+
+        <StackPanel Grid.Row="1"
+                Orientation="Vertical"
+                Margin="70,35,70,35">
+            <TextBlock Text="Nombre"
+                           Foreground="DarkGray"
+                           FontSize="20"
+                           FontWeight="Medium"
+                           FontFamily="Montserrat"
+                           Margin="10,35,0,0"/>
+
+            <TextBox x:Name="txtNombreProducto"
+                           FontSize="20"
+                           FontWeight="Medium"
+                           FontFamily="Montserrat"
+                           Background="Transparent"
+                           Foreground="White"
+                           CaretBrush ="LightGray"
+                           BorderBrush="{DynamicResource color2}"
+                           BorderThickness="0,0,0,2"
+                           Height="28"
+                           VerticalContentAlignment="Center"
+                           Margin="0,5,0,0" Width="554" HorizontalAlignment="Left">
+            </TextBox>
+
+            <TextBlock Text="Descripcion"
+               Foreground="DarkGray"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Margin="10,35,0,0" HorizontalAlignment="Left"/>
+
+            <TextBox x:Name="txtDescripcion"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Background="Transparent"
+               Foreground="White"
+               CaretBrush ="LightGray"
+               BorderBrush="{DynamicResource color2}"
+               BorderThickness="0,0,0,2"
+               Height="28"
+               VerticalContentAlignment="Center"
+               Margin="0,5,0,0" Width="554" HorizontalAlignment="Left" TextChanged="txtDescripcion_TextChanged">
+            </TextBox>
+
+
+            <TextBlock Text="Categoria"
+               Foreground="DarkGray"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Margin="10,35,0,0" HorizontalAlignment="Left"/>
+
+            <TextBox x:Name="txtCategoria"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Background="Transparent"
+               Foreground="White"
+               CaretBrush ="LightGray"
+               BorderBrush="{DynamicResource color2}"
+               BorderThickness="0,0,0,2"
+               Height="28"
+               VerticalContentAlignment="Center"
+               Margin="0,5,0,0" Width="554" HorizontalAlignment="Left" TextChanged="txtCategoria_TextChanged">
+            </TextBox>
+
+            <TextBlock Text="Precio unitario"
+               Foreground="DarkGray"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Margin="10,35,0,0" HorizontalAlignment="Left"/>
+
+            <TextBox x:Name="txtPrecioUnitario"
+               FontSize="20"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               Background="Transparent"
+               Foreground="White"
+               CaretBrush ="LightGray"
+               BorderBrush="{DynamicResource color2}"
+               BorderThickness="0,0,0,2"
+               Height="28"
+               VerticalContentAlignment="Center"
+               Margin="0,5,0,0" Width="554" HorizontalAlignment="Left">
+            </TextBox>
+
+            <TextBlock Text="Unidades"
+                Foreground="DarkGray"
+                FontSize="20"
+                FontWeight="Medium"
+                FontFamily="Montserrat"
+                Margin="10,35,0,0" HorizontalAlignment="Left"/>
+
+            <TextBox x:Name="txtUnidades"
+                FontSize="20"
+                FontWeight="Medium"
+                FontFamily="Montserrat"
+                Background="Transparent"
+                Foreground="White"
+                CaretBrush ="LightGray"
+                BorderBrush="{DynamicResource color2}"
+                BorderThickness="0,0,0,2"
+                Height="28"
+                VerticalContentAlignment="Center"
+                Margin="0,5,0,0" Width="554" HorizontalAlignment="Left">
+            </TextBox>
+            <Button x:Name="btnRegistrar"
+                    BorderThickness="0"
+                    Content="Registrar"
+                    Foreground="White"
+                    FontSize="20"
+                    FontFamily="Montserrat"
+                    Cursor="Hand"
+                    Click="btnRegistrar_Click" Width="180"
+                    Margin="0,0,-200,-250">
+
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="{DynamicResource color3}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource color1}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Width="200" Height="46"
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}" Margin="50,0,-99,0">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="btnCancelar"
+                BorderThickness="0"
+                Content="Registrar"
+                Foreground="White"
+                FontSize="20"
+                FontFamily="Montserrat"
+                Cursor="Hand"
+                Click="btnRegistrar_Click" Width="182"
+                Margin="0,100,55,0" HorizontalAlignment="Right">
+
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="{DynamicResource color1}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource color1}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Width="200" Height="45"
+                    CornerRadius="20"
+                    Background="{TemplateBinding Background}" Margin="0,0,-38,0">
+                            <ContentPresenter VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+        </StackPanel>
+
+
     </Grid>
 </Page>

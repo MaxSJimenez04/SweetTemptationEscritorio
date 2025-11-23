@@ -24,5 +24,10 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         {
             InitializeComponent();
         }
+
+        private void txtCategoria_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
