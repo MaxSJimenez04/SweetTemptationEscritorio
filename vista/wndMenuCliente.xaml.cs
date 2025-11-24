@@ -35,5 +35,9 @@ namespace sweet_temptation_clienteEscritorio.vista
         {
             
         }
+
+        private void fmPrincipal_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
+
+        }
     }
 }
