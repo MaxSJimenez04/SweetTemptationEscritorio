@@ -7,6 +7,8 @@
     <!-- Color Palette-->
     <SolidColorBrush x:Key="color1" Color="#FCC8D1"/>
     <SolidColorBrush x:Key="color2" Color="#FBA1B7"/>
+    <SolidColorBrush x:Key="color3" Color="#FF70B5"/>
+    <SolidColorBrush x:Key="color4" Color="#FCE4E8"/>
 
     <!--Font Colors--> 
     <SolidColorBrush x:Key="letterColor1" Color="#000000"/>

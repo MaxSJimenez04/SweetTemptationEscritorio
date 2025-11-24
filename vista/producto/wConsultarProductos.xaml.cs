@@ -16,28 +16,13 @@ using System.Windows.Shapes;
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     /// <summary>
-    /// Lógica de interacción para wRegistrarProducto.xaml
+    /// Lógica de interacción para wConsultarProductos.xaml
     /// </summary>
-    public partial class wRegistrarProducto : Page
+    public partial class wConsultarProductos : Page
     {
-        public wRegistrarProducto()
+        public wConsultarProductos()
         {
             InitializeComponent();
-        }
-
-        private void txtCategoria_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void txtDescripcion_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void btnRegistrar_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
