@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace sweet_temptation_clienteEscritorio.dto
 {
-    internal class ArchivoDTO
+    internal class DetallesArchivoDTO
     {
         public int id { get; set; }
         public DateTime fechaRegistro { get; set; }
         public string extension { get; set; }
-        public byte[] datos { get; set; }
+        public string ruta { get; set; }
     }
 }
