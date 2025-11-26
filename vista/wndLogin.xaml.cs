@@ -35,7 +35,6 @@ namespace sweet_temptation_clienteEscritorio.vista
             string usuario = txtUsuario.Text.Trim();
             string contrasena = txtContrasena.Password;
 
-            // Validaciones
             if (string.IsNullOrEmpty(usuario))
             {
                 MessageBox.Show("Por favor ingresa tu usuario o correo.", "Campos requeridos", 
@@ -52,7 +51,6 @@ namespace sweet_temptation_clienteEscritorio.vista
                 return;
             }
 
-            // Deshabilitar botón mientras se procesa
             btnIniciarSesion.IsEnabled = false;
             btnIniciarSesion.Content = "Iniciando...";
 
@@ -62,12 +60,12 @@ namespace sweet_temptation_clienteEscritorio.vista
                 
                 if (loginResponse != null)
                 {
-                    // Guardar token y datos del usuario
                     App.Current.Properties["Token"] = loginResponse.Token;
+                    App.Current.Properties["Id"] = loginResponse.Id;
+                    App.Current.Properties["Nombre"] = loginResponse.Nombre;
                     App.Current.Properties["Correo"] = loginResponse.Correo;
                     App.Current.Properties["Rol"] = loginResponse.Rol;
 
-                    // Abrir ventana según el rol
                     Window menuWindow = loginResponse.Rol switch
                     {
                         "Administrador" => new wndMenuAdmin(),
@@ -97,11 +95,11 @@ namespace sweet_temptation_clienteEscritorio.vista
             }
         }
 
-        private async Task<LoginResponse?> LoginAsync(string correo, string contrasena)
+        private async Task<LoginResponse?> LoginAsync(string usuario, string contrasena)
         {
             var loginRequest = new
             {
-                correo = correo,
+                usuario = usuario,
                 contrasena = contrasena
             };
 
@@ -141,10 +139,11 @@ namespace sweet_temptation_clienteEscritorio.vista
         }
     }
 
-    // Clase para deserializar la respuesta del login
     public class LoginResponse
     {
         public string Token { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
         public string Correo { get; set; } = string.Empty;
         public string Rol { get; set; } = string.Empty;
     }

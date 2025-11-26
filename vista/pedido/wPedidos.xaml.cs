@@ -22,11 +22,12 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 {
     public partial class wPedidos : Page
     {
-        private int _idUsuario = 2;
+        private int _idUsuario;
         private PedidoService _servicio;
         public ObservableCollection<Pedido> _pedidos;
         public wPedidos()
         {
+            _idUsuario = (int)App.Current.Properties["Id"];
             _servicio = new PedidoService(new HttpClient());
             _pedidos = new ObservableCollection<Pedido>();
 
