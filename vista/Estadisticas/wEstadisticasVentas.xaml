@@ -4,11 +4,241 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.Estadisticas"
+      xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="700" d:DesignWidth="1280"
       Title="wEstadisticasVentas">
 
-    <Grid>
-        
+    <Page.Resources>
+        <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="{DynamicResource color1}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource color3}"/>
+            <Setter Property="BorderThickness" Value="0 0 1 1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource letterColor1}"/>
+            <Setter Property="Height" Value="35"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource color2}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CenteredColumnStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <Style x:Key="RightAlignedColumnStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <Style x:Key="FilterControlStyle" TargetType="{x:Type Control}">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Control}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF70B5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="#FF70B5"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" Direction="270" ShadowDepth="2" Opacity="0.2" BlurRadius="5"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF8AA4C4"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#000000" ShadowDepth="1" Opacity="0.1" BlurRadius="3"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid Background="#FFF7F7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="White"
+                    CornerRadius="10"
+                    Margin="20,20,20,20">
+                <Border.Effect>
+                    <DropShadowEffect Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
+                </Border.Effect>
+
+                <Grid Margin="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Fecha Inicial:" Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                    <DatePicker x:Name="dpFechaInicial" Grid.Column="1" Style="{StaticResource FilterControlStyle}"/>
+
+                    <Label Content="Fecha Final:" Grid.Column="3" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                    <DatePicker x:Name="dpFechaFinal" Grid.Column="4" Style="{StaticResource FilterControlStyle}"/>
+
+                    <Label Content="Estado:" Grid.Column="6" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
+                    <ComboBox x:Name="cbEstadoVenta" Grid.Column="7" SelectedIndex="0" Style="{StaticResource FilterControlStyle}">
+                        <ComboBoxItem Content="Todas"/>
+                        <ComboBoxItem Content="Completada"/>
+                        <ComboBoxItem Content="Cancelada"/>
+                    </ComboBox>
+
+                    <Button x:Name="btnBuscar" 
+                            Grid.Column="9" 
+                            Content="Buscar" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="#FF70B5"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="20,0,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Resultados de Ventas" 
+                           Grid.Row="0"
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           Margin="0,0,0,15" 
+                           Foreground="{DynamicResource letterColor1}"/>
+
+                <DataGrid x:Name="dgVentas" 
+                          Grid.Row="1"
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          AlternatingRowBackground="#F5F5F5"
+                          GridLinesVisibility="Horizontal" 
+                          HorizontalGridLinesBrush="#E0E0E0"
+                          BorderBrush="#CCCCCC" 
+                          BorderThickness="1" 
+                          HeadersVisibility="Column"
+                          ColumnHeaderStyle="{StaticResource DataGridHeaderStyle}"
+                          RowStyle="{StaticResource DataGridRowStyle}">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID Pedido" 
+                                            Binding="{Binding IdPedido}" 
+                                            Width="0.5*" 
+                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
+
+                        <DataGridTextColumn Header="Fecha de Compra" 
+                                            Binding="{Binding FechaCompra, StringFormat='dd/MM/yyyy HH:mm'}" 
+                                            Width="*" 
+                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
+
+                        <DataGridTextColumn Header="Total" 
+                                            Binding="{Binding Total, StringFormat='C'}" 
+                                            Width="0.7*" 
+                                            ElementStyle="{StaticResource RightAlignedColumnStyle}"/>
+
+                        <DataGridTextColumn Header="Estado" 
+                                            Binding="{Binding Estado}" 
+                                            Width="*"
+                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Grid.Row="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,20,0,0">
+
+                    <Button x:Name="btnDescargar"
+                            Width="200"
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="#FF70B5"
+                            Click="btnDescargar_Click">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <fa:IconImage Icon="Download" Width="20" Height="20" Margin="0,0,8,0"/>
+                                <TextBlock Text="Descargar CSV"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>
+    
