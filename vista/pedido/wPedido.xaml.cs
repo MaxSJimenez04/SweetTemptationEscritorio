@@ -27,23 +27,35 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     {
         private PedidoService _servicioPedido;
         private ProductoPedidoService _servicioProductoPedido;
+        private ArchivoService _archivoService;
         private Pedido _pedido;
         private int _idUsuario = 3;
         private List<DetallesProducto> _detallesProductos;
 
-        public wPedido()
+        public wPedido(Pedido pedido)
         {
             InitializeComponent();
             _servicioPedido = new PedidoService(new HttpClient());
             _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
-            _pedido = new Pedido();
+            _archivoService = new ArchivoService(new HttpClient());
+            _pedido = pedido;
             _detallesProductos = new List<DetallesProducto>();
-            Loaded += async (s, e) =>
+            if(pedido.id == 0)
             {
-                await ObtenerPedidoActualAsync();
-                await ObtenerProductosAsync();
-            };
-            
+                Loaded += async (s, e) =>
+                {
+                    await ObtenerPedidoActualAsync();
+                    await ObtenerProductosAsync();
+                };
+            }
+            else
+            {
+                Loaded += async (s, e) =>
+                {
+                    await ObtenerProductosAsync();
+                };
+            }
+
         }
         public async void CalcularTotal()
         {
@@ -86,6 +98,10 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                     wpProductos.Children.Remove(userControl);
                     VaciarDatosPedido();
                 };
+                string detalles = await ObtenerDetallesAsync(item.idProducto);
+                BitmapImage img = await ObtenerImagenAsync(detalles);
+                userControl.ColocarImagen(img);
+                
             }
         }
 
@@ -98,7 +114,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void btnClickRealizar(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Navegar a WPago
         }
 
         private void btnClickEditar(object sender, RoutedEventArgs e)
@@ -133,7 +149,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void BtnClickProductos(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Navegar a WProductos
         }
 
         public async Task ObtenerPedidoActualAsync()
@@ -266,6 +282,37 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 case HttpStatusCode.InternalServerError:
                     MessageBox.Show(respuesta.mensaje);
                     break;
+            }
+        }
+
+        public async Task<string> ObtenerDetallesAsync(int idProducto)
+        {
+            var respuesta = await _archivoService.ObtenerDetallesArchivoAsync(idProducto);
+            DetallesArchivo detalles = new DetallesArchivo();
+            if (respuesta.detalles != null)
+            {
+                detalles.ruta = respuesta.detalles.ruta;
+                return detalles.ruta;
+            }
+            else
+            {
+                MessageBox.Show(respuesta.mensaje);
+                return detalles.ruta;
+            }
+            
+        }
+
+        public async Task<BitmapImage> ObtenerImagenAsync(string ruta)
+        {
+            var respuesta = await _archivoService.ObtenerImagenAsync(ruta);
+            if(respuesta.imagen != null)
+            {
+                return respuesta.imagen;
+            }
+            else
+            {
+                MessageBox.Show(respuesta.mensaje);
+                return null;
             }
         }
     }

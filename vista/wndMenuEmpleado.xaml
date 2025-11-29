@@ -20,11 +20,17 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="btnRegresar" Width="45" Height="55" HorizontalAlignment="Left"
-            Margin="25,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                        Margin="25,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" 
+                        Foreground="{x:Null}" Click="BtnClickRegresar" >
                     <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
                 </Button>
+                <Button x:Name="btnCerrarSesion" Content="Cerrar Sesión" 
+                        Margin="15,0,0,0" Padding="10,5" 
+                        Background="#FFE91E63" Foreground="White" 
+                        BorderBrush="{x:Null}" FontSize="12" Cursor="Hand"
+                        Click="BtnClickCerrarSesion"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1"  Orientation="Horizontal">

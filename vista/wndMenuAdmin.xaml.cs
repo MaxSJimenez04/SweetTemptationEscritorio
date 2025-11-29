@@ -23,5 +23,12 @@ namespace sweet_temptation_clienteEscritorio.vista
         {
             InitializeComponent();
         }
+
+        private void BtnClickCerrarSesion(object sender, RoutedEventArgs e)
+        {
+            App.Current.Properties.Clear();
+            new wndLogin().Show();
+            this.Close();
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sweet_temptation_clienteEscritorio.model
 {
-    internal class Pedido
+    public class Pedido
     {
         public int id {  get; set; }
         public DateTime fechaCompra {  get; set; }

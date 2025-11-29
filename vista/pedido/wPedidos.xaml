@@ -1,0 +1,44 @@
+﻿<Page x:Class="sweet_temptation_clienteEscritorio.vista.pedido.wPedidos"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.pedido"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1280"
+      Title="wPedidos">
+
+    <Grid Background="#FFF7F7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"
+               FontSize="50">Pedidos</Label>
+        <Button x:Name="btnNuevo" Grid.Row="0" Height="80" Width="80"
+                VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="{x:Null}"
+                Background="{x:Null}" Margin="15" Click="BtnClickNuevo" >
+            <svgc:SvgViewbox Source="/resources/icons/icon_agregar.svg" Width="50" Height="50"/>
+        </Button>
+
+
+        <ScrollViewer Grid.Row="1"
+              VerticalScrollBarVisibility="Auto"
+              CanContentScroll="True">
+
+            <ItemsControl Name="icPedidos">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical"
+                           Margin="10"
+                           ItemHeight="110"
+                           ItemWidth="1210" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+        </ScrollViewer>
+    </Grid>
+</Page>
