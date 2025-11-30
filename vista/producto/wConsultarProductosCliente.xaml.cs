@@ -176,8 +176,9 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (_productoSeleccionado != null && _cantidadPedido > 0)
             {
                 System.Windows.MessageBox.Show($"Agregado al pedido: {_productoSeleccionado.Nombre} x {_cantidadPedido}", "Pedido");
-              
-            OverlayDetalle.Visibility = Visibility.Collapsed;
+
+                OverlayDetalle.Visibility = Visibility.Collapsed;
+            }
         }
 
         /// <summary>
