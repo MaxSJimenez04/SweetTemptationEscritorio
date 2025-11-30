@@ -1,0 +1,125 @@
+<Page x:Class="sweet_temptation_clienteEscritorio.vista.admin.wPrincipalAdmin"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1280"
+      Title="Panel de Administrador">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Style x:Key="BtnMenuAdmin" TargetType="Button">
+                <Setter Property="Width" Value="280"/>
+                <Setter Property="Height" Value="55"/>
+                <Setter Property="Margin" Value="0,10"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#poppins"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}"
+                                    Effect="{StaticResource SombraSuave}">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="#FFF7F7">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Lado Izquierdo - Bienvenida -->
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="60,0,40,0">
+            <TextBlock Text="¡Bienvenido," 
+                       FontFamily="pack://application:,,,/resources/fonts/#prata"
+                       FontSize="48" 
+                       Foreground="#FF70B5"/>
+            <TextBlock x:Name="txtNombreUsuario"
+                       Text="Usuario Administrador!"
+                       FontFamily="pack://application:,,,/resources/fonts/#prata"
+                       FontSize="42" 
+                       Foreground="#333333"
+                       Margin="0,0,0,40"/>
+            
+            <!-- Imagen decorativa -->
+            <Border Background="White" 
+                    CornerRadius="20" 
+                    Padding="25"
+                    Effect="{StaticResource SombraSuave}"
+                    HorizontalAlignment="Left">
+                <StackPanel>
+                    <TextBlock Text="Panel de Administración"
+                               FontFamily="pack://application:,,,/resources/fonts/#poppins"
+                               FontSize="18"
+                               Foreground="#FF70B5"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15"/>
+                    <Image Source="/resources/images/logo_sweettemptation.png" 
+                           Width="200" Height="150"
+                           Stretch="Uniform"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Lado Derecho - Botones de Navegación -->
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            
+            <Button x:Name="btnEstadisticasVenta" 
+                    Content="📊  Estadísticas de Ventas"
+                    Style="{StaticResource BtnMenuAdmin}"
+                    Background="#9B59B6"
+                    Click="BtnEstadisticasVenta_Click"/>
+            
+            <Button x:Name="btnEstadisticasProductos" 
+                    Content="📈  Estadísticas de Productos"
+                    Style="{StaticResource BtnMenuAdmin}"
+                    Background="#8E44AD"
+                    Click="BtnEstadisticasProductos_Click"/>
+            
+            <Button x:Name="btnGestionCuentas" 
+                    Content="👥  Gestionar Cuentas"
+                    Style="{StaticResource BtnMenuAdmin}"
+                    Background="#FF70B5"
+                    Click="BtnGestionCuentas_Click"/>
+            
+            <Button x:Name="btnGestionProductos" 
+                    Content="🧁  Gestionar Productos"
+                    Style="{StaticResource BtnMenuAdmin}"
+                    Background="#E91E63"
+                    Click="BtnGestionProductos_Click"/>
+            
+            <Button x:Name="btnGestionPedidos" 
+                    Content="📦  Gestionar Pedidos"
+                    Style="{StaticResource BtnMenuAdmin}"
+                    Background="#C2185B"
+                    Click="BtnGestionPedidos_Click"/>
+            
+        </StackPanel>
+    </Grid>
+</Page>
+
