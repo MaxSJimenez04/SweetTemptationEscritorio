@@ -8,5 +8,7 @@ namespace sweet_temptation_clienteEscritorio.dto
 {
     internal class CategoriaDTO
     {
+        public int id { get; set; }
+        public string nombre { get; set; }
     }
 }

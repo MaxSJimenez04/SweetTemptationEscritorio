@@ -5,13 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Net.Http; // Necesario para la comunicación con la API
 
 namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 {
@@ -20,9 +15,45 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
     /// </summary>
     public partial class wEstadisticasVentas : Page
     {
+    
+        private const string API_ESTADISTICAS_URL = "http://localhost:8080/reportes/ventas";
+
+        private HttpClient _httpClient;
+
         public wEstadisticasVentas()
         {
             InitializeComponent();
+            _httpClient = new HttpClient();
+
+            // Iniciar la carga de datos del reporte al abrir la vista (opcional)
+            // _ = CargarEstadisticasAsync(); 
+        }
+
+        /// <summary>
+        /// Método para cargar los datos de estadísticas de la API.
+        /// </summary>
+        private async Task CargarEstadisticasAsync()
+        {
+            try
+            {
+                
+
+                System.Windows.MessageBox.Show("Funcionalidad pendiente: Carga de datos de estadísticas.", "Información");
+            }
+            catch (HttpRequestException ex)
+            {
+                System.Windows.MessageBox.Show($"🚨 Error de conexión al cargar estadísticas: {ex.Message}", "Error de Red");
+            }
+        }
+
+        /// <summary>
+        /// Maneja el evento de clic para descargar el reporte de ventas o las estadísticas.
+        /// </summary>
+        private void btnDescargar_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO
+
+            System.Windows.MessageBox.Show("Funcionalidad pendiente: Se iniciaría la descarga del reporte.", "Descarga de Reporte");
         }
     }
 }
