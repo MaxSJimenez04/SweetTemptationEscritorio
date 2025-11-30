@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace sweet_temptation_clienteEscritorio.model
+public class Categoria
 {
-    internal class Categoria
-    {
-        public int id {  get; set; }
-        public string nombre { get; set; }
-    }
+    // Estos nombres son para uso interno en WPF y mapeo JSON
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("nombre")]
+    public string Nombre { get; set; }
 }
