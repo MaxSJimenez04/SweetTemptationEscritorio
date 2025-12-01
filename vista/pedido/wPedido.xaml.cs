@@ -31,13 +31,14 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         private Pedido _pedido;
         private int _idUsuario = 3;
         private List<DetallesProducto> _detallesProductos;
-
+        string _token;
         public wPedido(Pedido pedido)
         {
             InitializeComponent();
             _servicioPedido = new PedidoService(new HttpClient());
             _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
             _archivoService = new ArchivoService(new HttpClient());
+            _token = (string?)App.Current.Properties["Token"];
             _pedido = pedido;
             _detallesProductos = new List<DetallesProducto>();
             if(pedido.id == 0)
@@ -154,7 +155,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task ObtenerPedidoActualAsync()
         {
-            var respuesta = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario);
+            var respuesta = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
             if (respuesta.pedidoActual == null)
             {
                 MessageBox.Show(respuesta.mensaje);
@@ -173,7 +174,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task CancelarPedidoAsync()
         {
-            var respuesta = await _servicioPedido.CancelarPedidoAsync(_pedido.id, _idUsuario);
+            var respuesta = await _servicioPedido.CancelarPedidoAsync(_pedido.id, _idUsuario, _token);
 
             switch (respuesta.codigo)
             {
@@ -193,7 +194,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task CrearPedidoClienteAsync()
         {
-            var respuesta = await _servicioPedido.CrearPedidoClienteAsync(_idUsuario);
+            var respuesta = await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
             if (respuesta)
             {
                 await ObtenerPedidoActualAsync();
@@ -206,7 +207,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task ObtenerProductosAsync()
         {
-            var respuesta = await _servicioProductoPedido.obtenerProductosAsync(_pedido.id);
+            var respuesta = await _servicioProductoPedido.obtenerProductosAsync(_pedido.id, _token);
             if (respuesta.productos != null)
             {
                 spError.Visibility = Visibility.Collapsed;
@@ -242,7 +243,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task CambiarTotalPedidoAsync(Decimal total)
         {
-            var respuesta = await _servicioPedido.CambiarTotalPedidoAsync(_pedido.id, total);
+            var respuesta = await _servicioPedido.CambiarTotalPedidoAsync(_pedido.id, total, _token);
 
             if (respuesta.pedidoActualizado != null)
             {
@@ -264,7 +265,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 IdPedido = _pedido.id,
                 IdProducto = detalles.idProducto
             };
-            var respuesta = await _servicioProductoPedido.actualizarProductoAsync(_pedido.id, pedido);
+            var respuesta = await _servicioProductoPedido.actualizarProductoAsync(_pedido.id, pedido, _token);
             if(respuesta.productoActualizado == null)
             {
                 MessageBox.Show(respuesta.mensaje);
@@ -273,7 +274,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         
         public async Task EliminarProductoAsync(int idProducto)
         {
-            var respuesta = await _servicioProductoPedido.eliminarProductoAsync(_pedido.id, idProducto);
+            var respuesta = await _servicioProductoPedido.eliminarProductoAsync(_pedido.id, idProducto, _token);
             switch (respuesta.codigo)
             {
                 case HttpStatusCode.BadRequest:
@@ -287,7 +288,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task<string> ObtenerDetallesAsync(int idProducto)
         {
-            var respuesta = await _archivoService.ObtenerDetallesArchivoAsync(idProducto);
+            var respuesta = await _archivoService.ObtenerDetallesArchivoAsync(idProducto, _token);
             DetallesArchivo detalles = new DetallesArchivo();
             if (respuesta.detalles != null)
             {
@@ -304,7 +305,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task<BitmapImage> ObtenerImagenAsync(string ruta)
         {
-            var respuesta = await _archivoService.ObtenerImagenAsync(ruta);
+            var respuesta = await _archivoService.ObtenerImagenAsync(ruta, _token);
             if(respuesta.imagen != null)
             {
                 return respuesta.imagen;

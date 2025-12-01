@@ -25,11 +25,13 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         private int _idUsuario;
         private PedidoService _servicio;
         public ObservableCollection<Pedido> _pedidos;
+        string _token;
         public wPedidos()
         {
             _idUsuario = (int)App.Current.Properties["Id"];
             _servicio = new PedidoService(new HttpClient());
             _pedidos = new ObservableCollection<Pedido>();
+            _token = (string?)App.Current.Properties["Token"];
 
             InitializeComponent();
             Loaded += async (s, e) =>
@@ -64,7 +66,8 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private async Task ObtenerPedidosAsync()
         {
-            var respuesta = await _servicio.ObtenerPedidosAsync(_idUsuario);
+            _pedidos.Clear();
+            var respuesta = await _servicio.ObtenerPedidosAsync(_idUsuario, _token);
             if (respuesta.pedidos != null)
             {
                 if (respuesta.pedidos.Count > 0)
@@ -95,7 +98,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task CrearPedidoAsync()
         {
-            var respuesta = await _servicio.CrearPedidoEmpleadoAsync(_idUsuario);
+            var respuesta = await _servicio.CrearPedidoEmpleadoAsync(_idUsuario, _token);
 
             if (respuesta.pedido != null)
             {
@@ -121,7 +124,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task EliminarPedidoAsync(Pedido pedido)
         {
-            var respuesta = await _servicio.EliminarPedidoAsync(pedido.id);
+            var respuesta = await _servicio.EliminarPedidoAsync(pedido.id, _token);
             if (respuesta.mensaje != null)
             {
                 MessageBox.Show(respuesta.mensaje);

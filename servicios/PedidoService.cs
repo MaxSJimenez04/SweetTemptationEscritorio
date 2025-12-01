@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,8 +30,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(PedidoDTO pedidoActual, HttpStatusCode codigo, string mensaje)> ObtenerPedidoActualAsync(int idCliente)
+        public async Task<(PedidoDTO pedidoActual, HttpStatusCode codigo, string mensaje)> ObtenerPedidoActualAsync(int idCliente , string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.GetAsync($"pedido/actual?idCliente={idCliente}");
 
             if (respuesta.IsSuccessStatusCode)
@@ -45,8 +47,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ObtenerPedidosAsync(int idEmpleado)
+        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ObtenerPedidosAsync(int idEmpleado, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.GetAsync($"pedido/pedidos?idCliente={idEmpleado}");
             if (respuesta.IsSuccessStatusCode)
             {
@@ -60,8 +63,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(PedidoDTO pedidoActualizado, HttpStatusCode codigo, string mensaje)> CambiarTotalPedidoAsync(int idPedido, Decimal total)
+        public async Task<(PedidoDTO pedidoActualizado, HttpStatusCode codigo, string mensaje)> CambiarTotalPedidoAsync(int idPedido, Decimal total,string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PutAsJsonAsync<Decimal>($"pedido/{idPedido}/recalcular?idPedido={idPedido}", total);
 
             if (respuesta.IsSuccessStatusCode)
@@ -76,8 +80,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<bool> CrearPedidoClienteAsync(int idCliente)
+        public async Task<bool> CrearPedidoClienteAsync(int idCliente, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PostAsync($"pedido/nuevo?idCliente={idCliente}", null);
             if (respuesta.IsSuccessStatusCode)
             {
@@ -86,8 +91,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             return false;
         }
 
-        public async Task<(PedidoDTO pedido, HttpStatusCode codigo, string mensaje)> CrearPedidoEmpleadoAsync(int idEmpleado)
+        public async Task<(PedidoDTO pedido, HttpStatusCode codigo, string mensaje)> CrearPedidoEmpleadoAsync(int idEmpleado, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PostAsync($"pedido/?idEmpleado={idEmpleado}", null);
             if (respuesta.IsSuccessStatusCode)
             {
@@ -101,8 +107,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(HttpStatusCode codigo, string mensaje)> EliminarPedidoAsync(int idPedido)
+        public async Task<(HttpStatusCode codigo, string mensaje)> EliminarPedidoAsync(int idPedido, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.DeleteAsync($"pedido/?idPedido={idPedido}");
 
             if (respuesta.IsSuccessStatusCode)
@@ -116,8 +123,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(HttpStatusCode codigo, string mensaje)> CancelarPedidoAsync(int idPedido, int idCliente)
+        public async Task<(HttpStatusCode codigo, string mensaje)> CancelarPedidoAsync(int idPedido, int idCliente, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PutAsync($"/pedido/?idPedido={idPedido}&idCliente={idCliente}", null);
 
             if (respuesta.IsSuccessStatusCode)
@@ -132,8 +140,5 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
 
         }
-
-
-        
     }
 }
