@@ -21,6 +21,13 @@ namespace sweet_temptation_clienteEscritorio.servicios
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(Constantes.URL);
+            
+            var token = App.Current.Properties["Token"]?.ToString();
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = 
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
         }
 
         public async Task<(PedidoDTO pedidoActual, HttpStatusCode codigo, string mensaje)> ObtenerPedidoActualAsync(int idCliente , string token)

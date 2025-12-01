@@ -10,23 +10,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="resources\fonts\Inter\**" />
+    <EmbeddedResource Remove="resources\fonts\Inter\**" />
+    <None Remove="resources\fonts\Inter\**" />
+    <Page Remove="resources\fonts\Inter\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="resources\fonts\Inter_18pt-Regular.ttf" />
+    <None Remove="resources\fonts\Poppins-Regular.ttf" />
+    <None Remove="resources\fonts\Prata-Regular.ttf" />
     <None Remove="resources\icons\icon_agregar.svg" />
     <None Remove="resources\icons\icon_buscar.svg" />
     <None Remove="resources\icons\icon_carrito.svg" />
     <None Remove="resources\icons\icon_customPedidos.svg" />
     <None Remove="resources\icons\icon_descargar.svg" />
     <None Remove="resources\icons\icon_editar.svg" />
+    <None Remove="resources\icons\icon_efectivo.svg" />
     <None Remove="resources\icons\icon_eliminar.svg" />
     <None Remove="resources\icons\icon_empleados.svg" />
     <None Remove="resources\icons\icon_historial.svg" />
     <None Remove="resources\icons\icon_menu.svg" />
     <None Remove="resources\icons\icon_productos.svg" />
     <None Remove="resources\icons\icon_regresar.svg" />
+    <None Remove="resources\icons\icon_tarjeta.svg" />
     <None Remove="resources\icons\logo_sweettemptation.png" />
     <None Remove="resources\icons\ph_perfil.svg" />
+    <None Remove="resources\images\cupcake.png" />
+    <None Remove="resources\images\logo_sweettemptation2.png" />
+    <None Remove="resources\images\tarjetaBancaria.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="resources\icons\icon_efectivo.svg" />
+    <Resource Include="resources\icons\icon_tarjeta.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\fonts\Inter_18pt-Regular.ttf" />
+    <Resource Include="resources\fonts\Poppins-Regular.ttf" />
+    <Resource Include="resources\fonts\Prata-Regular.ttf" />
     <Resource Include="resources\icons\icon_customPedidos.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -72,15 +95,19 @@
     <Resource Include="resources\icons\icon_regresar.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="resources\images\cupcake.png" />
     <Resource Include="resources\images\logo_sweettemptation.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="resources\icons\ph_perfil.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="resources\images\logo_sweettemptation2.png" />
+    <Resource Include="resources\images\tarjetaBancaria.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="SharpVectors" Version="1.8.5" />
   </ItemGroup>
 

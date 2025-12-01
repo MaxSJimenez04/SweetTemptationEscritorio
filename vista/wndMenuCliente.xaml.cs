@@ -1,43 +1,33 @@
-﻿using sweet_temptation_clienteEscritorio.model;
-using sweet_temptation_clienteEscritorio.vista.pedido;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using sweet_temptation_clienteEscritorio.vista.cliente;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace sweet_temptation_clienteEscritorio.vista
 {
-
     public partial class wndMenuCliente : Window
     {
         public wndMenuCliente()
         {
             InitializeComponent();
+            fmPrincipal.Navigate(new wPrincipalCliente());
         }
 
-        private void btnClickPedido(object sender, RoutedEventArgs e)
-        {
-            fmPrincipal.Navigate(new wPedido(new Pedido()
-            {
-                id = 0
-            }));
-        }
-
-        private void btnClickRegresar(object sender, RoutedEventArgs e)
+        private void BtnClickInicio(object sender, RoutedEventArgs e)
         {
             if (fmPrincipal.CanGoBack)
             {
                 fmPrincipal.GoBack();
             }
+            else
+            {
+                fmPrincipal.Navigate(new wPrincipalCliente());
+            }
+        }
+
+        private void BtnClickCerrarSesion(object sender, RoutedEventArgs e)
+        {
+            App.Current.Properties.Clear();
+            new wndLogin().Show();
+            this.Close();
         }
     }
 }

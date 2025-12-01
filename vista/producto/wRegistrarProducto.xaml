@@ -1,0 +1,191 @@
+﻿<Page x:Class="sweet_temptation_clienteEscritorio.vista.producto.wRegistrarProducto"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.producto" 
+      xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1280"
+      Title="wRegistrarProducto">
+    <Page.Resources>
+        <Style x:Key="FormLabel" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontFamily" Value="Montserrat"/>
+            <Setter Property="Margin" Value="5,12,0,5"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="FormBaseInput" TargetType="{x:Type Control}">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontFamily" Value="Montserrat"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource color2}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Style.Triggers>
+                <Trigger Property="Control.IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource color3}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FormTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormBaseInput}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0,0,0,5"/>
+            <Setter Property="CaretBrush" Value="DarkGray"/>
+        </Style>
+
+        <Style x:Key="FormComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource FormBaseInput}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+        </Style>
+
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
+            <Border Width="220" Height="60"
+                    CornerRadius="30"
+                    Background="{TemplateBinding Background}">
+                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
+        </ControlTemplate>
+    </Page.Resources>
+
+    <Grid Background="#FFF7F7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="70,35">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Registro de Nuevo Producto"
+                       Foreground="{DynamicResource color3}"
+                       FontSize="36"
+                       FontFamily="Montserrat"
+                       FontWeight="Bold"
+                       Margin="0,0,0,20"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Left"
+                       Grid.ColumnSpan="2"/>
+
+            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,60,50,0">
+
+                <TextBlock Text="Nombre" Style="{StaticResource FormLabel}"/>
+                <TextBox x:Name="txtNombreProducto" Style="{StaticResource FormTextBox}"/>
+
+                <TextBlock Text="Descripción" Style="{StaticResource FormLabel}" Margin="0,25,0,0"/>
+                <TextBox x:Name="txtDescripcion" 
+                         Height="100" 
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Style="{StaticResource FormTextBox}"/>
+
+                <TextBlock Text="Categoría" Style="{StaticResource FormLabel}" Margin="0,25,0,0"/>
+                <ComboBox x:Name="cmbCategoria" 
+                          Style="{StaticResource FormComboBox}"
+                          IsEditable="False"/>
+
+                <Grid Margin="0,25,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                        <TextBlock Text="Precio unitario" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtPrecioUnitario" Style="{StaticResource FormTextBox}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                        <TextBlock Text="Unidades (Stock)" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtUnidades" Style="{StaticResource FormTextBox}"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50,60,0,0">
+                <TextBlock Text="Vista Previa de la Imagen"
+                           Foreground="{DynamicResource color3}"
+                           FontSize="24"
+                           FontFamily="Montserrat"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,10"
+                           HorizontalAlignment="Center"/>
+
+                <Border BorderBrush="LightGray"
+                        BorderThickness="2"
+                        CornerRadius="5"
+                        Width="350" Height="350"
+                        Background="#E0E0E0"
+                        Margin="0,10,0,20">
+                    <Image x:Name="imgProducto"
+                           Source="{Binding ImagenSeleccionada}"
+                           Stretch="UniformToFill"/>
+                </Border>
+
+                <Button x:Name="btnCargarImagen"
+                        Content="Cargar Imagen"
+                        Foreground="White"
+                        FontSize="22"
+                        FontWeight="Medium"
+                        Cursor="Hand"
+                        Width="250"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        Click="btnCargarImagen_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border CornerRadius="10" Background="{DynamicResource color3}">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,70,35">
+            <Button x:Name="btnCancelar"
+                    Content="Cancelar"
+                    Foreground="White"
+                    FontSize="22"
+                    Cursor="Hand"
+                    Click="btnCancelar_Click"
+                    Margin="0,0,20,0"
+                    Template="{StaticResource ButtonTemplate}"
+                    Background="{DynamicResource color1}"/>
+
+            <Button x:Name="btnRegistrar"
+                    Content="Registrar"
+                    Foreground="White"
+                    FontSize="22"
+                    Cursor="Hand"
+                    Click="btnRegistrar_Click"
+                    Template="{StaticResource ButtonTemplate}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{x:Null}">
+                        <Setter Property="Background" Value="{DynamicResource color3}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource color1}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

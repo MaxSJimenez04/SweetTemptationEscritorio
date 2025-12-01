@@ -1,29 +1,14 @@
-﻿using sweet_temptation_clienteEscritorio.vista.pedido;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using sweet_temptation_clienteEscritorio.vista.empleado;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace sweet_temptation_clienteEscritorio.vista
 {
-    /// <summary>
-    /// Lógica de interacción para wndMenuEmpleado.xaml
-    /// </summary>
     public partial class wndMenuEmpleado : Window
     {
         public wndMenuEmpleado()
         {
             InitializeComponent();
-            fmPrincipal.Navigate(new wPedidos());
+            fmPrincipal.Navigate(new wPrincipalEmpleado());
         }
 
         private void BtnClickRegresar(object sender, RoutedEventArgs e)
@@ -32,6 +17,17 @@ namespace sweet_temptation_clienteEscritorio.vista
             {
                 fmPrincipal.GoBack();
             }
+            else
+            {
+                fmPrincipal.Navigate(new wPrincipalEmpleado());
+            }
+        }
+
+        private void BtnClickCerrarSesion(object sender, RoutedEventArgs e)
+        {
+            App.Current.Properties.Clear();
+            new wndLogin().Show();
+            this.Close();
         }
     }
 }
