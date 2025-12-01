@@ -28,6 +28,11 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     {
         private PedidoService _servicioPedido;
         private ProductoPedidoService _servicioProductoPedido;
+
+
+        private TicketGrpcService _ticketGrpcService;
+
+
         private ArchivoService _archivoService;
         private Pedido _pedido;
         private int _idUsuario = 3;
@@ -39,6 +44,11 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             _servicioPedido = new PedidoService(new HttpClient());
             _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
             _archivoService = new ArchivoService(new HttpClient());
+
+
+            _ticketGrpcService = new TicketGrpcService();
+
+
             _token = (string?)App.Current.Properties["Token"];
             _pedido = pedido;
             _detallesProductos = new List<DetallesProducto>();
@@ -114,10 +124,30 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             await ObtenerProductosAsync();
         }
 
-        private void btnClickRealizar(object sender, RoutedEventArgs e)
+        //TODO: IMPLEMENTARLO EN WPAGOTARJETA & WPAGOEFECTIVO
+
+        private async void btnClickRealizar(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new wTipoPago(_pedido.id));
+            //NavigationService.Navigate(new wTipoPago(_pedido.id));
+            await GenerarTicketAsync();
+
+
         }
+        //TODO: BORRAR IMPLEMENTACIÓN DE PRUEBA
+        private async Task GenerarTicketAsync()
+        {
+            var respuesta = await _ticketGrpcService.DescargarTicketAsync(_pedido.id);
+
+            if (respuesta != null)
+            {
+                MessageBox.Show("Ticket descargado en" + respuesta);
+            }
+            else
+            {
+                MessageBox.Show("ERROR: ocurrió un problema al generar el ticket");
+            }
+        }
+
 
         private void btnClickEditar(object sender, RoutedEventArgs e)
         {

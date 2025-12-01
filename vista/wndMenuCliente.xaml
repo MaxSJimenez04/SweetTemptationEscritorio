@@ -48,7 +48,7 @@
 
                 <Button x:Name="btnCarrito" Width="45" Height="55" HorizontalAlignment="Right"
                         Margin="50,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" 
-                        Foreground="{x:Null}" ToolTip="Carrito">
+                        Foreground="{x:Null}" ToolTip="Carrito" Click="btnClickCarrito" >
                     <svgc:SvgViewbox Source="/resources/icons/icon_carrito.svg"/>
                 </Button>
 

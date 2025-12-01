@@ -20,7 +20,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     /// </summary>
     public partial class wTipoPago : Page
     {
-        public wTipoPago(int idPedido)
+        public wTipoPago()
         {
             InitializeComponent();
         }
