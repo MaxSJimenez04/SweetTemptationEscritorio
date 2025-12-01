@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +27,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)> GuardarArchivoAsync(ArchivoDTO archivo)
+        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)> GuardarArchivoAsync(ArchivoDTO archivo, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PostAsJsonAsync<ArchivoDTO>($"archivo/", archivo);
             if (respuesta.IsSuccessStatusCode)
             {
@@ -41,8 +43,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto)
+        public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.PostAsync($"archivo/asociar?idArchivo={idArchivo}&idProducto={idProducto}", null);
             if (respuesta.IsSuccessStatusCode)
             {
@@ -55,8 +58,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)> ObtenerDetallesArchivoAsync(int idProducto)
+        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)> ObtenerDetallesArchivoAsync(int idProducto, string token)
         {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var respuesta = await _httpClient.GetAsync($"archivo/?idProducto={idProducto}");
             if (respuesta.IsSuccessStatusCode)
             {
@@ -70,10 +74,11 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)> ObtenerImagenAsync(string ruta)
+        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)> ObtenerImagenAsync(string ruta, string token)
         {
             if (ruta != null)
             {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var respuesta = await _httpClient.GetAsync(ruta);
                 if (respuesta.IsSuccessStatusCode)
                 {
