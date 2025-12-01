@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sweet_temptation_clienteEscritorio.servicios;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,7 +13,8 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         private string _titular;
         private string _vencimiento;
         private string _cvc;
-        private bool _isFormatting = false; 
+        private bool _isFormatting = false;
+        private TicketGrpcService _ticketGrpcService;
 
         public string NumeroTarjeta {
             get => _numeroTarjeta;
@@ -214,5 +216,12 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void BtnClickPagar(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        
     }
 }

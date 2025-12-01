@@ -8,9 +8,11 @@ namespace sweet_temptation_clienteEscritorio.resources
 {
     internal class Constantes
     {
-        public static string PUERTO = "8080";
-        public static string IP = "localhost";
-        public static string URL = "http://" + IP + ":" + PUERTO + "/";
-        public static int IVA = 16;
+        public const string PUERTO = "8080";
+        public const string PUERTO_GRPC = "9090";
+        public const string IP = "localhost";
+        public const string URL = "http://" + IP + ":" + PUERTO + "/";
+        public const string URL_GRPC = "http://" + IP + ":" + PUERTO_GRPC;
+        public const int IVA = 16;
     }
 }

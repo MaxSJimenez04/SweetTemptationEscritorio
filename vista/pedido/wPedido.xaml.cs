@@ -3,6 +3,7 @@ using sweet_temptation_clienteEscritorio.model;
 using sweet_temptation_clienteEscritorio.resources;
 using sweet_temptation_clienteEscritorio.resources.usercontrolers;
 using sweet_temptation_clienteEscritorio.servicios;
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,7 +116,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void btnClickRealizar(object sender, RoutedEventArgs e)
         {
-            //TODO: Navegar a WPago
+            NavigationService.Navigate(new wTipoPago(_pedido.id));
         }
 
         private void btnClickEditar(object sender, RoutedEventArgs e)
@@ -150,7 +151,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void BtnClickProductos(object sender, RoutedEventArgs e)
         {
-            //TODO: Navegar a WProductos
+            NavigationService.Navigate(new wConsultarProductos());
         }
 
         public async Task ObtenerPedidoActualAsync()
