@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.sweettemptation.grpc";
+option java_outer_classname = "Ticket";
+
+service TicketService {
+  rpc generarTicket (TicketRequest) returns (TicketResponse);
+}
+
+message TicketRequest {
+  int32 idPedido = 1;
+}
+
+message TicketResponse {
+  bytes pdf = 1;
+  string fileName = 2;
+}
