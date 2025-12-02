@@ -1,7 +1,10 @@
-﻿using sweet_temptation_clienteEscritorio.servicios;
+﻿using sweet_temptation_clienteEscritorio.dto;
+using sweet_temptation_clienteEscritorio.servicios;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,6 +53,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         public wPagoTarjeta() {
             InitializeComponent();
             DataContext = this;
+            LlenarDatosPedido();
         }
 
         private void TxtNumero_PreviewTextInput(object sender, TextCompositionEventArgs e) {
@@ -210,18 +214,47 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
             }
         }
 
-
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void BtnClickPagar(object sender, RoutedEventArgs e)
-        {
-            
+        private async void BtnClickPagar(object sender, RoutedEventArgs e) {
+            string token = App.Current.Properties["Token"]?.ToString();
+            int idPedido = (int)App.Current.Properties["IdPedidoActual"];
+
+            var servicioPago = new PagoService(new HttpClient());
+
+            decimal monto = Convert.ToDecimal(txtTotal.Text);
+
+            var request = new PagoRequestDTO {
+                TipoPago = "Tarjeta",
+                MontoPagado = monto,
+                DetallesCuenta = NumeroTarjeta.Replace(" ", "") +
+                                 $" | {Titular} | {Vencimiento} | CVC:{CVC}"
+            };
+
+            var (pago, codigo, mensaje) = await servicioPago.RegistrarPagoAsync(idPedido, request, token);
+
+            if(codigo == HttpStatusCode.OK) {
+                MessageBox.Show("Pago realizado con éxito:\n" + pago.MensajeConfirmacion);
+            } else {
+                MessageBox.Show("Error al pagar: " + mensaje);
+            }
         }
 
-        
+
+        public void LlenarDatosPedido() {
+            var pedido = (PedidoDTO)App.Current.Properties["PedidoActual"];
+            txtTotal.Text = pedido.total.ToString("0.00");
+        }
+
+        public void VaciarDatosPedido() {
+            txtTotal.Text = "Total: $";
+        }
+
+
+
+
     }
 }

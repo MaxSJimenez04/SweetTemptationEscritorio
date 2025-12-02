@@ -39,5 +39,9 @@ namespace sweet_temptation_clienteEscritorio.vista
             pedido.id = 0;
             fmPrincipal.NavigationService.Navigate(new wPedido(pedido));
         }
+
+        private void fmPrincipal_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
+
+        }
     }
 }

@@ -194,6 +194,7 @@
                 </Border>
 
                 <TextBlock
+                    x:Name="txtTotal"
                     Grid.Column="1"
                     Width="300"
                     Height="40"
