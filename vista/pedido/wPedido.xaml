@@ -8,6 +8,15 @@
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="wPedido">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
     <Grid Background="#FFF7F7">
         <Grid.RowDefinitions>
             <RowDefinition Height="75"/>
@@ -16,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Label FontSize="50" Margin="5">Tu Pedido</Label>
+            <TextBlock FontSize="50" Margin="10" Style="{StaticResource TxtTitulo}" Text="Tu Pedido"/>
             <Button x:Name="btnEditar" Margin="8,8,25,8" Height="50" 
                     Width="50" HorizontalAlignment="Right" Background="{x:Null}" 
                     BorderBrush="{x:Null}" Foreground="{x:Null}" Click="btnClickEditar" >
@@ -54,11 +63,11 @@
                 <Label x:Name="lbTotal" FontSize="30" Height="50">Total: $</Label>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="btnCancelar" Content="Cancelar" Background="#FEDFE3"
-                        Height="90" Width="250" Margin="15" FontSize="30" 
+                <Button x:Name="btnCancelar" Content="Cancelar" Style="{StaticResource BtnBlancoStyle}"
+                        Height="90" Width="250" Margin="15" FontSize="25" 
                         Click="btnClickCancelar"/>
                 <Button x:Name="btnRealizarPedido" Content="Realizar Pedido" Background="#FBA1B7"
-                        Height="90" Width="250" Margin="15" FontSize="30" 
+                        Height="90" Width="250" Margin="15" FontSize="30" Style="{StaticResource BtnRosaStyle}"
                         Click="btnClickRealizar"/>
             </StackPanel>
         </Grid>

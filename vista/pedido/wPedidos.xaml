@@ -9,17 +9,25 @@
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="wPedidos">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <Grid Background="#FFF7F7">
         <Grid.RowDefinitions>
             <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"
-               FontSize="50">Pedidos</Label>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,5,5"
+               Style="{StaticResource TxtTitulo}" Text="Pedidos" />
         <Button x:Name="btnNuevo" Grid.Row="0" Height="80" Width="80"
                 VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="{x:Null}"
-                Background="{x:Null}" Margin="15" Click="BtnClickNuevo" >
+                Background="{x:Null}" Margin="15" Style="{StaticResource iconButton}" Click="BtnClickNuevo" >
             <svgc:SvgViewbox Source="/resources/icons/icon_agregar.svg" Width="50" Height="50"/>
         </Button>
 

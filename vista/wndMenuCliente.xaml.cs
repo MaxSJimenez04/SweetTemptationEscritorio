@@ -33,7 +33,7 @@ namespace sweet_temptation_clienteEscritorio.vista
             this.Close();
         }
 
-        private void btnClickCarrito(object sender, RoutedEventArgs e)
+        private void BtnClickCarrito(object sender, RoutedEventArgs e)
         {
             Pedido pedido = new Pedido();
             pedido.id = 0;
