@@ -469,9 +469,13 @@
     <!-- Sombra -->
     <DropShadowEffect x:Key="SombraSuave"
                   Color="Gray" BlurRadius="15" ShadowDepth="3"/>
-    
-    
-    
+
+
+    <Style x:Key="lbTexto" TargetType="Label">
+        <Setter Property="Foreground" Value="#282828"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
     
 
 

@@ -16,21 +16,21 @@
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
-                
-                
-                
-                <Label x:Name="lbId" Grid.Column="0"  Content="Orden: " FontSize="35" VerticalAlignment="Center"/>
-                <Label x:Name="lbTotal" Grid.Column="1" Content="Total: $" FontSize="35" VerticalAlignment="Center"/>
+
+
+
+                <Label x:Name="lbId" Grid.Column="0"  Content="Orden: " FontSize="35" FontFamily="pack://application:,,,/resources/fonts/#poppins" VerticalAlignment="Center"/>
+                <Label x:Name="lbTotal" Grid.Column="1" Content="Total: $" FontSize="35" FontFamily="pack://application:,,,/resources/fonts/#poppins" VerticalAlignment="Center"/>
                 
                 
 
                 <Button x:Name="btnEditar" Grid.Column="2" Margin="5" Width="90"
-                         Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnClickEditar" >
+                         Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnClickEditar" Style="{StaticResource iconButton}" >
                     <svgc:SvgViewbox Source="/resources/icons/icon_editar.svg" Width="50" Height="50"/>
                 </Button>
 
                 <Button x:Name="btnEliminar" Grid.Column="3" Margin="5" Width="90"
-                         Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnClickEliminar" >
+                         Background="{x:Null}" BorderBrush="{x:Null}" Style="{StaticResource iconButton}" Click="BtnClickEliminar" >
                     <svgc:SvgViewbox Source="/resources/icons/icon_eliminar.svg" Width="50" Height="50"/>
                 </Button>
             </Grid>

@@ -77,8 +77,10 @@ WindowStyle="None"
                         Style="{StaticResource BtnMenuCuentaStyle}"/>
 
                     <Button 
+                        x:Name="BtnCarrito"
                         Grid.Column="6"
-                        Style="{StaticResource BtnCarritoDeCompra}">
+                        Style="{StaticResource BtnCarritoDeCompra}" Click="BtnClickCarrito"
+                        >
                         <svgc:SvgViewbox 
                             Source="/resources/icons/icon_carrito.svg"
                             Width="28"

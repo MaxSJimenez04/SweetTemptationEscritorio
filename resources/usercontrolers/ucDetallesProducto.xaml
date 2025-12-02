@@ -7,8 +7,16 @@
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              mc:Ignorable="d" 
              d:DesignHeight="275" d:DesignWidth="175">
-<Grid Margin="25">
-    <Border CornerRadius="8" Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid Margin="25">
+        <Border CornerRadius="8" Background="White" BorderBrush="#FCC8D1" BorderThickness="3">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -18,20 +26,20 @@
 
             </Image>
             <Button x:Name="btnEliminar" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                    Width="40" Height="40" Visibility="Collapsed" Background="{x:Null}" 
+                    Width="40" Height="40" Visibility="Collapsed" Background="{x:Null}" Style="{StaticResource iconButton}"
                     Click="btnClickEliminar">
                 <svgc:SvgViewbox Source="/resources/icons/icon_eliminar.svg"/>
             </Button>
 
             <StackPanel Grid.Row="1" Orientation="Vertical" Margin="2">
-                <Label x:Name="lbNombre" Height="30"/>
-                <Label x:Name="lbPrecio" Height="30"/>
-                <Label Name="lbCantidad" Height="30" Visibility="Visible"/>
-                <StackPanel x:Name="spSpinner" Orientation="Horizontal" Margin="5" HorizontalAlignment="Center" Visibility="Collapsed">
-                    <Button x:Name="btnRestar" Content="-" Width="30" Height="30" 
+                    <Label x:Name="lbNombre" Height="30" Style="{StaticResource lbTexto}" FontSize="15"/>
+                    <Label x:Name="lbPrecio" Height="30" Style="{StaticResource lbTexto}" FontSize="15"/>
+                    <Label Name="lbCantidad" Height="30" Style="{StaticResource lbTexto}" FontSize="15" Visibility="Visible"/>
+                <StackPanel x:Name="spSpinner" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <Button x:Name="btnRestar" Content="-" Width="30" Height="30" Style="{StaticResource BtnRosaStyle}"
                                 Click="btnClickRestar"/>
                     <Label x:Name="lbNumero" Content="0" Width="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                    <Button x:Name="btnAgregar" Content="+" Width="30" Height="30" 
+                    <Button x:Name="btnAgregar" Content="+" Width="30" Height="30"  Style="{StaticResource BtnRosaStyle}"
                                 Click="btnClickAgregar"/>
                 </StackPanel>
             </StackPanel>
