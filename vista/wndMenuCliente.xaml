@@ -156,7 +156,7 @@ WindowStyle="None"
 
             </Grid>
 
-            <Frame Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" Margin="10,44,-10,44" Grid.RowSpan="2" />
+            <Frame Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" Margin="10,0,-10,10" Grid.Row="1" />
         </Grid>
     </Viewbox>
 </Window>

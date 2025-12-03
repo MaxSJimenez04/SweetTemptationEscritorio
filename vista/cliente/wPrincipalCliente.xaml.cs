@@ -1,3 +1,4 @@
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,8 +20,7 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
 
         private void BtnVerCatalogo_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Ver Catálogo - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wConsultarProductos());
         }
 
         private void BtnVerPedidos_Click(object sender, RoutedEventArgs e)
