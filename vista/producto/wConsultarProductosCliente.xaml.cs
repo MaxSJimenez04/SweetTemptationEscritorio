@@ -21,6 +21,9 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         // para buscar productos
         private List<ProductoVistaItem> _listaCompletaCache;
 
+        private decimal _precioUnitarioActual;
+        private int _stockMaximoActual;
+
         public wConsultarProductos()
         {
             InitializeComponent();
@@ -65,6 +68,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                             Descripcion = itemDTO.Descripcion,
                             Precio = itemDTO.Precio,
                             Disponible = itemDTO.Disponible,
+                            Unidades = itemDTO.Unidades,
 
                             // TODO - cambiar la categoria, hay que traerlo de la base de datos - ya esta en la api
                             CategoriaNombre = "Categoría " + itemDTO.categoria,
@@ -88,6 +92,8 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
+
+        // --BOTONES--
         private void BtnVerDetalle_Click(object sender, RoutedEventArgs e)
         {
             var boton = sender as Button;
@@ -95,17 +101,30 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             if (productoSeleccionado != null)
             {
+                // 1. Guardamos los datos importantes en las variables temporales
+                _precioUnitarioActual = productoSeleccionado.Precio;
+                _stockMaximoActual = productoSeleccionado.Unidades;
+
+                // 2. Llenamos la UI
                 TxtDetalleNombre.Text = productoSeleccionado.Nombre;
                 TxtDetalleDescripcion.Text = productoSeleccionado.Descripcion;
-                TxtDetallePrecioTotal.Text = productoSeleccionado.Precio.ToString("C"); // Formato moneda
+
+                // Inicializamos siempre en 1 al abrir
                 TxtCantidad.Text = "1";
 
-                // TODO - Aqui agregar la imagen
-                ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
+                // Calculamos el total inicial (1 * precio)
+                ActualizarTextoPrecioTotal(1);
 
-                // Aqui se muestra la tarjeta del producto
+                ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
                 OverlayDetalle.Visibility = Visibility.Visible;
             }
+        }
+
+        // Método auxiliar para actualizar el texto del precio total
+        private void ActualizarTextoPrecioTotal(int cantidad)
+        {
+            decimal total = cantidad * _precioUnitarioActual;
+            TxtDetallePrecioTotal.Text = total.ToString("C");
         }
 
         private void BtnCerrarModal_Click(object sender, RoutedEventArgs e)
@@ -155,10 +174,35 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
 
         // Para restar al producto
-        private void BtnMenos_Click(object sender, RoutedEventArgs e) {  }
-        
-        // Para agregar unidades al producto
-        private void BtnMas_Click(object sender, RoutedEventArgs e) { }
+        private void BtnMas_Click(object sender, RoutedEventArgs e)
+        {
+            int cantidadActual = int.Parse(TxtCantidad.Text);
+
+            // Validar stock
+            if (cantidadActual < _stockMaximoActual)
+            {
+                cantidadActual++;
+                TxtCantidad.Text = cantidadActual.ToString();
+                ActualizarTextoPrecioTotal(cantidadActual);
+            }
+            else
+            {
+                MessageBox.Show($"Solo hay {_stockMaximoActual} unidades disponibles de este producto.");
+            }
+        }
+
+        private void BtnMenos_Click(object sender, RoutedEventArgs e)
+        {
+            int cantidadActual = int.Parse(TxtCantidad.Text);
+
+            // Validar - no puede haber menos de 1
+            if (cantidadActual > 1)
+            {
+                cantidadActual--;
+                TxtCantidad.Text = cantidadActual.ToString();
+                ActualizarTextoPrecioTotal(cantidadActual);
+            }
+        }
 
         // Agregar el producto al pedido
         private void BtnAgregarAlPedido_Click(object sender, RoutedEventArgs e) {}
@@ -174,6 +218,10 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
         public string CategoriaNombre { get; set; }
+
+        // para la tarjeta de modal
+        public int Unidades { get; set; }
+
         public ImageSource ImagenProducto { get; set; }
         public bool EstaDisponible => Disponible;
         public string TextoDisponibilidad => Disponible ? "Disponible" : "Agotado";
