@@ -17,7 +17,7 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
         private void CargarNombreUsuario()
         {
             var nombre = App.Current.Properties["Nombre"]?.ToString() ?? "Cliente";
-            txtNombreUsuario.Text = $"{nombre}!";
+            //txtNombreUsuario.Text = $"{nombre}!";
         }
 
         private void BtnVerCatalogo_Click(object sender, RoutedEventArgs e)
