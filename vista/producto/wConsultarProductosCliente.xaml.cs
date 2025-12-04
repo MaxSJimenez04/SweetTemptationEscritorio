@@ -1,34 +1,46 @@
-﻿using sweet_temptation_clienteEscritorio.dto; 
+﻿using sweet_temptation_clienteEscritorio.dto;
 using sweet_temptation_clienteEscritorio.servicios;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wConsultarProductos : Page
     {
+        // servicios
         private ProductoService _servicioProducto;
-        private string _token;
-        public ObservableCollection<ProductoVistaItem> ListaProductos { get; set; }
+        private ProductoPedidoService _servicioProductoPedido; 
+        private PedidoService _servicioPedido;
+        private ArchivoService _servicioArchivo;
 
-        // para buscar productos
-        private List<ProductoVistaItem> _listaCompletaCache;
+        private string _token;
+        private int _idUsuario = 3;
 
         private decimal _precioUnitarioActual;
         private int _stockMaximoActual;
+        private int _idProductoActual; 
+
+        public ObservableCollection<ProductoVistaItem> ListaProductos { get; set; }
+        private List<ProductoVistaItem> _listaCompletaCache; // Para buscar productos
 
         public wConsultarProductos()
         {
             InitializeComponent();
 
             _servicioProducto = new ProductoService(new HttpClient());
+            _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
+            _servicioPedido = new PedidoService(new HttpClient());
+            _servicioArchivo = new ArchivoService(new HttpClient());
 
             if (App.Current.Properties.Contains("Token"))
             {
@@ -38,7 +50,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             ListaProductos = new ObservableCollection<ProductoVistaItem>();
             ItemsControlProductos.ItemsSource = ListaProductos;
 
-            // cargar productos
+            // Cargar datos al iniciar
             Loaded += async (s, e) =>
             {
                 await CargarCategoriasAsync();
@@ -48,11 +60,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private async Task CargarProductosAsync()
         {
-            if (string.IsNullOrEmpty(_token))
-            {
-                MessageBox.Show("No se ha detectado una sesión activa. Por favor inicie sesión.");
-                return;
-            }
+            if (string.IsNullOrEmpty(_token)) return;
 
             try
             {
@@ -73,58 +81,81 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                             Precio = itemDTO.Precio,
                             Disponible = itemDTO.Disponible,
                             Unidades = itemDTO.Unidades,
-                            IdCategoria = itemDTO.categoria,
+                            IdCategoria = itemDTO.Categoria,
+                            CategoriaNombre = "Categoría " + itemDTO.Categoria,
 
-                            // TODO - cambiar la categoria, hay que traerlo de la base de datos - ya esta en la api
-                            CategoriaNombre = "Categoría " + itemDTO.categoria,
-
-                            // TODO - la imagen esta en null, pero hay que cambiarlo
-                            ImagenProducto = null
+                            ImagenProducto = null 
                         };
 
                         ListaProductos.Add(prodVista);
                         _listaCompletaCache.Add(prodVista);
                     }
-                }
-                else
-                {
-                    MessageBox.Show($"No se pudieron cargar los productos: {respuesta.mensaje}");
+
+                    // para que no bloquee la interfaz mientras descarga
+                    _ = CargarImagenesAsync();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}");
+                MessageBox.Show($"Error al cargar productos: {ex.Message}");
+            }
+        }
+
+        private async Task CargarImagenesAsync()
+        {
+            var listaCopia = ListaProductos.ToList();
+
+            foreach (var item in listaCopia)
+            {
+                try
+                {
+                    var respuestaDetalles = await _servicioArchivo.ObtenerDetallesArchivoAsync(item.IdProducto, _token);
+
+                    if (respuestaDetalles.detalles != null && !string.IsNullOrEmpty(respuestaDetalles.detalles.ruta))
+                    {
+                        var respuestaImagen = await _servicioArchivo.ObtenerImagenAsync(respuestaDetalles.detalles.ruta, _token);
+
+                        if (respuestaImagen.imagen != null)
+                        {
+                            // para actualizar la interfaz
+                            // Dispatcher porque es una tarea asíncrona
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                item.ImagenProducto = respuestaImagen.imagen;
+                            });
+                        }
+                    }
+                }
+                catch
+                {
+                    // Si falla una imagen (ej. 404), la ignoramos y el producto se queda sin foto.
+                    // No mostramos MessageBox para no interrumpir al usuario.
+                }
             }
         }
 
         private async Task CargarCategoriasAsync()
         {
-            // Llamamos al método que agregamos al servicio en el paso anterior
             var respuesta = await _servicioProducto.ObtenerCategoriasAsync(_token);
 
             if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.categorias != null)
             {
                 var listaCategorias = new List<CategoriaDTO>();
 
-                // 1. Agregamos la opción "Todas" (ID 0)
-                // OJO: Usa minusculas (id, nombre) si así está en tu CategoriaDTO
                 listaCategorias.Add(new CategoriaDTO { id = 0, nombre = "Todas las Categorías" });
 
-                // 2. Agregamos las de la BD
                 listaCategorias.AddRange(respuesta.categorias);
 
-                // 3. Configuramos el ComboBox
                 CmbCategorias.ItemsSource = listaCategorias;
-                CmbCategorias.DisplayMemberPath = "nombre"; // Lo que se ve
-                CmbCategorias.SelectedValuePath = "id";     // El valor oculto
+                CmbCategorias.DisplayMemberPath = "nombre";
+                CmbCategorias.SelectedValuePath = "id";
 
-                // 4. Seleccionamos la primera
                 CmbCategorias.SelectedIndex = 0;
             }
         }
 
+        // Botones
 
-        // --BOTONES--
         private void BtnVerDetalle_Click(object sender, RoutedEventArgs e)
         {
             var boton = sender as Button;
@@ -132,18 +163,23 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             if (productoSeleccionado != null)
             {
-                // 1. Guardamos los datos importantes en las variables temporales
                 _precioUnitarioActual = productoSeleccionado.Precio;
                 _stockMaximoActual = productoSeleccionado.Unidades;
+                _idProductoActual = productoSeleccionado.IdProducto; 
 
-                // 2. Llenamos la UI
                 TxtDetalleNombre.Text = productoSeleccionado.Nombre;
                 TxtDetalleDescripcion.Text = productoSeleccionado.Descripcion;
 
-                // Inicializamos siempre en 1 al abrir
-                TxtCantidad.Text = "1";
+                if (productoSeleccionado.ImagenProducto != null)
+                {
+                    ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
+                }
+                else
+                {
+                    ImgDetalle.ImageSource = null; // O poner una imagen por defecto
+                }
 
-                // Calculamos el total inicial (1 * precio)
+                TxtCantidad.Text = "1";
                 ActualizarTextoPrecioTotal(1);
 
                 ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
@@ -151,7 +187,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // Método auxiliar para actualizar el texto del precio total
         private void ActualizarTextoPrecioTotal(int cantidad)
         {
             decimal total = cantidad * _precioUnitarioActual;
@@ -168,7 +203,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             OverlayDetalle.Visibility = Visibility.Collapsed;
         }
 
-        // Barra de busqueda
+        // Barra de búsqueda
         private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_listaCompletaCache == null) return;
@@ -191,82 +226,129 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (TxtBuscar.Text == "Buscar postre...")
-                TxtBuscar.Text = "";
+            if (TxtBuscar.Text == "Buscar postre...") TxtBuscar.Text = "";
         }
 
         private void TxtBuscar_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtBuscar.Text))
-                TxtBuscar.Text = "Buscar postre...";
+            if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar postre...";
         }
 
-        // TODO - Agregar funcionalidad
+        // Filtro Categoría
         private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Evitamos errores si aún no cargan los datos
             if (_listaCompletaCache == null || CmbCategorias.SelectedItem == null) return;
 
-            // Obtenemos la categoría seleccionada
             var categoriaSeleccionada = (CategoriaDTO)CmbCategorias.SelectedItem;
 
             if (categoriaSeleccionada.id == 0)
             {
-                // Si es "Todas", mostramos la lista completa
                 ItemsControlProductos.ItemsSource = _listaCompletaCache;
             }
             else
             {
-                // Filtramos comparando el ID de la categoría
                 var filtrados = _listaCompletaCache
                     .Where(p => p.IdCategoria == categoriaSeleccionada.id)
                     .ToList();
 
                 ItemsControlProductos.ItemsSource = filtrados;
             }
-
-            // Reiniciamos el buscador de texto para no confundir
             TxtBuscar.Text = "Buscar postre...";
         }
 
-        // Para restar al producto
         private void BtnMas_Click(object sender, RoutedEventArgs e)
         {
-            int cantidadActual = int.Parse(TxtCantidad.Text);
-
-            // Validar stock
-            if (cantidadActual < _stockMaximoActual)
+            if (int.TryParse(TxtCantidad.Text, out int cantidadActual))
             {
-                cantidadActual++;
-                TxtCantidad.Text = cantidadActual.ToString();
-                ActualizarTextoPrecioTotal(cantidadActual);
-            }
-            else
-            {
-                MessageBox.Show($"Solo hay {_stockMaximoActual} unidades disponibles de este producto.");
+                if (cantidadActual < _stockMaximoActual)
+                {
+                    cantidadActual++;
+                    TxtCantidad.Text = cantidadActual.ToString();
+                    ActualizarTextoPrecioTotal(cantidadActual);
+                }
+                else
+                {
+                    MessageBox.Show($"Solo hay {_stockMaximoActual} unidades disponibles de este producto.");
+                }
             }
         }
 
         private void BtnMenos_Click(object sender, RoutedEventArgs e)
         {
-            int cantidadActual = int.Parse(TxtCantidad.Text);
-
-            // Validar - no puede haber menos de 1
-            if (cantidadActual > 1)
+            if (int.TryParse(TxtCantidad.Text, out int cantidadActual))
             {
-                cantidadActual--;
-                TxtCantidad.Text = cantidadActual.ToString();
-                ActualizarTextoPrecioTotal(cantidadActual);
+                if (cantidadActual > 1)
+                {
+                    cantidadActual--;
+                    TxtCantidad.Text = cantidadActual.ToString();
+                    ActualizarTextoPrecioTotal(cantidadActual);
+                }
             }
         }
 
-        // Agregar el producto al pedido
-        private void BtnAgregarAlPedido_Click(object sender, RoutedEventArgs e) {}
+        private async void BtnAgregarAlPedido_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_token))
+            {
+                MessageBox.Show("Sesión no válida.");
+                return;
+            }
+
+            try
+            {
+                BtnAgregarConfirmar.IsEnabled = false;
+
+                int cantidad = int.Parse(TxtCantidad.Text);
+
+                var respuestaPedido = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+
+                if (respuestaPedido.pedidoActual == null)
+                {
+                    await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
+                    
+                    respuestaPedido = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                }
+
+                if (respuestaPedido.pedidoActual != null)
+                {
+                    int idPedidoActual = respuestaPedido.pedidoActual.id;
+
+                    var resultado = await _servicioProductoPedido.crearProductoAsync(
+                        idProducto: _idProductoActual,
+                        idPedido: idPedidoActual,
+                        cantidad: cantidad,
+                        token: _token
+                    );
+
+                    if (resultado.codigo == System.Net.HttpStatusCode.Created ||
+                        resultado.codigo == System.Net.HttpStatusCode.OK)
+                    {
+                        MessageBox.Show("¡Producto agregado al carrito exitosamente!");
+                        OverlayDetalle.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"No se pudo agregar: {resultado.mensaje}");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error: No se pudo generar un número de pedido.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error: " + ex.Message);
+            }
+            finally
+            {
+                BtnAgregarConfirmar.IsEnabled = true;
+            }
+        }
     }
 
-    // Ayuda para el modelo dto
-    // Para mostrar disponible y agotado
-    public class ProductoVistaItem
+    
+    public class ProductoVistaItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
         public string Nombre { get; set; }
@@ -274,14 +356,27 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
         public string CategoriaNombre { get; set; }
-
         public int IdCategoria { get; set; }
-
-        // para la tarjeta de modal
         public int Unidades { get; set; }
 
-        public ImageSource ImagenProducto { get; set; }
+        private ImageSource _imagenProducto;
+        public ImageSource ImagenProducto
+        {
+            get { return _imagenProducto; }
+            set
+            {
+                _imagenProducto = value;
+                OnPropertyChanged(); // actualiza la pantalla
+            }
+        }
+
         public bool EstaDisponible => Disponible;
         public string TextoDisponibilidad => Disponible ? "Disponible" : "Agotado";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }
