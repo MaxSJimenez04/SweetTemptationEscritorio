@@ -39,7 +39,11 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             ItemsControlProductos.ItemsSource = ListaProductos;
 
             // cargar productos
-            Loaded += async (s, e) => await CargarProductosAsync();
+            Loaded += async (s, e) =>
+            {
+                await CargarCategoriasAsync();
+                await CargarProductosAsync();
+            };
         }
 
         private async Task CargarProductosAsync()
@@ -69,6 +73,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                             Precio = itemDTO.Precio,
                             Disponible = itemDTO.Disponible,
                             Unidades = itemDTO.Unidades,
+                            IdCategoria = itemDTO.categoria,
 
                             // TODO - cambiar la categoria, hay que traerlo de la base de datos - ya esta en la api
                             CategoriaNombre = "Categoría " + itemDTO.categoria,
@@ -89,6 +94,32 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             catch (Exception ex)
             {
                 MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}");
+            }
+        }
+
+        private async Task CargarCategoriasAsync()
+        {
+            // Llamamos al método que agregamos al servicio en el paso anterior
+            var respuesta = await _servicioProducto.ObtenerCategoriasAsync(_token);
+
+            if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.categorias != null)
+            {
+                var listaCategorias = new List<CategoriaDTO>();
+
+                // 1. Agregamos la opción "Todas" (ID 0)
+                // OJO: Usa minusculas (id, nombre) si así está en tu CategoriaDTO
+                listaCategorias.Add(new CategoriaDTO { id = 0, nombre = "Todas las Categorías" });
+
+                // 2. Agregamos las de la BD
+                listaCategorias.AddRange(respuesta.categorias);
+
+                // 3. Configuramos el ComboBox
+                CmbCategorias.ItemsSource = listaCategorias;
+                CmbCategorias.DisplayMemberPath = "nombre"; // Lo que se ve
+                CmbCategorias.SelectedValuePath = "id";     // El valor oculto
+
+                // 4. Seleccionamos la primera
+                CmbCategorias.SelectedIndex = 0;
             }
         }
 
@@ -171,7 +202,32 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
 
         // TODO - Agregar funcionalidad
-        private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
+        private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Evitamos errores si aún no cargan los datos
+            if (_listaCompletaCache == null || CmbCategorias.SelectedItem == null) return;
+
+            // Obtenemos la categoría seleccionada
+            var categoriaSeleccionada = (CategoriaDTO)CmbCategorias.SelectedItem;
+
+            if (categoriaSeleccionada.id == 0)
+            {
+                // Si es "Todas", mostramos la lista completa
+                ItemsControlProductos.ItemsSource = _listaCompletaCache;
+            }
+            else
+            {
+                // Filtramos comparando el ID de la categoría
+                var filtrados = _listaCompletaCache
+                    .Where(p => p.IdCategoria == categoriaSeleccionada.id)
+                    .ToList();
+
+                ItemsControlProductos.ItemsSource = filtrados;
+            }
+
+            // Reiniciamos el buscador de texto para no confundir
+            TxtBuscar.Text = "Buscar postre...";
+        }
 
         // Para restar al producto
         private void BtnMas_Click(object sender, RoutedEventArgs e)
@@ -218,6 +274,8 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
         public string CategoriaNombre { get; set; }
+
+        public int IdCategoria { get; set; }
 
         // para la tarjeta de modal
         public int Unidades { get; set; }

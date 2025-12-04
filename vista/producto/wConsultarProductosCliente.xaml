@@ -102,7 +102,7 @@
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <fa:IconImage Icon="Store" Foreground="#F06292" Height="25" Margin="0,0,10,0"/>
-                    <TextBlock Text="Nuestros Postres" FontSize="26" FontWeight="Bold" Foreground="#333"/>
+                    <TextBlock Text="Elige nuestros postres" FontSize="26" FontWeight="Bold" Foreground="#333"/>
                 </StackPanel>
 
                 <Border Grid.Column="2" Width="300" Height="40" Background="White" CornerRadius="20" Margin="0,0,20,0" BorderBrush="#E0E0E0" BorderThickness="1">
@@ -117,7 +117,6 @@
                 </Border>
 
                 <ComboBox x:Name="CmbCategorias" Grid.Column="3" Width="220" Height="40" Style="{StaticResource RoundedComboBox}" Cursor="Hand" SelectionChanged="CmbCategorias_SelectionChanged">
-                    <ComboBoxItem Content="Todas las Categorías" IsSelected="True"/>
                 </ComboBox>
             </Grid>
 

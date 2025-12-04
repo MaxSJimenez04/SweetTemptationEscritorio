@@ -155,5 +155,34 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return (null, respuesta.StatusCode, mensaje);
             }
         }
+
+        // GET - Obtener todas las categorías para el ComboBox
+        // RUTA API: /categoria/todos
+        public async Task<(List<CategoriaDTO> categorias, HttpStatusCode codigo, string mensaje)> ObtenerCategoriasAsync(string token)
+        {
+            ConfigurarToken(token);
+
+            try
+            {
+                var respuesta = await _httpClient.GetAsync("categoria/todos");
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var lista = await respuesta.Content.ReadFromJsonAsync<List<CategoriaDTO>>();
+                    return (lista, respuesta.StatusCode, null);
+                }
+                else
+                {
+                    var mensaje = await respuesta.Content.ReadAsStringAsync();
+                    return (null, respuesta.StatusCode, mensaje);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, HttpStatusCode.ServiceUnavailable, ex.Message);
+            }
+        }
     }
+
+
 }
