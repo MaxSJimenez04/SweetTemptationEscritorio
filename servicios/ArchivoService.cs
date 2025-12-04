@@ -45,8 +45,13 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
         public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto, string token)
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var respuesta = await _httpClient.PostAsync($"archivo/asociar?idArchivo={idArchivo}&idProducto={idProducto}", null);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            // ← CORREGIDO: usar path variables
+            var respuesta = await _httpClient.PostAsync(
+                $"archivo/asociar/{idArchivo}/{idProducto}", null);
+
             if (respuesta.IsSuccessStatusCode)
             {
                 return (respuesta.StatusCode, null);
@@ -57,6 +62,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return (respuesta.StatusCode, mensaje);
             }
         }
+
 
         public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)> ObtenerDetallesArchivoAsync(int idProducto, string token)
         {

@@ -79,22 +79,24 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
         // POST - Crear un producto
         // RUTA API: /producto/nuevo
-        public async Task<(ProductoDTO productoCreado, HttpStatusCode codigo, string mensaje)> CrearProductoAsync(ProductoDTO nuevoProducto, string token)
+        public async Task<(int idProducto, HttpStatusCode codigo, string mensaje)> CrearProductoAsync(ProductoDTO producto, string token)
         {
-            ConfigurarToken(token);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
 
-            var respuesta = await _httpClient.PostAsJsonAsync("producto/nuevo", nuevoProducto);
+            var respuesta = await _httpClient.PostAsJsonAsync("producto/nuevo", producto);
 
-            if (respuesta.IsSuccessStatusCode)
+            if (!respuesta.IsSuccessStatusCode)
             {
-                return (null, respuesta.StatusCode, await respuesta.Content.ReadAsStringAsync());
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return (0, respuesta.StatusCode, mensaje);
             }
-            else
-            {
-                var mensaje = await respuesta.Content.ReadAsStringAsync();
-                return (null, respuesta.StatusCode, mensaje);
-            }
+
+            int id = await respuesta.Content.ReadFromJsonAsync<int>();
+
+            return (id, respuesta.StatusCode, "OK");
         }
+
 
         // PUT - Actualizar producto
         // RUTA API: /producto/{id}
