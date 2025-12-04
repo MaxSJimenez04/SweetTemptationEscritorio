@@ -1,6 +1,7 @@
 ﻿using sweet_temptation_clienteEscritorio.model;
 using sweet_temptation_clienteEscritorio.vista.cliente;
 using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -13,35 +14,28 @@ namespace sweet_temptation_clienteEscritorio.vista
             InitializeComponent();
             fmPrincipal.Navigate(new wPrincipalCliente());
         }
+        private void fmPrincipal_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
 
-        private void BtnClickInicio(object sender, RoutedEventArgs e)
-        {
-            if (fmPrincipal.CanGoBack)
-            {
+        }
+
+         private void BtnClickInicio(object sender, RoutedEventArgs e) {
+            if(fmPrincipal.CanGoBack) {
                 fmPrincipal.GoBack();
-            }
-            else
-            {
+            } else {
                 fmPrincipal.Navigate(new wPrincipalCliente());
             }
         }
-
-        private void BtnClickCerrarSesion(object sender, RoutedEventArgs e)
-        {
-            App.Current.Properties.Clear();
-            new wndLogin().Show();
-            this.Close();
-        }
-
-        private void BtnClickCarrito(object sender, RoutedEventArgs e)
-        {
+        private void btnClickCarrito(object sender, RoutedEventArgs e) {
             Pedido pedido = new Pedido();
             pedido.id = 0;
             fmPrincipal.NavigationService.Navigate(new wPedido(pedido));
         }
-
-        private void fmPrincipal_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
-
+        private void btnClickProductos(object sender, RoutedEventArgs e) {
+            if(fmPrincipal.NavigationService != null) {
+                fmPrincipal.NavigationService.Navigate(new wConsultarProductos());
+            }
         }
+
+
     }
 }
