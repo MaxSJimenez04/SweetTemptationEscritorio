@@ -3,125 +3,87 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="1280"
-      Title="Panel de Cliente">
+      mc:Ignorable="d"
+      Title="Panel de Cliente"
+      Background="White"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/">
 
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
-            <Style x:Key="BtnMenuCliente" TargetType="Button">
-                <Setter Property="Width" Value="240"/>
-                <Setter Property="Height" Value="55"/>
-                <Setter Property="Margin" Value="0,12"/>
-                <Setter Property="FontSize" Value="17"/>
-                <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#poppins"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="border"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    Effect="{StaticResource SombraSuave}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                  VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="RenderTransform">
-                                        <Setter.Value>
-                                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="#FFF7F7">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.3*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Viewbox
+    Stretch="Uniform">
+        <Grid Background="#FFFFFF" Height="993" Width="1920">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Lado Izquierdo - Bienvenida y Producto Destacado -->
-        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="60,0,40,0">
-            <TextBlock Text="¡Bienvenido," 
-                       FontFamily="pack://application:,,,/resources/fonts/#prata"
-                       FontSize="48" 
-                       Foreground="#FF70B5"/>
-            <TextBlock x:Name="txtNombreUsuario"
-                       Text="Usuario Cliente!"
-                       FontFamily="pack://application:,,,/resources/fonts/#prata"
-                       FontSize="40" 
-                       Foreground="#333333"
-                       Margin="0,0,0,40"/>
-            
-            <!-- Producto Destacado -->
-            <Border Background="White" 
-                    CornerRadius="20" 
-                    Padding="25"
-                    Effect="{StaticResource SombraSuave}"
-                    HorizontalAlignment="Left">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/resources/images/cupcake.png" 
-                           Width="180" Height="150"
-                           Stretch="Uniform"/>
-                    <StackPanel VerticalAlignment="Center" Margin="20,0,0,0">
-                        <TextBlock Text="Producto Destacado"
-                                   FontFamily="pack://application:,,,/resources/fonts/#poppins"
-                                   FontSize="14"
-                                   Foreground="#999999"/>
-                        <TextBlock Text="Cupcake Especial"
-                                   FontFamily="pack://application:,,,/resources/fonts/#prata"
-                                   FontSize="22"
-                                   Foreground="#FF70B5"
-                                   Margin="0,5,0,0"/>
-                        <TextBlock Text="Delicioso cupcake con"
-                                   FontFamily="pack://application:,,,/resources/fonts/#poppins"
-                                   FontSize="13"
-                                   Foreground="#666666"
-                                   Margin="0,10,0,0"/>
-                        <TextBlock Text="cobertura de fresa"
-                                   FontFamily="pack://application:,,,/resources/fonts/#poppins"
-                                   FontSize="13"
-                                   Foreground="#666666"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+            <!--Parte de abajo-->
+            <Grid
+                Grid.Row="0">
 
-        <!-- Lado Derecho - Botones de Navegación -->
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            
-            <Button x:Name="btnVerCatalogo" 
-                    Content="📋  Ver Catálogo"
-                    Style="{StaticResource BtnMenuCliente}"
-                    Background="#9B59B6"
-                    Click="BtnVerCatalogo_Click"/>
-            
-            <Button x:Name="btnVerPedidos" 
-                    Content="📦  Ver Pedidos"
-                    Style="{StaticResource BtnMenuCliente}"
-                    Background="#FF70B5"
-                    Click="BtnVerPedidos_Click"/>
-            
-            <Button x:Name="btnCarrito" 
-                    Content="🛒  Mi Carrito"
-                    Style="{StaticResource BtnMenuCliente}"
-                    Background="#E91E63"
-                    Click="BtnCarrito_Click"/>
-            
-        </StackPanel>
-    </Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="800"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid
+                    Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="UNA TENTACIÓN SEGURA"
+                        FontFamily="pack://application:,,,/resources/fonts/#Prata"
+                        FontSize="28"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Padding="20"/>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        FontFamily="pack://application:,,,/resources/fonts/#Prata"
+                        FontSize="85"
+                        TextWrapping="Wrap"
+                        TextAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" Width="682">
+                        
+                        <Run Text="Obten tu propia mordida de " Foreground="Black"/>
+                        <Run Text="dulzura" Foreground="#FF70B5"/>
+
+                    </TextBlock>
+                    <Button
+                        Grid.Row="2"
+                        Width="220"
+                        Height="65"
+                        FontSize="27"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource BtnRosaStyle}"
+                        Content="Ordena Ahora"
+                        Margin="40">
+
+                    </Button>
+
+                </Grid>
+
+                <Image 
+                    Grid.Column="1"
+                    Source="/resources/images/cupcake.png"
+                    HorizontalAlignment="Left"/>
+
+            </Grid>
+        </Grid>
+    </Viewbox>
 </Page>
 
