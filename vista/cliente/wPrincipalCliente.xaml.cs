@@ -36,6 +36,11 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
             MessageBox.Show("Mi Carrito - Próximamente", 
                 "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO
+        }
     }
 }
 

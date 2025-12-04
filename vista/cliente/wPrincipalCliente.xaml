@@ -71,7 +71,7 @@
                         VerticalAlignment="Top"
                         Style="{StaticResource BtnRosaStyle}"
                         Content="Ordena Ahora"
-                        Margin="40">
+                        Margin="40" Click="Button_Click">
 
                     </Button>
 
