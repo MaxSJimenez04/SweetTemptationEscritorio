@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista"
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
-WindowStyle="None"
+        WindowStyle="None"
         ResizeMode="NoResize"
         WindowState="Maximized"
         Title="wndMenuCliente" Height="1080" Width="1920">
@@ -19,7 +19,8 @@ WindowStyle="None"
         </ResourceDictionary>
     </Window.Resources>
 
-    <Viewbox>
+    <Viewbox
+    Stretch="Uniform">
         <Grid Background="#FFFFFF" Height="1080" Width="1920">
             <Grid.RowDefinitions>
                 <RowDefinition Height="87"/>
@@ -44,6 +45,7 @@ WindowStyle="None"
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="180"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Button          
                         Grid.Column="0"
                         x:Name="Home"
@@ -61,24 +63,30 @@ WindowStyle="None"
 
                     <Button 
                         Grid.Column="2"
-                        Content="Menú" 
-                        Style="{StaticResource BtnMenuStyle}"/>
+                        Content="Productos" 
+                        Style="{StaticResource BtnMenuStyle}"
+                        Click="btnClickProductos"/>
+
                     <Button 
                         Grid.Column="3"
                         Content="Conócenos" 
                         Style="{StaticResource BtnMenuStyle}"/>
+                    
                     <Button 
                         Grid.Column="4"
                         Content="Cotizar" 
                         Style="{StaticResource BtnMenuStyle}"/>
+                    
                     <Button 
                         Grid.Column="5"
                         Content="Mi Cuenta" 
                         Style="{StaticResource BtnMenuCuentaStyle}"/>
-
+                    
                     <Button 
                         Grid.Column="6"
-                        Style="{StaticResource BtnCarritoDeCompra}">
+                        Style="{StaticResource BtnCarritoDeCompra}"
+                        Click="btnClickCarrito">
+                        
                         <svgc:SvgViewbox 
                             Source="/resources/icons/icon_carrito.svg"
                             Width="28"
@@ -86,75 +94,17 @@ WindowStyle="None"
                             Stretch="Uniform"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
-                            
                             />
                     </Button>
 
                 </Grid>
             </Border>
 
-            <!--Parte de abajo-->
             <Grid
                 Grid.Row="1">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="800"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid
-                    Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-
-                    <TextBlock
-                        Grid.Row="0"
-                        Text="UNA TENTACIÓN SEGURA"
-                        FontFamily="pack://application:,,,/resources/fonts/#Prata"
-                        FontSize="28"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Bottom"
-                        Padding="20"/>
-
-                    <TextBlock
-                        Grid.Row="1"
-                        FontFamily="pack://application:,,,/resources/fonts/#Prata"
-                        FontSize="85"
-                        TextWrapping="Wrap"
-                        TextAlignment="Center"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" Width="682">
-                        
-                        <Run Text="Obten tu propia mordida de " Foreground="Black"/>
-                        <Run Text="dulzura" Foreground="#FF70B5"/>
-
-                    </TextBlock>
-                    <Button
-                        Grid.Row="2"
-                        Width="220"
-                        Height="65"
-                        FontSize="27"
-                        VerticalAlignment="Top"
-                        Style="{StaticResource BtnRosaStyle}"
-                        Content="Ordena Ahora"
-                        Margin="40">
-
-                    </Button>
-
-                </Grid>
-
-                <Image 
-                    Grid.Column="1"
-                    Source="/resources/images/cupcake.png"
-                    HorizontalAlignment="Left"/>
-
+                <Frame Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" />
+                
             </Grid>
-
-            <Frame Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" Margin="10,44,-10,44" Grid.RowSpan="2" />
         </Grid>
     </Viewbox>
 </Window>
