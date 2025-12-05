@@ -1,4 +1,6 @@
 using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.producto;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -20,8 +22,12 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
 
         private void BtnGestionarProductos_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Gestionar Productos - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado; 
+
+            if (ventana != null)
+            {
+                ventana.fmPrincipal.Navigate(new sweet_temptation_clienteEscritorio.vista.producto.wAdministrarProductos());
+            }
         }
 
         private void BtnGestionarPedidos_Click(object sender, RoutedEventArgs e)
