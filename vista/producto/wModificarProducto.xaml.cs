@@ -15,17 +15,14 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wModificarProducto : Page
     {
-        // Evento para notificar a la lista que hubo cambios
         public event Action<int> ProductoActualizado;
 
         private ProductoVistaAdminItem _productoOriginal;
-        private byte[] _imagenOriginal; // Se mantiene solo para cargar la imagen inicial
+        private byte[] _imagenOriginal; 
 
-        // ELIMINADAS: _nuevaImagenBytes y _extensionNuevaImagen
 
         private bool _isEditing = false;
 
-        // URLs de la API
         private static readonly string API_PRODUCTOS = "http://localhost:8080/producto";
         private static readonly string API_ARCHIVO = "http://localhost:8080/archivo";
         private static readonly string API_CATEGORIAS = "http://localhost:8080/categoria/todos";
@@ -51,9 +48,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             SetEditMode(false);
         }
 
-        // ============================================================
-        // 1. CARGAR DATOS TEXTUALES
-        // ============================================================
         private void CargarDatosProductoEnPantalla()
         {
             txtNombreProducto.Text = _productoOriginal.Nombre;
@@ -62,13 +56,9 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             txtUnidades.Text = _productoOriginal.Unidades.ToString();
             txtFechaRegistro.Text = _productoOriginal.FechaRegistro?.ToString("dd/MM/yyyy HH:mm");
 
-            // 0 = Disponible, 1 = Agotado/No Disponible
             cmbDisponible.SelectedIndex = _productoOriginal.Disponible ? 0 : 1;
         }
 
-        // ============================================================
-        // 2. CARGAR CATEGORÍAS
-        // ============================================================
         private async Task CargarCategoriasAsync()
         {
             try
@@ -97,9 +87,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // 3. CARGAR IMAGEN ACTUAL (Lógica Robusta)
-        // ============================================================
         private async Task CargarImagenProductoDesdeAPI()
         {
             try
@@ -108,7 +95,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 client.DefaultRequestHeaders.Authorization =
                   new AuthenticationHeaderValue("Bearer", _token);
 
-                // A) Obtener ruta/ID del archivo
                 string urlDetalles = $"{API_ARCHIVO}/detalle?idProducto={_productoOriginal.IdProducto}";
                 var respDetalles = await client.GetAsync(urlDetalles);
 
@@ -127,15 +113,12 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     return;
                 }
 
-                // B) Limpiar la ruta para obtener solo el ID y construir URL
-                // Esta lógica arregla rutas tipo "/archivo/123" o "123"
                 string idArchivo = detalles.ruta;
                 if (idArchivo.Contains("/")) idArchivo = idArchivo.Substring(idArchivo.LastIndexOf('/') + 1);
                 if (idArchivo.Contains("\\")) idArchivo = idArchivo.Substring(idArchivo.LastIndexOf('\\') + 1);
 
                 string urlImagen = $"{API_ARCHIVO}/{idArchivo}";
 
-                // C) Descargar la imagen
                 var respArchivo = await client.GetAsync(urlImagen);
 
                 if (!respArchivo.IsSuccessStatusCode)
@@ -173,9 +156,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             return img;
         }
 
-        // ============================================================
-        // 4. MODO EDICIÓN
-        // ============================================================
         private void SetEditMode(bool isEditing)
         {
             _isEditing = isEditing;
@@ -187,16 +167,10 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             cmbCategoria.IsEnabled = isEditing;
             cmbDisponible.IsEnabled = isEditing;
-            // ELIMINADA: La referencia a btnCargarImagen
 
             btnAccion.Content = isEditing ? "Guardar Cambios" : "Modificar";
         }
 
-        // ELIMINADO: Método 5. SELECCIONAR NUEVA IMAGEN (btnCargarImagen_Click)
-
-        // ============================================================
-        // 6. BOTÓN PRINCIPAL
-        // ============================================================
         private void btnAccion_Click(object sender, RoutedEventArgs e)
         {
             if (!_isEditing)
@@ -205,9 +179,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 GuardarCambiosProducto();
         }
 
-        // ============================================================
-        // 7. VALIDACIONES
-        // ============================================================
         private bool ValidarCampos(out decimal precio, out int unidades)
         {
             precio = 0; unidades = 0;
@@ -218,7 +189,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (!int.TryParse(txtUnidades.Text, out unidades) || unidades < 0) return Msg("Unidades inválidas.");
             if (cmbCategoria.SelectedValue == null) return Msg("Seleccione categoría.");
 
-            // VALIDACIÓN AJUSTADA: Solo verifica si _imagenOriginal está presente (la imagen inicial)
             if (_imagenOriginal == null)
                 return Msg("El producto debe tener una imagen previa cargada.");
 
@@ -227,9 +197,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private bool Msg(string m) { MessageBox.Show(m); return false; }
 
-        // ============================================================
-        // 8. GUARDAR CAMBIOS (PUT - SOLO DATOS TEXTUALES)
-        // ============================================================
         private async void GuardarCambiosProducto()
         {
             if (!ValidarCampos(out decimal nuevoPrecio, out int nuevasUnidades)) return;
@@ -253,7 +220,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 var json = JsonConvert.SerializeObject(productoActualizado);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Solo enviamos el PUT de los datos textuales
                 var response = await client.PutAsync($"{API_PRODUCTOS}/{_productoOriginal.IdProducto}", content);
 
                 if (!response.IsSuccessStatusCode)
@@ -262,11 +228,9 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     return;
                 }
 
-                // ELIMINADA: La llamada a GuardarYAsociarNuevaImagen
 
                 MessageBox.Show("Producto modificado correctamente.");
 
-                // Notificamos para recargar la lista
                 ProductoActualizado?.Invoke(_productoOriginal.IdProducto);
 
                 SetEditMode(false);
@@ -277,11 +241,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ELIMINADO: Método GuardarYAsociarNuevaImagen
-
-        // ============================================================
-        // 10. CANCELAR / VOLVER
-        // ============================================================
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             if (_isEditing)
@@ -292,13 +251,11 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 else
                     imgProducto.Source = null;
 
-                // ELIMINADA: La limpieza de _nuevaImagenBytes
 
                 SetEditMode(false);
             }
             else
             {
-                // Volver atrás (depende de tu navegación)
                 if (NavigationService.CanGoBack)
                     NavigationService.GoBack();
             }

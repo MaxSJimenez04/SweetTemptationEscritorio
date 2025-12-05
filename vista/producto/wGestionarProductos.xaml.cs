@@ -15,14 +15,11 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wAdministrarProductos : Page
     {
-        // Servicios (Ya no necesitamos ArchivoService aquí)
         private ProductoService _servicioProducto;
         private string _token;
 
-        // Lista principal enlazada al DataGrid
         public ObservableCollection<ProductoVistaAdminItem> ListaProductos { get; set; }
 
-        // Cache para filtros rápidos
         private List<ProductoVistaAdminItem> _listaCompletaCache;
 
         public wAdministrarProductos()
@@ -38,17 +35,12 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             ListaProductos = new ObservableCollection<ProductoVistaAdminItem>();
             DataGridProductos.ItemsSource = ListaProductos;
 
-            // Recargar datos al entrar a la página
             Loaded += async (s, e) =>
             {
                 await CargarCategoriasAsync();
                 await CargarProductosAsync();
             };
         }
-
-        // ============================================================
-        // CARGAR PRODUCTOS (Solo Texto - Súper Rápido)
-        // ============================================================
         private async Task CargarProductosAsync()
         {
             if (string.IsNullOrEmpty(_token))
@@ -94,10 +86,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
         }
-
-        // ============================================================
-        // CARGAR CATEGORÍAS (Para el filtro)
-        // ============================================================
         private async Task CargarCategoriasAsync()
         {
             try
@@ -125,9 +113,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // FILTROS (Buscador y Combo)
-        // ============================================================
         private void FiltrarProductos()
         {
             if (_listaCompletaCache == null) return;
@@ -171,9 +156,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar producto...";
         }
 
-        // ============================================================
-        // BOTÓN MODIFICAR (Abre la otra ventana que SÍ carga imagen)
-        // ============================================================
         private void BtnModificar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -184,14 +166,12 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             var ventana = Window.GetWindow(this) as wndMenuEmpleado;
             if (ventana != null)
             {
-                // Pasamos el producto seleccionado a la ventana de edición
                 var pagina = new wModificarProducto(producto);
                 pagina.ProductoActualizado += OnProductoActualizado;
                 ventana.fmPrincipal.Navigate(pagina);
             }
         }
 
-        // Se ejecuta al regresar de la edición para actualizar la tabla
         private async void OnProductoActualizado(int idProducto)
         {
             try
@@ -206,7 +186,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
                 if (prod != null)
                 {
-                    // Actualizamos solo los datos visuales de la tabla
                     prod.Nombre = dto.Nombre;
                     prod.Descripcion = dto.Descripcion;
                     prod.Precio = dto.Precio;
@@ -214,7 +193,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     prod.Disponible = dto.Disponible;
                     prod.IdCategoria = dto.Categoria;
 
-                    // Notificar a la UI (INotifyPropertyChanged)
                     prod.RefrescarPropiedades();
                 }
                 FiltrarProductos();
@@ -267,7 +245,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
     }
 
-    // Modelo ligero para la tabla (SIN IMAGEN)
     public class ProductoVistaAdminItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
@@ -283,7 +260,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Método auxiliar para refrescar todo de golpe
         public void RefrescarPropiedades()
         {
             OnPropertyChanged(nameof(Nombre));

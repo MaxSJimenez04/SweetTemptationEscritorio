@@ -20,14 +20,8 @@ namespace sweet_temptation_clienteEscritorio.servicios
         {
             _httpClient = httpClient;
 
-            // Ejemplo: http://localhost:8080/
             _httpClient.BaseAddress = new Uri(Constantes.URL);
         }
-
-
-        // ===========================================
-        //    OBTENER DETALLES DEL ARCHIVO (RUTA)
-        // ===========================================
 
         public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)>
       ObtenerDetallesArchivoAsync(int idProducto, string token)
@@ -61,11 +55,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-
-        // ===========================================
-        //       OBTENER LA IMAGEN (BYTES → PNG)
-        // ===========================================
-
         public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)>
       ObtenerImagenAsync(string ruta, string token)
         {
@@ -77,10 +66,8 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 _httpClient.DefaultRequestHeaders.Authorization =
                   new AuthenticationHeaderValue("Bearer", token);
 
-                // 1. URL Base limpia (http://localhost:8080)
                 string baseUrl = Constantes.URL.TrimEnd('/');
 
-                // 2. ESTRATEGIA DE EXTRACCIÓN DE ID
                 string idArchivo = ruta;
 
                 if (idArchivo.Contains("/"))
@@ -89,14 +76,11 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 if (idArchivo.Contains("\\"))
                     idArchivo = idArchivo.Substring(idArchivo.LastIndexOf('\\') + 1);
 
-                // Limpieza extra por si quedaron espacios
                 idArchivo = idArchivo.Trim();
 
-                // 3. Construimos la URL correcta: http://localhost:8080/archivo/123
                 string urlFinal = $"{baseUrl}/archivo/{idArchivo}";
 
-                // DEBUG: Para que veas en la consola qué está pasando
-                Console.WriteLine($"🔍 Ruta BD: '{ruta}' -> ID extraído: '{idArchivo}' -> URL: {urlFinal}");
+                Console.WriteLine($" Ruta BD: '{ruta}' -> ID extraído: '{idArchivo}' -> URL: {urlFinal}");
 
                 var respuesta = await _httpClient.GetAsync(urlFinal);
 
@@ -105,7 +89,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
                     return (null, respuesta.StatusCode, "No se encontró la imagen en el servidor");
                 }
 
-                // 4. Procesar la imagen (JSON o Bytes)
+                // Para procesar la imagen (JSON o Bytes)
                 byte[] datosImagen = null;
                 string contentType = respuesta.Content.Headers.ContentType?.MediaType ?? "";
 
@@ -139,10 +123,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-
-        // ===========================================
-        //        Convertir bytes → BitmapImage
-        // ===========================================
         private BitmapImage ConvertirImagen(byte[] datos)
         {
             if (datos == null || datos.Length == 0)
@@ -156,16 +136,12 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 imagen.CacheOption = BitmapCacheOption.OnLoad;
                 imagen.StreamSource = ms;
                 imagen.EndInit();
-                imagen.Freeze(); // ⚠ NECESARIO PARA WPF
+                imagen.Freeze();
             }
 
             return imagen;
         }
 
-
-        // ===========================================
-        //           SUBIR ARCHIVO (si lo usas)
-        // ===========================================
         public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)>
       GuardarArchivoAsync(ArchivoDTO archivo, string token)
         {
@@ -191,19 +167,15 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        // ===========================================
-        //    ASOCIAR ARCHIVO (CORREGIDO A PUT)
-        // ===========================================
         public async Task<(HttpStatusCode codigo, string mensaje)>
       AsociarArchivoAsync(int idArchivo, int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
               new AuthenticationHeaderValue("Bearer", token);
 
-            // 🛑 CORRECCIÓN APLICADA: De PostAsync a PutAsync
             var respuesta = await _httpClient.PutAsync(
-        $"archivo/asociar/{idArchivo}/{idProducto}",
-        null // El cuerpo de PUT está vacío (null)
+            $"archivo/asociar/{idArchivo}/{idProducto}",
+            null 
             );
 
             if (respuesta.IsSuccessStatusCode)
