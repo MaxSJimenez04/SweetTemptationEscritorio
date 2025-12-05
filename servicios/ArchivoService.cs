@@ -20,15 +20,10 @@ namespace sweet_temptation_clienteEscritorio.servicios
         {
             _httpClient = httpClient;
 
-            // BaseAddress SI debe terminar con /
             // Ejemplo: http://localhost:8080/api/
             _httpClient.BaseAddress = new Uri(Constantes.URL);
         }
 
-
-        // =====================================================================
-        //    GUARDAR ARCHIVO
-        // =====================================================================
         public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)> GuardarArchivoAsync(ArchivoDTO archivo, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -37,7 +32,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
             var json = System.Text.Json.JsonSerializer.Serialize(archivo);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // ✔ CORREGIDO (nada de "/" al inicio o final)
             var respuesta = await _httpClient.PostAsync("archivo", content);
 
             if (!respuesta.IsSuccessStatusCode)
@@ -55,9 +49,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        // =====================================================================
-        //    ASOCIAR ARCHIVO A PRODUCTO
-        // =====================================================================
         public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -77,17 +68,14 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        // =====================================================================
-        //    OBTENER DETALLES DE ARCHIVO
-        // =====================================================================
         public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)>
             ObtenerDetallesArchivoAsync(int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            // ✔ CORREGIDO
-            var respuesta = await _httpClient.GetAsync($"archivo?idProducto={idProducto}");
+            var respuesta = await _httpClient.GetAsync($"archivo/?idProducto={idProducto}");
+
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -99,10 +87,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
             return (null, respuesta.StatusCode, mensaje);
         }
 
-
-        // =====================================================================
-        //    OBTENER IMAGEN
-        // =====================================================================
         public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)> ObtenerImagenAsync(string ruta, string token)
         {
             if (ruta == null)
@@ -111,7 +95,17 @@ namespace sweet_temptation_clienteEscritorio.servicios
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            var respuesta = await _httpClient.GetAsync(ruta);
+            HttpResponseMessage respuesta;
+
+            if (ruta.StartsWith("http://") || ruta.StartsWith("https://"))
+            {
+                var http = new HttpClient();
+                respuesta = await http.GetAsync(ruta);
+            }
+            else
+            {
+                respuesta = await _httpClient.GetAsync(ruta);
+            }
 
             if (!respuesta.IsSuccessStatusCode)
             {
@@ -130,9 +124,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        // =====================================================================
-        //    CONVERTIR BYTE[] → IMAGEN
-        // =====================================================================
         private BitmapImage ConvertirImagen(byte[] datos)
         {
             if (datos == null || datos.Length == 0)

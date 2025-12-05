@@ -293,6 +293,24 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 return;
             }
 
+            // Validacion para ver si esta disponible el producto
+            var producto = _listaCompletaCache.FirstOrDefault(p => p.IdProducto == _idProductoActual);
+
+            if (producto == null)
+            {
+                MessageBox.Show("No se pudo encontrar la información del producto.");
+                return;
+            }
+
+            if (!producto.Disponible)
+            {
+                MessageBox.Show("Este producto está agotado y no se puede agregar al pedido.",
+                                "Producto no disponible",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 BtnAgregarConfirmar.IsEnabled = false;
@@ -304,7 +322,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 if (respuestaPedido.pedidoActual == null)
                 {
                     await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
-                    
                     respuestaPedido = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
                 }
 
@@ -343,10 +360,12 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             {
                 BtnAgregarConfirmar.IsEnabled = true;
             }
+        
         }
+
     }
 
-    
+
     public class ProductoVistaItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }

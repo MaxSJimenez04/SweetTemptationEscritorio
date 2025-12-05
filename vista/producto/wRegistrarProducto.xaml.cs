@@ -38,9 +38,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             this.Loaded += async (s, e) => await CargarCategoriasAsync();
         }
 
-        // ============================================================
-        // CARGAR CATEGORÍAS
-        // ============================================================
         private async Task CargarCategoriasAsync()
         {
             var resp = await _productoService.ObtenerCategoriasAsync(_token);
@@ -56,9 +53,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             cmbCategoria.SelectedValuePath = "id";
         }
 
-        // ============================================================
-        // CARGAR IMAGEN
-        // ============================================================
         private void btnCargarImagen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new();
@@ -79,9 +73,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // VALIDACIONES
-        // ============================================================
         private bool ValidarCampos(out decimal precio, out int unidades)
         {
             precio = 0; unidades = 0;
@@ -113,9 +104,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             return false;
         }
 
-        // ============================================================
-        // REGISTRAR PRODUCTO
-        // ============================================================
         private async void btnRegistrar_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidarCampos(out decimal precio, out int unidades))
@@ -154,7 +142,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             int idProducto = resp.idProducto;
 
-            // GUARDAR ARCHIVO
+            // guardar archivo
             var archivo = new ArchivoDTO
             {
                 extension = extension,
@@ -172,7 +160,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             int idArchivo = respArchivo.idArchivo;
 
-            // ASOCIAR ARCHIVO
             var respAsociar = await _archivoService.AsociarArchivoAsync(idArchivo, idProducto, _token);
 
             if (respAsociar.codigo != HttpStatusCode.OK &&
