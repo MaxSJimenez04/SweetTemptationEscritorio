@@ -20,111 +20,130 @@ namespace sweet_temptation_clienteEscritorio.servicios
         {
             _httpClient = httpClient;
 
-            // Ejemplo: http://localhost:8080/api/
-            _httpClient.BaseAddress = new Uri(Constantes.URL);
-        }
-
-        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)> GuardarArchivoAsync(ArchivoDTO archivo, string token)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            var json = System.Text.Json.JsonSerializer.Serialize(archivo);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var respuesta = await _httpClient.PostAsync("archivo", content);
-
-            if (!respuesta.IsSuccessStatusCode)
-            {
-                string msg = await respuesta.Content.ReadAsStringAsync();
-                return (0, respuesta.StatusCode, msg);
-            }
-
-            string texto = await respuesta.Content.ReadAsStringAsync();
-
-            if (int.TryParse(texto, out int idArchivo))
-                return (idArchivo, respuesta.StatusCode, null);
-
-            return (0, respuesta.StatusCode, "Respuesta inesperada: " + texto);
+            // Ejemplo: http://localhost:8080/
+            _httpClient.BaseAddress = new Uri(Constantes.URL);
         }
 
 
-        public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto, string token)
+        // ===========================================
+        //    OBTENER DETALLES DEL ARCHIVO (RUTA)
+        // ===========================================
+
+        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)>
+      ObtenerDetallesArchivoAsync(int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+              new AuthenticationHeaderValue("Bearer", token);
 
-            // ✔ CORREGIDO (sin slash inicial)
-            var respuesta = await _httpClient.PostAsync(
-                $"archivo/asociar/{idArchivo}/{idProducto}",
-                null
-            );
+            string endpoint = $"archivo/detalle?idProducto={idProducto}";
 
-            if (respuesta.IsSuccessStatusCode)
-                return (respuesta.StatusCode, null);
+            Console.WriteLine("➡ Llamando a: " + _httpClient.BaseAddress + endpoint);
 
-            string mensaje = await respuesta.Content.ReadAsStringAsync();
-            return (respuesta.StatusCode, mensaje);
-        }
-
-
-        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)>
-            ObtenerDetallesArchivoAsync(int idProducto, string token)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            var respuesta = await _httpClient.GetAsync($"archivo/?idProducto={idProducto}");
-
-
-            if (respuesta.IsSuccessStatusCode)
+            try
             {
-                var detalles = await respuesta.Content.ReadFromJsonAsync<DetallesArchivoDTO>();
-                return (detalles, respuesta.StatusCode, null);
-            }
+                var respuesta = await _httpClient.GetAsync(endpoint);
 
-            string mensaje = await respuesta.Content.ReadAsStringAsync();
-            return (null, respuesta.StatusCode, mensaje);
-        }
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var detalles = await respuesta.Content.ReadFromJsonAsync<DetallesArchivoDTO>();
+                    Console.WriteLine("✔ Datos recibidos. Ruta/ID: " + detalles?.ruta);
+                    return (detalles, respuesta.StatusCode, null);
+                }
 
-        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)> ObtenerImagenAsync(string ruta, string token)
-        {
-            if (ruta == null)
-                return (null, HttpStatusCode.BadRequest, "Ruta nula");
-
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            HttpResponseMessage respuesta;
-
-            if (ruta.StartsWith("http://") || ruta.StartsWith("https://"))
-            {
-                var http = new HttpClient();
-                respuesta = await http.GetAsync(ruta);
-            }
-            else
-            {
-                respuesta = await _httpClient.GetAsync(ruta);
-            }
-
-            if (!respuesta.IsSuccessStatusCode)
-            {
                 string mensaje = await respuesta.Content.ReadAsStringAsync();
+                Console.WriteLine($"❌ Error obteniendo detalles: {respuesta.StatusCode}");
                 return (null, respuesta.StatusCode, mensaje);
             }
-
-            var archivo = await respuesta.Content.ReadFromJsonAsync<ArchivoDTO>();
-
-            BitmapImage imagen = ConvertirImagen(archivo.datos);
-
-            if (imagen == null)
-                return (null, respuesta.StatusCode, "Error convirtiendo imagen");
-
-            return (imagen, respuesta.StatusCode, null);
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Excepción: " + ex.Message);
+                return (null, HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
 
-        private BitmapImage ConvertirImagen(byte[] datos)
+        // ===========================================
+        //       OBTENER LA IMAGEN (BYTES → PNG)
+        // ===========================================
+
+        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)>
+      ObtenerImagenAsync(string ruta, string token)
+        {
+            if (string.IsNullOrWhiteSpace(ruta))
+                return (null, HttpStatusCode.BadRequest, "Ruta vacía");
+
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                  new AuthenticationHeaderValue("Bearer", token);
+
+                // 1. URL Base limpia (http://localhost:8080)
+                string baseUrl = Constantes.URL.TrimEnd('/');
+
+                // 2. ESTRATEGIA DE EXTRACCIÓN DE ID
+                string idArchivo = ruta;
+
+                if (idArchivo.Contains("/"))
+                    idArchivo = idArchivo.Substring(idArchivo.LastIndexOf('/') + 1);
+
+                if (idArchivo.Contains("\\"))
+                    idArchivo = idArchivo.Substring(idArchivo.LastIndexOf('\\') + 1);
+
+                // Limpieza extra por si quedaron espacios
+                idArchivo = idArchivo.Trim();
+
+                // 3. Construimos la URL correcta: http://localhost:8080/archivo/123
+                string urlFinal = $"{baseUrl}/archivo/{idArchivo}";
+
+                // DEBUG: Para que veas en la consola qué está pasando
+                Console.WriteLine($"🔍 Ruta BD: '{ruta}' -> ID extraído: '{idArchivo}' -> URL: {urlFinal}");
+
+                var respuesta = await _httpClient.GetAsync(urlFinal);
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    return (null, respuesta.StatusCode, "No se encontró la imagen en el servidor");
+                }
+
+                // 4. Procesar la imagen (JSON o Bytes)
+                byte[] datosImagen = null;
+                string contentType = respuesta.Content.Headers.ContentType?.MediaType ?? "";
+
+                if (contentType.Contains("json"))
+                {
+                    try
+                    {
+                        var archivoDto = await respuesta.Content.ReadFromJsonAsync<ArchivoDTO>();
+                        datosImagen = archivoDto?.datos;
+                    }
+                    catch { }
+                }
+
+                if (datosImagen == null || datosImagen.Length == 0)
+                {
+                    datosImagen = await respuesta.Content.ReadAsByteArrayAsync();
+                }
+
+                if (datosImagen != null && datosImagen.Length > 0)
+                {
+                    var bitmap = ConvertirImagen(datosImagen);
+                    return (bitmap, HttpStatusCode.OK, "Ok");
+                }
+
+                return (null, HttpStatusCode.NoContent, "Archivo sin datos");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return (null, HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+        // ===========================================
+        //        Convertir bytes → BitmapImage
+        // ===========================================
+        private BitmapImage ConvertirImagen(byte[] datos)
         {
             if (datos == null || datos.Length == 0)
                 return null;
@@ -137,10 +156,62 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 imagen.CacheOption = BitmapCacheOption.OnLoad;
                 imagen.StreamSource = ms;
                 imagen.EndInit();
-                imagen.Freeze();
-            }
+                imagen.Freeze(); // ⚠ NECESARIO PARA WPF
+            }
 
             return imagen;
         }
+
+
+        // ===========================================
+        //           SUBIR ARCHIVO (si lo usas)
+        // ===========================================
+        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)>
+      GuardarArchivoAsync(ArchivoDTO archivo, string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+              new AuthenticationHeaderValue("Bearer", token);
+
+            string json = System.Text.Json.JsonSerializer.Serialize(archivo);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var respuesta = await _httpClient.PostAsync("archivo", content);
+
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                return (0, respuesta.StatusCode, await respuesta.Content.ReadAsStringAsync());
+            }
+
+            string texto = await respuesta.Content.ReadAsStringAsync();
+
+            if (int.TryParse(texto, out int idArchivo))
+                return (idArchivo, respuesta.StatusCode, null);
+
+            return (0, respuesta.StatusCode, "Respuesta inesperada: " + texto);
+        }
+
+
+        // ===========================================
+        //    ASOCIAR ARCHIVO (CORREGIDO A PUT)
+        // ===========================================
+        public async Task<(HttpStatusCode codigo, string mensaje)>
+      AsociarArchivoAsync(int idArchivo, int idProducto, string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+              new AuthenticationHeaderValue("Bearer", token);
+
+            // 🛑 CORRECCIÓN APLICADA: De PostAsync a PutAsync
+            var respuesta = await _httpClient.PutAsync(
+        $"archivo/asociar/{idArchivo}/{idProducto}",
+        null // El cuerpo de PUT está vacío (null)
+            );
+
+            if (respuesta.IsSuccessStatusCode)
+                return (respuesta.StatusCode, null);
+
+            string mensaje = await respuesta.Content.ReadAsStringAsync();
+            return (respuesta.StatusCode, mensaje);
+        }
+
     }
 }
