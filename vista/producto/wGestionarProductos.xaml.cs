@@ -10,30 +10,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wAdministrarProductos : Page
     {
-        // Servicios
         private ProductoService _servicioProducto;
-        private ArchivoService _servicioArchivo;
-
         private string _token;
 
-        // Lista principal enlazada al DataGrid
         public ObservableCollection<ProductoVistaAdminItem> ListaProductos { get; set; }
 
-        // Cache para filtros
         private List<ProductoVistaAdminItem> _listaCompletaCache;
 
         public wAdministrarProductos()
         {
             InitializeComponent();
 
-            _servicioProducto = new ProductoService(new HttpClient());
-            _servicioArchivo = new ArchivoService(new HttpClient());
+            var http = new HttpClient();
+            _servicioProducto = new ProductoService(http);
 
             if (App.Current.Properties.Contains("Token"))
                 _token = (string?)App.Current.Properties["Token"];
@@ -47,7 +41,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 await CargarProductosAsync();
             };
         }
-
         private async Task CargarProductosAsync()
         {
             if (string.IsNullOrEmpty(_token))
@@ -93,7 +86,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
         }
-
         private async Task CargarCategoriasAsync()
         {
             try
@@ -104,7 +96,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 {
                     var lista = new List<CategoriaDTO>
                     {
-                        new CategoriaDTO { id = 0, nombre = "Categorías" }
+                        new CategoriaDTO { id = 0, nombre = "Todas las Categorías" }
                     };
 
                     lista.AddRange(respuesta.categorias);
@@ -151,39 +143,31 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e) => FiltrarProductos();
 
+        private void CmbCategoriasFiltro_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            => FiltrarProductos();
+
         private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (TxtBuscar.Text == "Buscar producto...")
-                TxtBuscar.Text = "";
+            if (TxtBuscar.Text == "Buscar producto...") TxtBuscar.Text = "";
         }
 
         private void TxtBuscar_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtBuscar.Text))
-                TxtBuscar.Text = "Buscar producto...";
+            if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar producto...";
         }
-
-        private void CmbCategoriasFiltro_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            => FiltrarProductos();
 
         private void BtnModificar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
             var producto = btn?.Tag as ProductoVistaAdminItem;
 
-            if (producto == null)
-            {
-                MessageBox.Show("No se pudo obtener el producto.");
-                return;
-            }
+            if (producto == null) return;
 
             var ventana = Window.GetWindow(this) as wndMenuEmpleado;
             if (ventana != null)
             {
                 var pagina = new wModificarProducto(producto);
-
                 pagina.ProductoActualizado += OnProductoActualizado;
-
                 ventana.fmPrincipal.Navigate(pagina);
             }
         }
@@ -198,8 +182,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     return;
 
                 var dto = resp.producto;
-
-                // Buscar el item existente
                 var prod = ListaProductos.FirstOrDefault(p => p.IdProducto == idProducto);
 
                 if (prod != null)
@@ -211,28 +193,19 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     prod.Disponible = dto.Disponible;
                     prod.IdCategoria = dto.Categoria;
 
-                    // Notificar cambios
-                    prod.OnPropertyChanged(nameof(prod.Nombre));
-                    prod.OnPropertyChanged(nameof(prod.Descripcion));
-                    prod.OnPropertyChanged(nameof(prod.Precio));
-                    prod.OnPropertyChanged(nameof(prod.Unidades));
-                    prod.OnPropertyChanged(nameof(prod.Disponible));
-                    prod.OnPropertyChanged(nameof(prod.IdCategoria));
+                    prod.RefrescarPropiedades();
                 }
-
-                // Refrescar filtros
                 FiltrarProductos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar producto: " + ex.Message);
+                MessageBox.Show("Error al actualizar lista: " + ex.Message);
             }
         }
 
         private void BtnAgregarProducto_Click(object sender, RoutedEventArgs e)
         {
             var ventana = Window.GetWindow(this) as wndMenuEmpleado;
-
             if (ventana != null)
             {
                 ventana.fmPrincipal.Navigate(
@@ -240,7 +213,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 );
             }
         }
-
 
         private async void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
@@ -255,8 +227,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
-            if (confirmar != MessageBoxResult.Yes)
-                return;
+            if (confirmar != MessageBoxResult.Yes) return;
 
             var respuesta = await _servicioProducto.EliminarProductoAsync(producto.IdProducto, _token);
 
@@ -274,9 +245,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
     }
 
-
-
-    // Clase auxiliar
     public class ProductoVistaAdminItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
@@ -290,19 +258,22 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         public string TextoDisponibilidad => Disponible ? "Sí" : "No";
 
-        private ImageSource _imagenProducto;
-        public ImageSource ImagenProducto
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RefrescarPropiedades()
         {
-            get => _imagenProducto;
-            set { _imagenProducto = value; OnPropertyChanged(); }
+            OnPropertyChanged(nameof(Nombre));
+            OnPropertyChanged(nameof(Descripcion));
+            OnPropertyChanged(nameof(Precio));
+            OnPropertyChanged(nameof(Unidades));
+            OnPropertyChanged(nameof(Disponible));
+            OnPropertyChanged(nameof(TextoDisponibilidad));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string nombrePropiedad = null)
+        protected void OnPropertyChanged([CallerMemberName] string nombrePropiedad = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nombrePropiedad));
         }
     }
 }
-
 

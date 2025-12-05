@@ -1,4 +1,5 @@
 ﻿using sweet_temptation_clienteEscritorio.dto;
+using sweet_temptation_clienteEscritorio.resources;
 using sweet_temptation_clienteEscritorio.servicios;
 using System;
 using System.Collections.Generic;
@@ -7,50 +8,49 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows.Media.Imaging; // Necesario para ImageSource
 
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wConsultarProductos : Page
     {
-        // servicios
         private ProductoService _servicioProducto;
-        private ProductoPedidoService _servicioProductoPedido; 
+        private ProductoPedidoService _servicioProductoPedido;
         private PedidoService _servicioPedido;
         private ArchivoService _servicioArchivo;
 
         private string _token;
-        private int _idUsuario = 3;
+        private int _idUsuario = 3; // TODO: Obtener del Login
 
+        // Variables para el modal
         private decimal _precioUnitarioActual;
         private int _stockMaximoActual;
-        private int _idProductoActual; 
+        private int _idProductoActual;
 
         public ObservableCollection<ProductoVistaItem> ListaProductos { get; set; }
-        private List<ProductoVistaItem> _listaCompletaCache; // Para buscar productos
+        private List<ProductoVistaItem> _listaCompletaCache;
 
         public wConsultarProductos()
         {
             InitializeComponent();
 
-            _servicioProducto = new ProductoService(new HttpClient());
-            _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
-            _servicioPedido = new PedidoService(new HttpClient());
-            _servicioArchivo = new ArchivoService(new HttpClient());
+            var http = new HttpClient();
+            _servicioProducto = new ProductoService(http);
+            _servicioProductoPedido = new ProductoPedidoService(http);
+            _servicioPedido = new PedidoService(http);
+            _servicioArchivo = new ArchivoService(http);
 
             if (App.Current.Properties.Contains("Token"))
-            {
                 _token = (string?)App.Current.Properties["Token"];
-            }
 
             ListaProductos = new ObservableCollection<ProductoVistaItem>();
             ItemsControlProductos.ItemsSource = ListaProductos;
 
-            // Cargar datos al iniciar
             Loaded += async (s, e) =>
             {
                 await CargarCategoriasAsync();
@@ -73,7 +73,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
                     foreach (var itemDTO in respuesta.productos)
                     {
-                        var prodVista = new ProductoVistaItem
+                        var model = new ProductoVistaItem
                         {
                             IdProducto = itemDTO.IdProducto,
                             Nombre = itemDTO.Nombre,
@@ -83,15 +83,14 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                             Unidades = itemDTO.Unidades,
                             IdCategoria = itemDTO.Categoria,
                             CategoriaNombre = "Categoría " + itemDTO.Categoria,
-
-                            ImagenProducto = null 
+                            ImagenProducto = null
                         };
 
-                        ListaProductos.Add(prodVista);
-                        _listaCompletaCache.Add(prodVista);
+                        ListaProductos.Add(model);
+                        _listaCompletaCache.Add(model);
                     }
 
-                    // para que no bloquee la interfaz mientras descarga
+                    // Iniciar carga de imágenes en segundo plano
                     _ = CargarImagenesAsync();
                 }
             }
@@ -103,211 +102,131 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private async Task CargarImagenesAsync()
         {
-            var listaCopia = ListaProductos.ToList();
+            var copiaLista = ListaProductos.ToList();
 
-            foreach (var item in listaCopia)
+            foreach (var item in copiaLista)
             {
                 try
                 {
-                    var respuestaDetalles = await _servicioArchivo.ObtenerDetallesArchivoAsync(item.IdProducto, _token);
+                    var detalles = await _servicioArchivo.ObtenerDetallesArchivoAsync(item.IdProducto, _token);
 
-                    if (respuestaDetalles.detalles != null && !string.IsNullOrEmpty(respuestaDetalles.detalles.ruta))
+                    if (detalles.detalles != null && !string.IsNullOrWhiteSpace(detalles.detalles.ruta))
                     {
-                        var respuestaImagen = await _servicioArchivo.ObtenerImagenAsync(respuestaDetalles.detalles.ruta, _token);
+                        
+                        var resultado = await _servicioArchivo.ObtenerImagenAsync(detalles.detalles.ruta, _token);
 
-                        if (respuestaImagen.imagen != null)
+                        if (resultado.imagen != null)
                         {
-                            // para actualizar la interfaz
-                            // Dispatcher porque es una tarea asíncrona
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                item.ImagenProducto = respuestaImagen.imagen;
+                                var itemReal = ListaProductos.FirstOrDefault(p => p.IdProducto == item.IdProducto);
+                                if (itemReal != null)
+                                {
+                                    itemReal.ImagenProducto = resultado.imagen;
+                                }
                             });
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Si falla una imagen (ej. 404), la ignoramos y el producto se queda sin foto.
-                    // No mostramos MessageBox para no interrumpir al usuario.
+                    Console.WriteLine($"Error imagen {item.IdProducto}: {ex.Message}");
                 }
             }
         }
 
         private async Task CargarCategoriasAsync()
         {
-            var respuesta = await _servicioProducto.ObtenerCategoriasAsync(_token);
-
-            if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.categorias != null)
+            try
             {
-                var listaCategorias = new List<CategoriaDTO>();
+                var respuesta = await _servicioProducto.ObtenerCategoriasAsync(_token);
+                if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.categorias != null)
+                {
+                    var lista = new List<CategoriaDTO>
+                    {
+                        new CategoriaDTO { id = -1, nombre = "Seleccionar categoría…" },
+                        new CategoriaDTO { id = 0, nombre = "Todas las categorías" }
+                    };
+                    lista.AddRange(respuesta.categorias);
 
-                listaCategorias.Add(new CategoriaDTO { id = 0, nombre = "Todas las Categorías" });
-
-                listaCategorias.AddRange(respuesta.categorias);
-
-                CmbCategorias.ItemsSource = listaCategorias;
-                CmbCategorias.DisplayMemberPath = "nombre";
-                CmbCategorias.SelectedValuePath = "id";
-
-                CmbCategorias.SelectedIndex = 0;
+                    CmbCategorias.ItemsSource = lista;
+                    CmbCategorias.DisplayMemberPath = "nombre";
+                    CmbCategorias.SelectedValuePath = "id";
+                    CmbCategorias.SelectedIndex = 0;
+                }
             }
+            catch { }
         }
 
-        // Botones
         private void BtnVerDetalle_Click(object sender, RoutedEventArgs e)
         {
-            var boton = sender as Button;
-            var productoSeleccionado = boton.Tag as ProductoVistaItem;
+            var button = sender as Button;
+            var producto = button?.Tag as ProductoVistaItem;
 
-            if (productoSeleccionado != null)
+            if (producto != null)
             {
-                _precioUnitarioActual = productoSeleccionado.Precio;
-                _stockMaximoActual = productoSeleccionado.Unidades;
-                _idProductoActual = productoSeleccionado.IdProducto; 
+                _precioUnitarioActual = producto.Precio;
+                _stockMaximoActual = producto.Unidades;
+                _idProductoActual = producto.IdProducto;
 
-                TxtDetalleNombre.Text = productoSeleccionado.Nombre;
-                TxtDetalleDescripcion.Text = productoSeleccionado.Descripcion;
-
-                if (productoSeleccionado.ImagenProducto != null)
-                {
-                    ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
-                }
-                else
-                {
-                    ImgDetalle.ImageSource = null; 
-                }
+                TxtDetalleNombre.Text = producto.Nombre;
+                TxtDetalleDescripcion.Text = producto.Descripcion;
+                ImgDetalle.ImageSource = producto.ImagenProducto;
 
                 TxtCantidad.Text = "1";
-                ActualizarTextoPrecioTotal(1);
-
-                ImgDetalle.ImageSource = productoSeleccionado.ImagenProducto;
+                ActualizarPrecio(1);
                 OverlayDetalle.Visibility = Visibility.Visible;
             }
         }
 
-        private void ActualizarTextoPrecioTotal(int cantidad)
+        private void ActualizarPrecio(int cantidad)
         {
-            decimal total = cantidad * _precioUnitarioActual;
-            TxtDetallePrecioTotal.Text = total.ToString("C");
+            TxtDetallePrecioTotal.Text = (cantidad * _precioUnitarioActual).ToString("C");
         }
 
-        private void BtnCerrarModal_Click(object sender, RoutedEventArgs e)
-        {
-            OverlayDetalle.Visibility = Visibility.Collapsed;
-        }
-
-        private void BtnCerrarModal_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            OverlayDetalle.Visibility = Visibility.Collapsed;
-        }
-
-        // Barra de búsqueda
-        private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (_listaCompletaCache == null) return;
-
-            string filtro = TxtBuscar.Text.ToLower();
-
-            if (string.IsNullOrWhiteSpace(filtro) || filtro == "buscar postre...")
-            {
-                ItemsControlProductos.ItemsSource = _listaCompletaCache;
-            }
-            else
-            {
-                var filtrados = _listaCompletaCache
-                    .Where(p => p.Nombre.ToLower().Contains(filtro))
-                    .ToList();
-
-                ItemsControlProductos.ItemsSource = filtrados;
-            }
-        }
-
-        private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (TxtBuscar.Text == "Buscar postre...") TxtBuscar.Text = "";
-        }
-
-        private void TxtBuscar_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar postre...";
-        }
-
-        // Filtro Categoría
-        private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_listaCompletaCache == null || CmbCategorias.SelectedItem == null) return;
-
-            var categoriaSeleccionada = (CategoriaDTO)CmbCategorias.SelectedItem;
-
-            if (categoriaSeleccionada.id == 0)
-            {
-                ItemsControlProductos.ItemsSource = _listaCompletaCache;
-            }
-            else
-            {
-                var filtrados = _listaCompletaCache
-                    .Where(p => p.IdCategoria == categoriaSeleccionada.id)
-                    .ToList();
-
-                ItemsControlProductos.ItemsSource = filtrados;
-            }
-            TxtBuscar.Text = "Buscar postre...";
-        }
+        private void BtnCerrarModal_Click(object sender, RoutedEventArgs e) => OverlayDetalle.Visibility = Visibility.Collapsed;
+        private void BtnCerrarModal_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => OverlayDetalle.Visibility = Visibility.Collapsed;
 
         private void BtnMas_Click(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(TxtCantidad.Text, out int cantidadActual))
+            if (int.TryParse(TxtCantidad.Text, out int cant) && cant < _stockMaximoActual)
             {
-                if (cantidadActual < _stockMaximoActual)
-                {
-                    cantidadActual++;
-                    TxtCantidad.Text = cantidadActual.ToString();
-                    ActualizarTextoPrecioTotal(cantidadActual);
-                }
-                else
-                {
-                    MessageBox.Show($"Solo hay {_stockMaximoActual} unidades disponibles de este producto.");
-                }
+                cant++;
+                TxtCantidad.Text = cant.ToString();
+                ActualizarPrecio(cant);
             }
+            else MessageBox.Show($"Solo hay {_stockMaximoActual} disponibles.");
         }
 
         private void BtnMenos_Click(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(TxtCantidad.Text, out int cantidadActual))
+            if (int.TryParse(TxtCantidad.Text, out int cant) && cant > 1)
             {
-                if (cantidadActual > 1)
-                {
-                    cantidadActual--;
-                    TxtCantidad.Text = cantidadActual.ToString();
-                    ActualizarTextoPrecioTotal(cantidadActual);
-                }
+                cant--;
+                TxtCantidad.Text = cant.ToString();
+                ActualizarPrecio(cant);
             }
         }
 
         private async void BtnAgregarAlPedido_Click(object sender, RoutedEventArgs e)
         {
+            // Validaciones
             if (string.IsNullOrEmpty(_token))
             {
-                MessageBox.Show("Sesión no válida.");
+                MessageBox.Show("Sesión no válida, por favor inicie sesión.");
                 return;
             }
 
-            // Validacion para ver si esta disponible el producto
-            var producto = _listaCompletaCache.FirstOrDefault(p => p.IdProducto == _idProductoActual);
-
-            if (producto == null)
+            if (!int.TryParse(TxtCantidad.Text, out int cantidad) || cantidad <= 0)
             {
-                MessageBox.Show("No se pudo encontrar la información del producto.");
+                MessageBox.Show("Cantidad inválida.");
                 return;
             }
 
-            if (!producto.Disponible)
+            var prod = _listaCompletaCache.FirstOrDefault(p => p.IdProducto == _idProductoActual);
+            if (prod == null || !prod.Disponible)
             {
-                MessageBox.Show("Este producto está agotado y no se puede agregar al pedido.",
-                                "Producto no disponible",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
+                MessageBox.Show("El producto ya no está disponible.");
                 return;
             }
 
@@ -315,56 +234,77 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             {
                 BtnAgregarConfirmar.IsEnabled = false;
 
-                int cantidad = int.Parse(TxtCantidad.Text);
+                var pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                int idPedido;
 
-                var respuestaPedido = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
-
-                if (respuestaPedido.pedidoActual == null)
+                if (pedidoRes.pedidoActual == null)
                 {
                     await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
-                    respuestaPedido = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                    pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
                 }
 
-                if (respuestaPedido.pedidoActual != null)
+                idPedido = pedidoRes.pedidoActual.id;
+
+
+                using (var client = new HttpClient())
                 {
-                    int idPedidoActual = respuestaPedido.pedidoActual.id;
+                    string baseUrl = Constantes.URL;
 
-                    var resultado = await _servicioProductoPedido.crearProductoAsync(
-                        idProducto: _idProductoActual,
-                        idPedido: idPedidoActual,
-                        cantidad: cantidad,
-                        token: _token
-                    );
+                    if (baseUrl.EndsWith("/")) baseUrl = baseUrl.TrimEnd('/');
 
-                    if (resultado.codigo == System.Net.HttpStatusCode.Created ||
-                        resultado.codigo == System.Net.HttpStatusCode.OK)
+                    string urlCorrecta = $"{baseUrl}/pedido/{idPedido}/?idProducto={_idProductoActual}&idPedido={idPedido}&cantidad={cantidad}";
+
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
+
+                    var content = new StringContent("", Encoding.UTF8, "application/json");
+
+                    // Enviar
+                    var respuesta = await client.PostAsync(urlCorrecta, content);
+
+                    if (respuesta.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("¡Producto agregado al carrito exitosamente!");
+                        MessageBox.Show("¡Producto agregado al carrito con éxito!");
                         OverlayDetalle.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
-                        MessageBox.Show($"No se pudo agregar: {resultado.mensaje}");
+                        string errorMsg = await respuesta.Content.ReadAsStringAsync();
+                        MessageBox.Show("No se pudo agregar: " + errorMsg);
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Error: No se pudo generar un número de pedido.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error: " + ex.Message);
+                MessageBox.Show("Error de conexión: " + ex.Message);
             }
             finally
             {
                 BtnAgregarConfirmar.IsEnabled = true;
             }
-        
         }
 
-    }
+        private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e) => AplicarFiltros();
+        private void CmbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e) => AplicarFiltros();
 
+        private void AplicarFiltros()
+        {
+            if (_listaCompletaCache == null) return;
+            string txt = TxtBuscar.Text.ToLower();
+            bool busca = !string.IsNullOrWhiteSpace(txt) && txt != "buscar postre...";
+            int idCat = (CmbCategorias.SelectedItem as CategoriaDTO)?.id ?? 0;
+
+            var filtrados = _listaCompletaCache.Where(p =>
+                (!busca || p.Nombre.ToLower().Contains(txt)) &&
+                (idCat <= 0 || p.IdCategoria == idCat)
+            ).ToList();
+
+            ItemsControlProductos.ItemsSource = filtrados;
+        }
+
+        private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e) { if (TxtBuscar.Text == "Buscar postre...") TxtBuscar.Text = ""; }
+        private void TxtBuscar_LostFocus(object sender, RoutedEventArgs e) { if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar postre..."; }
+    }
 
     public class ProductoVistaItem : INotifyPropertyChanged
     {
@@ -373,28 +313,22 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public bool Disponible { get; set; }
-        public string CategoriaNombre { get; set; }
         public int IdCategoria { get; set; }
         public int Unidades { get; set; }
+        public string CategoriaNombre { get; set; }
 
-        private ImageSource _imagenProducto;
+        private ImageSource _img;
         public ImageSource ImagenProducto
         {
-            get { return _imagenProducto; }
-            set
-            {
-                _imagenProducto = value;
-                OnPropertyChanged(); // actualiza la pantalla
-            }
+            get => _img;
+            set { _img = value; OnPropertyChanged(); }
         }
 
-        public bool EstaDisponible => Disponible;
         public string TextoDisponibilidad => Disponible ? "Disponible" : "Agotado";
+        public bool EstaDisponible => Disponible;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+        protected void OnPropertyChanged([CallerMemberName] string n = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
     }
 }
