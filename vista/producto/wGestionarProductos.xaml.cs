@@ -16,17 +16,16 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wAdministrarProductos : Page
     {
-        // SERVICIOS
+        // Servicios
         private ProductoService _servicioProducto;
         private ArchivoService _servicioArchivo;
 
-        // TOKEN
         private string _token;
 
-        // LISTA PRINCIPAL
+        // Lista principal
         public ObservableCollection<ProductoVistaAdminItem> ListaProductos { get; set; }
 
-        // LISTA COMPLETA PARA FILTROS
+        // Para filtros
         private List<ProductoVistaAdminItem> _listaCompletaCache;
 
         public wAdministrarProductos()
@@ -48,10 +47,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 await CargarProductosAsync();
             };
         }
-
-        // ============================================================
-        // 🟦 CARGAR PRODUCTOS
-        // ============================================================
         private async Task CargarProductosAsync()
         {
             if (string.IsNullOrEmpty(_token))
@@ -98,9 +93,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // 🟩 CARGAR CATEGORÍAS
-        // ============================================================
         private async Task CargarCategoriasAsync()
         {
             try
@@ -129,9 +121,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // 🔍 FILTROS (búsqueda + categoría)
-        // ============================================================
         private void FiltrarProductos()
         {
             if (_listaCompletaCache == null) return;
@@ -141,7 +130,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             var listaFiltrada = _listaCompletaCache.AsEnumerable();
 
-            // 1️⃣ Filtro por texto
             if (!string.IsNullOrWhiteSpace(filtroTexto) && filtroTexto != "buscar producto...")
             {
                 listaFiltrada = listaFiltrada.Where(p =>
@@ -150,7 +138,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 );
             }
 
-            // 2️⃣ Filtro por categoría
             if (categoriaSeleccionada != null && categoriaSeleccionada.id != 0)
             {
                 listaFiltrada = listaFiltrada.Where(p =>
@@ -162,9 +149,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 new ObservableCollection<ProductoVistaAdminItem>(listaFiltrada);
         }
 
-        // ============================================================
-        // 🔎 EVENTOS BUSCADOR
-        // ============================================================
         private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e)
         {
             FiltrarProductos();
@@ -182,21 +166,14 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 TxtBuscar.Text = "Buscar producto...";
         }
 
-        // ============================================================
-        // 🟪 EVENTO FILTRO CATEGORÍAS
-        // ============================================================
         private void CmbCategoriasFiltro_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             FiltrarProductos();
         }
 
-        // ============================================================
-        // 🟧 BOTÓN AGREGAR NUEVO
-        // ============================================================
         private void BtnAgregarProducto_Click(object sender, RoutedEventArgs e)
         {
-            // Obtener la ventana principal que contiene el Frame
-            var ventana = Window.GetWindow(this) as wndMenuEmpleado; // Usa el nombre real de tu ventana
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado; 
 
             if (ventana != null)
             {
@@ -204,9 +181,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
 
-        // ============================================================
-        // 🟦 BOTÓN MODIFICAR
-        // ============================================================
         private void BtnModificar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -215,9 +189,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             MessageBox.Show($"Modificar producto ID: {producto.IdProducto}");
         }
 
-        // ============================================================
-        // 🟥 BOTÓN ELIMINAR
-        // ============================================================
         private async void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -248,10 +219,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             }
         }
     }
-
-    // ============================================================
-    // 📌 VIEWMODEL DEL PRODUCTO EN LA TABLA
-    // ============================================================
     public class ProductoVistaAdminItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
