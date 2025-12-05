@@ -79,23 +79,37 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
         // POST - Crear un producto
         // RUTA API: /producto/nuevo
-        public async Task<(int idProducto, HttpStatusCode codigo, string mensaje)> CrearProductoAsync(ProductoDTO producto, string token)
+        public async Task<(int idProducto, HttpStatusCode codigo, string mensaje)>
+    CrearProductoAsync(ProductoDTO producto, string token)
         {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            var respuesta = await _httpClient.PostAsJsonAsync("producto/nuevo", producto);
-
-            if (!respuesta.IsSuccessStatusCode)
+            try
             {
-                string mensaje = await respuesta.Content.ReadAsStringAsync();
-                return (0, respuesta.StatusCode, mensaje);
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await _httpClient.PostAsJsonAsync("producto/nuevo", producto);
+
+                string contenido = await respuesta.Content.ReadAsStringAsync();
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    return (0, respuesta.StatusCode, contenido);
+                }
+
+                // Si la API devolvió un número → deberíamos poder convertirlo
+                if (!int.TryParse(contenido, out int idCreado))
+                {
+                    return (0, respuesta.StatusCode, contenido);
+                }
+
+                return (idCreado, respuesta.StatusCode, null);
             }
-
-            int id = await respuesta.Content.ReadFromJsonAsync<int>();
-
-            return (id, respuesta.StatusCode, "OK");
+            catch (Exception ex)
+            {
+                return (0, HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
+
 
 
         // PUT - Actualizar producto
@@ -184,7 +198,33 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return (null, HttpStatusCode.ServiceUnavailable, ex.Message);
             }
         }
+
+        public async Task<(ProductoDTO producto, HttpStatusCode codigo, string mensaje)>
+        ObtenerProductoPorIdAsync(int idProducto, string token)
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await _httpClient.GetAsync($"producto/{idProducto}");
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    string error = await respuesta.Content.ReadAsStringAsync();
+                    return (null, respuesta.StatusCode, error);
+                }
+
+                var producto = await respuesta.Content.ReadFromJsonAsync<ProductoDTO>();
+
+                return (producto, respuesta.StatusCode, null);
+            }
+            catch (Exception ex)
+            {
+                return (null, HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
     }
-
-
 }

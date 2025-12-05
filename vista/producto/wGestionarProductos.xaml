@@ -199,7 +199,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <fa:IconImage Icon="Folder"
+                        <fa:IconImage Icon="filter"
                                       Foreground="#999"
                                       Height="16"
                                       Margin="15,0,10,0"

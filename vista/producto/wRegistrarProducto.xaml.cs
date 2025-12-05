@@ -3,6 +3,7 @@ using sweet_temptation_clienteEscritorio.dto;
 using sweet_temptation_clienteEscritorio.servicios;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,172 +15,185 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 {
     public partial class wRegistrarProducto : Page
     {
-        private ProductoService _servicioProducto;
-        private ArchivoService _servicioArchivo;
+        private readonly ProductoService _productoService;
+        private readonly ArchivoService _archivoService;
 
         private string _token;
+
         private byte[] _imagenBytes = null;
+        private string _rutaSeleccionadaImagen = null;
+
+        public event Action<int> ProductoRegistrado;
 
         public wRegistrarProducto()
         {
             InitializeComponent();
 
-            _servicioProducto = new ProductoService(new HttpClient());
-            _servicioArchivo = new ArchivoService(new HttpClient());
+            _productoService = new ProductoService(new HttpClient());
+            _archivoService = new ArchivoService(new HttpClient());
 
             if (App.Current.Properties.Contains("Token"))
                 _token = (string)App.Current.Properties["Token"];
 
-            Loaded += async (s, e) =>
-            {
-                await CargarCategoriasAsync();
-            };
+            this.Loaded += async (s, e) => await CargarCategoriasAsync();
         }
 
+        // ============================================================
+        // CARGAR CATEGORÍAS
+        // ============================================================
         private async Task CargarCategoriasAsync()
         {
-            try
-            {
-                var respuesta = await _servicioProducto.ObtenerCategoriasAsync(_token);
+            var resp = await _productoService.ObtenerCategoriasAsync(_token);
 
-                if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.categorias != null)
-                {
-                    cmbCategoria.ItemsSource = respuesta.categorias;
-                    cmbCategoria.DisplayMemberPath = "nombre";
-                    cmbCategoria.SelectedValuePath = "id";
-                    cmbCategoria.SelectedIndex = 0;
-                }
-                else
-                {
-                    MessageBox.Show("No se pudieron cargar las categorías.");
-                }
-            }
-            catch (Exception ex)
+            if (resp.codigo != HttpStatusCode.OK)
             {
-                MessageBox.Show("Error al cargar categorías: " + ex.Message);
+                MessageBox.Show("Error al cargar categorías: " + resp.mensaje);
+                return;
             }
+
+            cmbCategoria.ItemsSource = resp.categorias;
+            cmbCategoria.DisplayMemberPath = "nombre";
+            cmbCategoria.SelectedValuePath = "id";
         }
 
+        // ============================================================
+        // CARGAR IMAGEN
+        // ============================================================
         private void btnCargarImagen_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Imágenes (*.jpg;*.png)|*.jpg;*.png";
+            OpenFileDialog dialog = new();
+            dialog.Filter = "Imágenes|*.jpg;*.jpeg;*.png";
 
-            if (dlg.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
-                imgProducto.Source = new BitmapImage(new Uri(dlg.FileName));
-                _imagenBytes = File.ReadAllBytes(dlg.FileName);
+                _rutaSeleccionadaImagen = dialog.FileName;
+                _imagenBytes = File.ReadAllBytes(dialog.FileName);
 
-                MessageBox.Show("Imagen cargada correctamente.");
+                BitmapImage img = new();
+                img.BeginInit();
+                img.StreamSource = new MemoryStream(_imagenBytes);
+                img.CacheOption = BitmapCacheOption.OnLoad;
+                img.EndInit();
+                img.Freeze();
+                imgProducto.Source = img;
             }
         }
 
-        private bool ValidarFormulario()
+        // ============================================================
+        // VALIDACIONES
+        // ============================================================
+        private bool ValidarCampos(out decimal precio, out int unidades)
         {
-            if (string.IsNullOrWhiteSpace(txtNombreProducto.Text) ||
-                string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
-                string.IsNullOrWhiteSpace(txtPrecioUnitario.Text) ||
-                string.IsNullOrWhiteSpace(txtUnidades.Text) ||
-                cmbCategoria.SelectedValue == null)
-            {
-                MessageBox.Show("Completa todos los campos.");
-                return false;
-            }
+            precio = 0; unidades = 0;
 
-            if (!decimal.TryParse(txtPrecioUnitario.Text, out _) ||
-                !int.TryParse(txtUnidades.Text, out _))
-            {
-                MessageBox.Show("Precio y unidades deben ser numéricos.");
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(txtNombreProducto.Text))
+                return Error("El nombre es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
+                return Error("La descripción es obligatoria.");
+
+            if (cmbCategoria.SelectedValue == null)
+                return Error("Debe seleccionar una categoría.");
+
+            if (!decimal.TryParse(txtPrecioUnitario.Text, out precio))
+                return Error("Precio inválido.");
+
+            if (!int.TryParse(txtUnidades.Text, out unidades))
+                return Error("Unidades inválidas.");
 
             if (_imagenBytes == null)
-            {
-                MessageBox.Show("Debes seleccionar una imagen para el producto.");
-                return false;
-            }
+                return Error("Debe cargar una imagen.");
 
             return true;
         }
 
-        private async void btnRegistrar_Click(object sender, RoutedEventArgs e)
+        private bool Error(string msg)
         {
-            if (!ValidarFormulario())
-                return;
-
-            try
-            {
-                ProductoDTO nuevo = new ProductoDTO
-                {
-                    Nombre = txtNombreProducto.Text,
-                    Descripcion = txtDescripcion.Text,
-                    Precio = decimal.Parse(txtPrecioUnitario.Text),
-                    Unidades = int.Parse(txtUnidades.Text),
-                    Disponible = true,
-                    Categoria = (int)cmbCategoria.SelectedValue
-                };
-
-                var respProducto = await _servicioProducto.CrearProductoAsync(nuevo, _token);
-
-                if (respProducto.codigo != HttpStatusCode.Created &&
-                    respProducto.codigo != HttpStatusCode.OK)
-                {
-                    MessageBox.Show("Error al registrar producto: " + respProducto.mensaje);
-                    return;
-                }
-
-                int idProducto = respProducto.idProducto;
-
-                ArchivoDTO archivo = new ArchivoDTO
-                {
-                    extension = "jpg",
-                    datos = _imagenBytes
-                };
-
-                var respArchivo = await _servicioArchivo.GuardarArchivoAsync(archivo, _token);
-
-                if (respArchivo.codigo != System.Net.HttpStatusCode.OK &&
-                    respArchivo.codigo != System.Net.HttpStatusCode.Created)
-                {
-                    MessageBox.Show("Producto creado, pero la imagen no se guardó.");
-                    return;
-                }
-
-                int idArchivo = respArchivo.idArchivo;
-
-                var respAsociar = await _servicioArchivo.AsociarArchivoAsync(idArchivo, idProducto, _token);
-
-                if (respAsociar.codigo != System.Net.HttpStatusCode.OK &&
-                    respAsociar.codigo != System.Net.HttpStatusCode.Created)
-                {
-                    MessageBox.Show("Producto creado, pero la imagen NO se asoció.");
-                    return;
-                }
-
-                MessageBox.Show("Producto registrado con éxito y con imagen asociada.");
-
-                LimpiarFormulario();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al registrar: " + ex.Message);
-            }
+            MessageBox.Show(msg, "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
         }
 
-        private void LimpiarFormulario()
+        // ============================================================
+        // REGISTRAR PRODUCTO
+        // ============================================================
+        private async void btnRegistrar_Click(object sender, RoutedEventArgs e)
         {
-            txtNombreProducto.Clear();
-            txtDescripcion.Clear();
-            txtPrecioUnitario.Clear();
-            txtUnidades.Clear();
-            cmbCategoria.SelectedIndex = 0;
-            imgProducto.Source = null;
-            _imagenBytes = null;
+            if (!ValidarCampos(out decimal precio, out int unidades))
+                return;
+
+            // Obtener extensión real
+            string extension = Path.GetExtension(_rutaSeleccionadaImagen)?
+                                .Replace(".", "").ToLower();
+
+            string[] permitidas = { "jpg", "jpeg", "png" };
+            if (!permitidas.Contains(extension))
+            {
+                MessageBox.Show("Formato no permitido.");
+                return;
+            }
+
+            // Crear producto
+            var nuevoProducto = new ProductoDTO
+            {
+                Nombre = txtNombreProducto.Text,
+                Descripcion = txtDescripcion.Text,
+                Precio = precio,
+                Unidades = unidades,
+                Disponible = true,
+                Categoria = (int)cmbCategoria.SelectedValue
+            };
+
+            var resp = await _productoService.CrearProductoAsync(nuevoProducto, _token);
+
+            if (resp.codigo != HttpStatusCode.OK &&
+                resp.codigo != HttpStatusCode.Created)
+            {
+                MessageBox.Show("ERROR al registrar producto:\n" + resp.mensaje);
+                return;
+            }
+
+            int idProducto = resp.idProducto;
+
+            // GUARDAR ARCHIVO
+            var archivo = new ArchivoDTO
+            {
+                extension = extension,
+                datos = _imagenBytes
+            };
+
+            var respArchivo = await _archivoService.GuardarArchivoAsync(archivo, _token);
+
+            if (respArchivo.codigo != HttpStatusCode.OK &&
+                respArchivo.codigo != HttpStatusCode.Created)
+            {
+                MessageBox.Show($"ERROR AL GUARDAR ARCHIVO:\nCódigo: {respArchivo.codigo}\nMensaje: {respArchivo.mensaje}");
+                return;
+            }
+
+            int idArchivo = respArchivo.idArchivo;
+
+            // ASOCIAR ARCHIVO
+            var respAsociar = await _archivoService.AsociarArchivoAsync(idArchivo, idProducto, _token);
+
+            if (respAsociar.codigo != HttpStatusCode.OK &&
+                respAsociar.codigo != HttpStatusCode.Created)
+            {
+                MessageBox.Show("Imagen guardada, pero NO se pudo asociar:\n" + respAsociar.mensaje);
+                return;
+            }
+
+            MessageBox.Show("Producto registrado correctamente.");
+
+            ProductoRegistrado?.Invoke(idProducto);
+
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
+            ventana.fmPrincipal.Navigate(new wAdministrarProductos());
         }
 
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
-            LimpiarFormulario();
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
+            ventana.fmPrincipal.Navigate(new wAdministrarProductos());
         }
     }
 }

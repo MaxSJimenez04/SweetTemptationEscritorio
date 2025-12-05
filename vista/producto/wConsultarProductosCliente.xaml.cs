@@ -155,7 +155,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
 
         // Botones
-
         private void BtnVerDetalle_Click(object sender, RoutedEventArgs e)
         {
             var boton = sender as Button;
@@ -176,7 +175,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 }
                 else
                 {
-                    ImgDetalle.ImageSource = null; // O poner una imagen por defecto
+                    ImgDetalle.ImageSource = null; 
                 }
 
                 TxtCantidad.Text = "1";

@@ -190,12 +190,20 @@
             
             <Grid>
                 <!-- Efecto de goteo rosa -->
-                <Image Source="/resources/images/login/drip.png"
-                       Height="130"
-                       VerticalAlignment="Top"
-                       Margin="-5,-10,-5,0"
-                       Stretch="Fill"/>
-                
+                <Grid Height="130"
+                      VerticalAlignment="Top"
+                      Margin="0,-10,0,0">
+
+                    <!-- Clip con esquinas redondeadas superiores -->
+                    <Grid.Clip>
+                        <RectangleGeometry RadiusX="50" RadiusY="50"
+                           Rect="0,0,454,130"/>
+                    </Grid.Clip>
+
+                    <Image Source="/resources/images/login/drip.png"
+                           Stretch="Fill"/>
+                </Grid>
+
                 <!-- Contenido del card -->
                 <StackPanel VerticalAlignment="Center" 
                             Margin="45,80,45,40">

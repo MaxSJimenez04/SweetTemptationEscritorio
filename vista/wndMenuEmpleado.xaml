@@ -57,6 +57,6 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Frame Grid.Row="1" Name="fmPrincipal" NavigationUIVisibility="Hidden" />
+        <Frame Grid.Row="1" Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" />
     </Grid>
 </Window>

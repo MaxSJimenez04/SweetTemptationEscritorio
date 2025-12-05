@@ -22,10 +22,10 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private string _token;
 
-        // Lista principal
+        // Lista principal enlazada al DataGrid
         public ObservableCollection<ProductoVistaAdminItem> ListaProductos { get; set; }
 
-        // Para filtros
+        // Cache para filtros
         private List<ProductoVistaAdminItem> _listaCompletaCache;
 
         public wAdministrarProductos()
@@ -47,6 +47,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 await CargarProductosAsync();
             };
         }
+
         private async Task CargarProductosAsync()
         {
             if (string.IsNullOrEmpty(_token))
@@ -64,18 +65,18 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     ListaProductos.Clear();
                     _listaCompletaCache = new List<ProductoVistaAdminItem>();
 
-                    foreach (var itemDTO in respuesta.productos)
+                    foreach (var dto in respuesta.productos)
                     {
                         var prod = new ProductoVistaAdminItem
                         {
-                            IdProducto = itemDTO.IdProducto,
-                            Nombre = itemDTO.Nombre,
-                            Descripcion = itemDTO.Descripcion,
-                            Precio = itemDTO.Precio,
-                            Disponible = itemDTO.Disponible,
-                            Unidades = itemDTO.Unidades,
-                            FechaRegistro = itemDTO.FechaRegistro,
-                            IdCategoria = itemDTO.Categoria
+                            IdProducto = dto.IdProducto,
+                            Nombre = dto.Nombre,
+                            Descripcion = dto.Descripcion,
+                            Precio = dto.Precio,
+                            Disponible = dto.Disponible,
+                            Unidades = dto.Unidades,
+                            FechaRegistro = dto.FechaRegistro,
+                            IdCategoria = dto.Categoria
                         };
 
                         ListaProductos.Add(prod);
@@ -111,7 +112,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                     CmbCategoriasFiltro.ItemsSource = lista;
                     CmbCategoriasFiltro.DisplayMemberPath = "nombre";
                     CmbCategoriasFiltro.SelectedValuePath = "id";
-
                     CmbCategoriasFiltro.SelectedIndex = 0;
                 }
             }
@@ -126,33 +126,30 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (_listaCompletaCache == null) return;
 
             string filtroTexto = TxtBuscar.Text.ToLower();
-            var categoriaSeleccionada = CmbCategoriasFiltro.SelectedItem as CategoriaDTO;
+            var categoria = CmbCategoriasFiltro.SelectedItem as CategoriaDTO;
 
-            var listaFiltrada = _listaCompletaCache.AsEnumerable();
+            var lista = _listaCompletaCache.AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(filtroTexto) && filtroTexto != "buscar producto...")
             {
-                listaFiltrada = listaFiltrada.Where(p =>
+                lista = lista.Where(p =>
                     p.Nombre.ToLower().Contains(filtroTexto) ||
                     p.Descripcion.ToLower().Contains(filtroTexto)
                 );
             }
 
-            if (categoriaSeleccionada != null && categoriaSeleccionada.id != 0)
+            if (categoria != null && categoria.id != 0)
             {
-                listaFiltrada = listaFiltrada.Where(p =>
-                    p.IdCategoria == categoriaSeleccionada.id
+                lista = lista.Where(p =>
+                    p.IdCategoria == categoria.id
                 );
             }
 
             DataGridProductos.ItemsSource =
-                new ObservableCollection<ProductoVistaAdminItem>(listaFiltrada);
+                new ObservableCollection<ProductoVistaAdminItem>(lista);
         }
 
-        private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            FiltrarProductos();
-        }
+        private void TxtBuscar_TextChanged(object sender, TextChangedEventArgs e) => FiltrarProductos();
 
         private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -167,58 +164,119 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
 
         private void CmbCategoriasFiltro_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            FiltrarProductos();
-        }
-
-        private void BtnAgregarProducto_Click(object sender, RoutedEventArgs e)
-        {
-            var ventana = Window.GetWindow(this) as wndMenuEmpleado; 
-
-            if (ventana != null)
-            {
-                ventana.fmPrincipal.Navigate(new sweet_temptation_clienteEscritorio.vista.producto.wRegistrarProducto());
-            }
-        }
+            => FiltrarProductos();
 
         private void BtnModificar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var producto = btn.Tag as ProductoVistaAdminItem;
+            var producto = btn?.Tag as ProductoVistaAdminItem;
 
-            MessageBox.Show($"Modificar producto ID: {producto.IdProducto}");
+            if (producto == null)
+            {
+                MessageBox.Show("No se pudo obtener el producto.");
+                return;
+            }
+
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
+            if (ventana != null)
+            {
+                var pagina = new wModificarProducto(producto);
+
+                pagina.ProductoActualizado += OnProductoActualizado;
+
+                ventana.fmPrincipal.Navigate(pagina);
+            }
         }
+
+        private async void OnProductoActualizado(int idProducto)
+        {
+            try
+            {
+                var resp = await _servicioProducto.ObtenerProductoPorIdAsync(idProducto, _token);
+
+                if (resp.codigo != System.Net.HttpStatusCode.OK || resp.producto == null)
+                    return;
+
+                var dto = resp.producto;
+
+                // Buscar el item existente
+                var prod = ListaProductos.FirstOrDefault(p => p.IdProducto == idProducto);
+
+                if (prod != null)
+                {
+                    prod.Nombre = dto.Nombre;
+                    prod.Descripcion = dto.Descripcion;
+                    prod.Precio = dto.Precio;
+                    prod.Unidades = dto.Unidades;
+                    prod.Disponible = dto.Disponible;
+                    prod.IdCategoria = dto.Categoria;
+
+                    // Notificar cambios
+                    prod.OnPropertyChanged(nameof(prod.Nombre));
+                    prod.OnPropertyChanged(nameof(prod.Descripcion));
+                    prod.OnPropertyChanged(nameof(prod.Precio));
+                    prod.OnPropertyChanged(nameof(prod.Unidades));
+                    prod.OnPropertyChanged(nameof(prod.Disponible));
+                    prod.OnPropertyChanged(nameof(prod.IdCategoria));
+                }
+
+                // Refrescar filtros
+                FiltrarProductos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al actualizar producto: " + ex.Message);
+            }
+        }
+
+        private void BtnAgregarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
+
+            if (ventana != null)
+            {
+                ventana.fmPrincipal.Navigate(
+                    new sweet_temptation_clienteEscritorio.vista.producto.wRegistrarProducto()
+                );
+            }
+        }
+
 
         private async void BtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var producto = btn.Tag as ProductoVistaAdminItem;
+            var producto = btn?.Tag as ProductoVistaAdminItem;
 
             if (producto == null) return;
 
             var confirmar = MessageBox.Show(
-                $"¿Desea eliminar el producto '{producto.Nombre}'?",
+                $"¿Desea eliminar '{producto.Nombre}'?",
                 "Confirmar eliminación",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
-            if (confirmar == MessageBoxResult.Yes)
-            {
-                var respuesta = await _servicioProducto.EliminarProductoAsync(producto.IdProducto, _token);
+            if (confirmar != MessageBoxResult.Yes)
+                return;
 
-                if (respuesta.codigo == System.Net.HttpStatusCode.OK)
-                {
-                    ListaProductos.Remove(producto);
-                    _listaCompletaCache.Remove(producto);
-                    MessageBox.Show("Producto eliminado correctamente.");
-                }
-                else
-                {
-                    MessageBox.Show("Error al eliminar: " + respuesta.mensaje);
-                }
+            var respuesta = await _servicioProducto.EliminarProductoAsync(producto.IdProducto, _token);
+
+            if (respuesta.codigo == System.Net.HttpStatusCode.OK)
+            {
+                ListaProductos.Remove(producto);
+                _listaCompletaCache.Remove(producto);
+                MessageBox.Show("Producto eliminado correctamente.");
+                FiltrarProductos();
+            }
+            else
+            {
+                MessageBox.Show("Error al eliminar: " + respuesta.mensaje);
             }
         }
     }
+
+
+
+    // Clase auxiliar
     public class ProductoVistaAdminItem : INotifyPropertyChanged
     {
         public int IdProducto { get; set; }
@@ -240,10 +298,11 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string property = null)
+        public void OnPropertyChanged([CallerMemberName] string nombrePropiedad = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nombrePropiedad));
         }
     }
 }
+
 

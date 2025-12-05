@@ -22,8 +22,7 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
 
         private void BtnGestionarProductos_Click(object sender, RoutedEventArgs e)
         {
-            // Obtener la ventana principal que contiene el Frame
-            var ventana = Window.GetWindow(this) as wndMenuEmpleado; // Usa el nombre real de tu ventana
+            var ventana = Window.GetWindow(this) as wndMenuEmpleado; 
 
             if (ventana != null)
             {
