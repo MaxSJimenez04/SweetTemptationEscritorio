@@ -26,13 +26,13 @@ namespace sweet_temptation_clienteEscritorio.servicios
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                 new AuthenticationHeaderValue("Bearer", token);
             }
         }
 
-        // GET - Obtener todos los productos
-        // RUTA API: /producto/todos
-        public async Task<(List<ProductoDTO> productos, HttpStatusCode codigo, string mensaje)> ObtenerProductosAsync(string token)
+        // GET - Obtener todos los productos
+        // RUTA API: /producto/todos
+        public async Task<(List<ProductoDTO> productos, HttpStatusCode codigo, string mensaje)> ObtenerProductosAsync(string token)
         {
             ConfigurarToken(token);
 
@@ -57,35 +57,14 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        // GET - Obtener producto por ID
-        // RUTA API: /producto/{id}
-        public async Task<(ProductoDTO producto, HttpStatusCode codigo, string mensaje)> ObtenerProductoAsync(int idProducto, string token)
-        {
-            ConfigurarToken(token);
-
-            var respuesta = await _httpClient.GetAsync($"producto/{idProducto}");
-
-            if (respuesta.IsSuccessStatusCode)
-            {
-                var producto = await respuesta.Content.ReadFromJsonAsync<ProductoDTO>();
-                return (producto, respuesta.StatusCode, null);
-            }
-            else
-            {
-                var mensaje = await respuesta.Content.ReadAsStringAsync();
-                return (null, respuesta.StatusCode, mensaje);
-            }
-        }
-
-        // POST - Crear un producto
-        // RUTA API: /producto/nuevo
-        public async Task<(int idProducto, HttpStatusCode codigo, string mensaje)>
-    CrearProductoAsync(ProductoDTO producto, string token)
+        public async Task<(int idProducto, HttpStatusCode codigo, string mensaje)>
+ 
+            CrearProductoAsync(ProductoDTO producto, string token)
         {
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                 new AuthenticationHeaderValue("Bearer", token);
 
                 var respuesta = await _httpClient.PostAsJsonAsync("producto/nuevo", producto);
 
@@ -96,7 +75,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
                     return (0, respuesta.StatusCode, contenido);
                 }
 
-                // Si la API devolvió un número → deberíamos poder convertirlo
                 if (!int.TryParse(contenido, out int idCreado))
                 {
                     return (0, respuesta.StatusCode, contenido);
@@ -111,10 +89,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-
-        // PUT - Actualizar producto
-        // RUTA API: /producto/{id}
-        public async Task<(ProductoDTO productoActualizado, HttpStatusCode codigo, string mensaje)> ActualizarProductoAsync(int idProducto, ProductoDTO productoActualizado, string token)
+        // PUT - Actualizar producto
+        // RUTA API: /producto/{id}
+        public async Task<(ProductoDTO productoActualizado, HttpStatusCode codigo, string mensaje)> ActualizarProductoAsync(int idProducto, ProductoDTO productoActualizado, string token)
         {
             ConfigurarToken(token);
 
@@ -132,9 +109,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        // DELETE - Eliminar producto
-        // RUTA API: /producto/{id}
-        public async Task<(HttpStatusCode codigo, string mensaje)> EliminarProductoAsync(int idProducto, string token)
+        // DELETE - Eliminar producto
+        // RUTA API: /producto/{id}
+        public async Task<(HttpStatusCode codigo, string mensaje)> EliminarProductoAsync(int idProducto, string token)
         {
             ConfigurarToken(token);
 
@@ -142,8 +119,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
             if (respuesta.IsSuccessStatusCode)
             {
-                var mensaje = await respuesta.Content.ReadAsStringAsync();
-                return (respuesta.StatusCode, mensaje);
+                return (respuesta.StatusCode, null);
             }
             else
             {
@@ -152,12 +128,12 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        // TODO - por terminar
-        // GET - Por Categoria 
-        public async Task<(List<ProductoDTO> productos, HttpStatusCode codigo, string mensaje)> ObtenerPorCategoriaAsync(int idCategoria, string token)
+        // TODO - por terminar
+        // GET - Por Categoria 
+        public async Task<(List<ProductoDTO> productos, HttpStatusCode codigo, string mensaje)> ObtenerPorCategoriaAsync(int idCategoria, string token)
         {
             ConfigurarToken(token);
-            
+
             var respuesta = await _httpClient.GetAsync($"producto/categoria/{idCategoria}");
 
             if (respuesta.IsSuccessStatusCode)
@@ -172,9 +148,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        // GET - Obtener todas las categorías para el ComboBox
-        // RUTA API: /categoria/todos
-        public async Task<(List<CategoriaDTO> categorias, HttpStatusCode codigo, string mensaje)> ObtenerCategoriasAsync(string token)
+        // GET - Obtener todas las categorías para el ComboBox
+        // RUTA API: /categoria/todos
+        public async Task<(List<CategoriaDTO> categorias, HttpStatusCode codigo, string mensaje)> ObtenerCategoriasAsync(string token)
         {
             ConfigurarToken(token);
 
@@ -205,7 +181,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                 new AuthenticationHeaderValue("Bearer", token);
 
                 var respuesta = await _httpClient.GetAsync($"producto/{idProducto}");
 
@@ -224,7 +200,5 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return (null, HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
-
     }
 }

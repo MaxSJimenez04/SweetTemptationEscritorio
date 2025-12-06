@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging; // Necesario para ImageSource
+using System.Windows.Media.Imaging; 
 
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
@@ -25,7 +25,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         private ArchivoService _servicioArchivo;
 
         private string _token;
-        private int _idUsuario = 3; // TODO: Obtener del Login
+        private int _idUsuario = 3; 
 
         // Variables para el modal
         private decimal _precioUnitarioActual;
@@ -90,7 +90,6 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                         _listaCompletaCache.Add(model);
                     }
 
-                    // Iniciar carga de imágenes en segundo plano
                     _ = CargarImagenesAsync();
                 }
             }
