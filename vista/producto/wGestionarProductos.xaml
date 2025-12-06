@@ -12,8 +12,6 @@
 
     <!-- Recursos -->
     <Page.Resources>
-
-        <!-- BOTÓN ROSA ADMIN -->
         <Style x:Key="AdminButton" TargetType="Button">
             <Setter Property="Background" Value="#FFB6C1"/>
             <Setter Property="Foreground" Value="White"/>
@@ -38,7 +36,7 @@
             </Setter>
         </Style>
 
-        <!-- Disponibilidad -->
+        <!-- Disponible -->
         <Style x:Key="DisponibilidadCell" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Green"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
