@@ -1,17 +1,16 @@
-﻿<Window x:Class="sweet_temptation_clienteEscritorio.vista.wndLogin"
+<Window x:Class="sweet_temptation_clienteEscritorio.vista.wndRecuperarContrasena"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Sweet Temptation - Login" 
+        Title="Sweet Temptation - Recuperar Contraseña" 
         Height="800" Width="1280"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         WindowStyle="SingleBorderWindow">
     
     <Window.Resources>
-        <!-- Colores -->
         <Color x:Key="PinkPrimary">#FF70B5</Color>
         <Color x:Key="PinkLight">#FFA9D3</Color>
         <Color x:Key="PinkDark">#E17BB1</Color>
@@ -19,8 +18,7 @@
         <SolidColorBrush x:Key="PinkLightBrush" Color="{StaticResource PinkLight}"/>
         <SolidColorBrush x:Key="PinkDarkBrush" Color="{StaticResource PinkDark}"/>
         
-        <!-- Estilo para TextBox -->
-        <Style x:Key="LoginTextBoxStyle" TargetType="TextBox">
+        <Style x:Key="RecuperarTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="54"/>
             <Setter Property="FontFamily" Value="Poppins, Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
@@ -45,38 +43,11 @@
             </Setter>
         </Style>
         
-        <!-- Estilo para PasswordBox -->
-        <Style x:Key="LoginPasswordBoxStyle" TargetType="PasswordBox">
-            <Setter Property="Height" Value="54"/>
-            <Setter Property="FontFamily" Value="Poppins, Segoe UI"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="15,15,15,15"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PinkPrimaryBrush}"/>
-            <Setter Property="BorderThickness" Value="3"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="PasswordBox">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="15">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                          VerticalAlignment="Center"
-                                          Margin="5,0,0,0"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
-        <!-- Estilo para el botón de login -->
-        <Style x:Key="LoginButtonStyle" TargetType="Button">
+        <Style x:Key="RecuperarButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="54"/>
             <Setter Property="Width" Value="208"/>
             <Setter Property="FontFamily" Value="Poppins, Segoe UI"/>
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="{StaticResource PinkPrimaryBrush}"/>
@@ -101,6 +72,10 @@
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#D16A9E"/>
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#CCCCCC"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#CCCCCC"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -108,7 +83,6 @@
         </Style>
     </Window.Resources>
     
-    <!-- Fondo principal con gradiente -->
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -117,21 +91,24 @@
             </LinearGradientBrush>
         </Grid.Background>
         
-        <!-- Fondo con patrón de iconos -->
         <Image Source="/resources/images/login/Fondo.png" 
                Stretch="UniformToFill" 
                Opacity="0.66"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"/>
         
-        <!-- Imágenes decorativas izquierda -->
+        <!-- Imágenes decorativas DERECHA (espejado del login) -->
         <Canvas>
-            <!-- Chispas -->
+            <!-- Chispas - arriba -->
             <Image Source="/resources/images/login/Chispas.png"
                    Width="256" Height="146"
-                   Canvas.Left="98" Canvas.Top="20">
+                   Canvas.Left="926" Canvas.Top="20"
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
-                    <RotateTransform Angle="-12"/>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <RotateTransform Angle="12"/>
+                    </TransformGroup>
                 </Image.RenderTransform>
                 <Image.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
@@ -141,9 +118,13 @@
             <!-- Crema/Frosting -->
             <Image Source="/resources/images/login/Crema.png"
                    Width="273" Height="220"
-                   Canvas.Left="180" Canvas.Top="160">
+                   Canvas.Left="827" Canvas.Top="160"
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
-                    <RotateTransform Angle="17"/>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <RotateTransform Angle="-17"/>
+                    </TransformGroup>
                 </Image.RenderTransform>
                 <Image.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
@@ -153,21 +134,29 @@
             <!-- Bizcocho -->
             <Image Source="/resources/images/login/Bizcocho.png"
                    Width="244" Height="154"
-                   Canvas.Left="91" Canvas.Top="420">
+                   Canvas.Left="945" Canvas.Top="420"
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
-                    <RotateTransform Angle="-14"/>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <RotateTransform Angle="14"/>
+                    </TransformGroup>
                 </Image.RenderTransform>
                 <Image.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
                 </Image.Effect>
             </Image>
             
-            <!-- Envoltura -->
+            <!-- Envoltura - abajo -->
             <Image Source="/resources/images/login/Envoltura.png"
                    Width="280" Height="213"
-                   Canvas.Left="187" Canvas.Top="560">
+                   Canvas.Left="813" Canvas.Top="560"
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
-                    <RotateTransform Angle="-22"/>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <RotateTransform Angle="22"/>
+                    </TransformGroup>
                 </Image.RenderTransform>
                 <Image.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
@@ -175,11 +164,11 @@
             </Image>
         </Canvas>
         
-        <!-- Card de Login -->
-        <Border Width="454" Height="677"
-                HorizontalAlignment="Right"
+        <!-- Card de Recuperación -->
+        <Border Width="454" Height="550"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Margin="0,0,150,0"
+                Margin="150,0,0,0"
                 Background="White"
                 BorderBrush="{StaticResource PinkPrimaryBrush}"
                 BorderThickness="5"
@@ -189,57 +178,66 @@
             </Border.Effect>
             
             <Grid>
-                <!-- Efecto de goteo rosa -->
                 <Grid Height="130"
                       VerticalAlignment="Top"
                       Margin="0,-10,0,0">
-
-                    <!-- Clip con esquinas redondeadas superiores -->
                     <Grid.Clip>
                         <RectangleGeometry RadiusX="50" RadiusY="50"
                            Rect="0,0,454,130"/>
                     </Grid.Clip>
-
                     <Image Source="/resources/images/login/drip.png"
                            Stretch="Fill"/>
                 </Grid>
 
-                <!-- Contenido del card -->
                 <StackPanel VerticalAlignment="Center" 
-                            Margin="45,80,45,40">
+                            Margin="45,60,45,40">
                     
-                    <!-- Logo -->
                     <Image Source="/resources/images/login/logo_cupcake.png"
                            Width="80" Height="108"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,5"/>
                     
-                    <!-- Título -->
                     <TextBlock Text="SweetTemptation"
                                FontFamily="Pacifico, Segoe Script, Segoe UI"
                                FontSize="24"
                                Foreground="{StaticResource PinkDarkBrush}"
                                HorizontalAlignment="Center"
-                               Margin="0,0,0,50"/>
+                               Margin="0,0,0,20"/>
                     
-                    <!-- Campo Usuario -->
-                    <Grid Margin="0,0,0,20">
-                        <TextBox x:Name="txtUsuario"
-                                 Style="{StaticResource LoginTextBoxStyle}"
-                                 Tag="Usuario"/>
-                        <TextBlock Text="Usuario"
+                    <TextBlock Text="Recuperar Contraseña"
+                               FontFamily="Poppins, Segoe UI"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Ingresa tu correo electrónico y te enviaremos un código para restablecer tu contraseña."
+                               FontFamily="Poppins, Segoe UI"
+                               FontSize="12"
+                               Foreground="#666666"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,30"/>
+                    
+                    <!-- Campo Correo -->
+                    <Grid Margin="0,0,0,30">
+                        <TextBox x:Name="txtCorreo"
+                                 Style="{StaticResource RecuperarTextBoxStyle}"/>
+                        <TextBlock Text="Correo electrónico"
                                    FontFamily="Poppins, Segoe UI"
                                    FontSize="14"
                                    Foreground="Gray"
                                    VerticalAlignment="Center"
                                    Margin="20,0,0,0"
                                    IsHitTestVisible="False"
-                                   x:Name="placeholderUsuario">
+                                   x:Name="placeholderCorreo">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=txtUsuario}" Value="">
+                                        <DataTrigger Binding="{Binding Text, ElementName=txtCorreo}" Value="">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -248,38 +246,23 @@
                         </TextBlock>
                     </Grid>
                     
-                    <!-- Campo Contraseña -->
-                    <Grid Margin="0,0,0,40">
-                        <PasswordBox x:Name="txtContrasena"
-                                     Style="{StaticResource LoginPasswordBoxStyle}"/>
-                        <TextBlock Text="Contraseña"
-                                   FontFamily="Poppins, Segoe UI"
-                                   FontSize="14"
-                                   Foreground="Gray"
-                                   VerticalAlignment="Center"
-                                   Margin="20,0,0,0"
-                                   IsHitTestVisible="False"
-                                   x:Name="placeholderContrasena"
-                                   Visibility="Visible"/>
-                    </Grid>
-                    
-                    <!-- Botón Iniciar Sesión -->
-                    <Button x:Name="btnIniciarSesion"
-                            Content="Iniciar sesión"
-                            Style="{StaticResource LoginButtonStyle}"
+                    <!-- Botón Enviar Código -->
+                    <Button x:Name="btnEnviarCodigo"
+                            Content="Enviar Código"
+                            Style="{StaticResource RecuperarButtonStyle}"
                             HorizontalAlignment="Center"
-                            Click="btnIniciarSesion_Click"/>
+                            Click="btnEnviarCodigo_Click"/>
                     
-                    <!-- Link Olvidaste Contraseña -->
-                    <TextBlock x:Name="linkOlvidasteContrasena"
-                               Text="¿Olvidaste tu contraseña?"
+                    <!-- Link Volver al Login -->
+                    <TextBlock x:Name="linkVolverLogin"
+                               Text="Volver al inicio de sesión"
                                FontFamily="Poppins, Segoe UI"
                                FontSize="12"
                                Foreground="#277DEE"
                                Cursor="Hand"
                                HorizontalAlignment="Center"
-                               Margin="0,60,0,0"
-                               MouseLeftButtonDown="linkOlvidasteContrasena_Click">
+                               Margin="0,40,0,0"
+                               MouseLeftButtonDown="linkVolverLogin_Click">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -296,3 +279,4 @@
         </Border>
     </Grid>
 </Window>
+

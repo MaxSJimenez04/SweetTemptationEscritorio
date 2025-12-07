@@ -131,11 +131,11 @@ namespace sweet_temptation_clienteEscritorio.vista
             }
         }
 
-        private void linkCrearCuenta_Click(object sender, MouseButtonEventArgs e)
+        private void linkOlvidasteContrasena_Click(object sender, MouseButtonEventArgs e)
         {
-            // TODO: Implementar navegación a ventana de registro
-            MessageBox.Show("Función de registro próximamente.", "Crear cuenta", 
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            var recuperarWindow = new wndRecuperarContrasena();
+            recuperarWindow.Show();
+            this.Close();
         }
     }
 
