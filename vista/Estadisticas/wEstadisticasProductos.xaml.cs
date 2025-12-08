@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Wpf;
 using sweet_temptation_clienteEscritorio.dto;
 using sweet_temptation_clienteEscritorio.servicios;
 using System;
+using System;
 using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -20,6 +24,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Color = System.Windows.Media.Color;
 
 
 namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
@@ -31,6 +36,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
         string _token;
         public List<Producto> _productos = new List<Producto>();
         public List<EstadisticaVentaProductoDTO> _estadisticasProducto = new List<EstadisticaVentaProductoDTO>();
+        
        
         public wEstadisticasProductos()
         {
@@ -180,9 +186,9 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
         {
             var respuesta = await _estadisticasService.ObtenerEstadisticasProductoAsync(fechaInicio, fechaFin, idProducto, _token);
 
-            if (respuesta.mensaje != null)
+            if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.estadisticas != null)
             {
-                if (respuesta.estadisticas != null)
+                if (respuesta.estadisticas.Count > 0)
                 {
                     _estadisticasProducto.Clear();
                     foreach (var estadistica in respuesta.estadisticas)
@@ -230,42 +236,44 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             }
         }
 
-        /*private void crearGrafico(IEnumerable<EstadisticaVentaProductoDTO> datos)
+        private void crearGrafico(List<EstadisticaVentaProductoDTO> datos)
         {
-            var serieOrdenada = datos.OrderBy(d => d.fecha).ToList();
-            var lineSeries = new LineSeries<DateTimePoint>
+            List<string> fechas = new List<string>();
+            foreach (var item in datos)
             {
-                Name = "Cantidad",
-                Values = (IReadOnlyCollection<DateTimePoint>)serieOrdenada.Select(d =>
-                    new DateTimePoint(d.fecha, d.ventasPorDia)),
+                fechas.Add(item.fecha.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+            }
+            
+            List<int> ventas = new List<int>();
+            foreach (var item in datos)
+            {
+                ventas.Add(item.ventasPorDia);
+            }
 
-                GeometrySize = 8,
-                Stroke = new SolidColorPaint(SKColors.LightPink) { StrokeThickness = 2 },
-                Fill = null
+
+            SeriesCollection = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Ventas: ",
+                    Values = new ChartValues<int>(ventas),
+                    LineSmoothness = 0,
+                    Fill = new SolidColorBrush(Color.FromRgb(251, 161, 183)),
+                    Stroke = new SolidColorBrush(Color.FromRgb(255, 112, 181))
+
+                },
+
             };
 
-            Series = new[] { lineSeries };
+            Labels = fechas.ToArray();
+            YFormatter = value => value.ToString("C");
 
-            EjesX = new[]
-            {
-                    new Axis
-                    {
-                        Labeler = value => DateTime.FromOADate(value).ToString("dd/MM/yy"),
-                        LabelsRotation = 45,
-                        UnitWidth = TimeSpan.FromDays(1).Ticks,
-                        Name = "Fecha"
-                    }
-                };
-
-            EjesY = new[]
-            {
-                    new Axis
-                    {
-                        Name = "Cantidad",
-                        MinLimit = 0,
-                    }
-                };
-        }*/
+            DataContext = this;
+        }
+        public SeriesCollection SeriesCollection { get; set; }
+        public string[] Labels { get; set; }
+        public Func<int, string> YFormatter { get; set; }
+        
 
         private async void cbNombreProducto_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -281,14 +289,14 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             }
 
             string opcion = cbRangoFecha.SelectedItem?.ToString() ?? string.Empty;
+            
             RangoFecha fechas = CalcularRangoFecha(opcion);
 
             await ObtenerEstadisticasProductoAsync(fechas.FechaInicio, fechas.FechaFin, idSeleccionado);
 
-            if (_estadisticasProducto != null && _estadisticasProducto.Any())
+           if (_estadisticasProducto != null && _estadisticasProducto.Any())
             {
-                IEnumerable<EstadisticaVentaProductoDTO> estadisticasProducto = _estadisticasProducto;
-                //crearGrafico(estadisticasProducto);
+                crearGrafico(_estadisticasProducto);
             }
 
         }

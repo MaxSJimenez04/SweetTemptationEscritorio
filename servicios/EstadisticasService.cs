@@ -52,7 +52,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
             string fechaInicioStr = fechaInicio.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             string fechaFinStr = fechaFin.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var respuesta = await _httpClient.GetAsync($"estadisticas/productos/{idProducto}/?fechaInicio={fechaInicioStr}&fechaFin={fechaFinStr}");
+            var respuesta = await _httpClient.GetAsync($"estadisticas/productos/{idProducto}?fechaInicio={fechaInicioStr}&fechaFin={fechaFinStr}&idProducto={idProducto}");
 
             if (respuesta.IsSuccessStatusCode)
             {
