@@ -19,14 +19,12 @@ public class Producto
     [JsonPropertyName("precio")]
     public decimal Precio { get; set; }
 
-    // Este campo se inicializa a 'true' en el cliente (wRegistrarProducto.xaml.cs)
     [JsonPropertyName("disponible")]
     public bool Disponible { get; set; }
 
     [JsonPropertyName("unidades")]
     public int Unidades { get; set; }
 
-    // Mantenemos la convención de tu DTO para los nombres de llave JSON (ej. fechaRegistro)
     [JsonPropertyName("fechaRegistro")]
     public DateTime FechaRegistro { get; set; }
 
@@ -35,8 +33,4 @@ public class Producto
 
     [JsonPropertyName("categoria")]
     public int Categoria { get; set; }
-
-    // Opcional: Si la imagen se envía como Base64
-    // [JsonPropertyName("imagenBase64")]
-    // public string ImagenBase64 { get; set; }
 }

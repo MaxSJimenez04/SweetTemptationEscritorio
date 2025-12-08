@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace sweet_temptation_clienteEscritorio.dto
+public class DetallesArchivoDTO
 {
-    internal class DetallesArchivoDTO
-    {
-        public int id { get; set; }
-        public DateTime fechaRegistro { get; set; }
-        public string extension { get; set; }
-        public string ruta { get; set; }
-    }
+    [JsonPropertyName("id")]
+    public int id { get; set; }
+
+    [JsonPropertyName("fechaRegistro")]
+    public DateTime fechaRegistro { get; set; }
+
+    [JsonPropertyName("extension")]
+    public string extension { get; set; }
+
+    [JsonPropertyName("ruta")]
+    public string ruta { get; set; }
 }
+

@@ -11,65 +11,64 @@
       FontFamily="Montserrat">
 
     <Page.Resources>
-        <DropShadowEffect x:Key="cardShadow" Color="#000000" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.1"/>
+
+        <DropShadowEffect x:Key="cardShadow"
+                          Color="#000000" Direction="270"
+                          ShadowDepth="3" BlurRadius="10" Opacity="0.1"/>
 
         <Style x:Key="btnAddCart" TargetType="Button">
             <Setter Property="Background" Value="#FFB6C1"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="15,5"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="20">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="20" 
+                                Padding="15,5">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#F06292"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
-                                <Setter Property="Foreground" Value="#999"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F06292"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
-        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+        <ControlTemplate x:Key="ComboToggleButton" TargetType="ToggleButton">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="30" />
                 </Grid.ColumnDefinitions>
                 <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="20" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" />
-                <fa:IconImage Grid.Column="1" Icon="ChevronDown" Height="12" Width="12" Foreground="#F06292" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <Path x:Name="Arrow" Grid.Column="1" Fill="#F06292" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M0,0 L4,4 L8,0 Z"/>
             </Grid>
         </ControlTemplate>
 
-        <Style x:Key="RoundedComboBox" TargetType="{x:Type ComboBox}">
+        <Style x:Key="CmbRedondo" TargetType="ComboBox">
             <Setter Property="Foreground" Value="#555"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="Montserrat"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="15,0,0,0"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                            <ToggleButton Name="ToggleButton" Template="{StaticResource ComboToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
                             <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="15,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                 <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="#E0E0E0" CornerRadius="10" Margin="0,5,0,0">
                                         <Border.Effect>
-                                            <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                                            <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
                                         </Border.Effect>
                                         <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
@@ -82,10 +81,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </Page.Resources>
 
     <Grid Background="#FFFBFBFB">
-
         <Grid x:Name="GridCatalogo">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -105,29 +104,41 @@
                     <TextBlock Text="Elige nuestros postres" FontSize="26" FontWeight="Bold" Foreground="#333"/>
                 </StackPanel>
 
-                <Border Grid.Column="2" Width="300" Height="40" Background="White" CornerRadius="20" Margin="0,0,20,0" BorderBrush="#E0E0E0" BorderThickness="1">
+                <Border Grid.Column="2" Width="300" Height="40"
+                        Background="White" CornerRadius="20"
+                        Margin="0,0,20,0" BorderBrush="#E0E0E0" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <fa:IconImage Icon="Search" Foreground="#999" Height="16" Margin="15,0,10,0"/>
-                        <TextBox x:Name="TxtBuscar" Grid.Column="1" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" FontSize="14" Foreground="#555" Text="Buscar postre..." GotFocus="TxtBuscar_GotFocus" LostFocus="TxtBuscar_LostFocus" TextChanged="TxtBuscar_TextChanged"/>
+                        <TextBox x:Name="TxtBuscar" Grid.Column="1"
+                                 BorderThickness="0" Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14" Foreground="#555"
+                                 Text="Buscar postre..."
+                                 GotFocus="TxtBuscar_GotFocus"
+                                 LostFocus="TxtBuscar_LostFocus"
+                                 TextChanged="TxtBuscar_TextChanged"/>
                     </Grid>
                 </Border>
 
-                <ComboBox x:Name="CmbCategorias" Grid.Column="3" Width="220" Height="40" Style="{StaticResource RoundedComboBox}" Cursor="Hand" SelectionChanged="CmbCategorias_SelectionChanged">
-                </ComboBox>
+                <ComboBox x:Name="CmbCategorias"
+                          Grid.Column="3"
+                          Width="220" Height="40"
+                          Cursor="Hand"
+                          Style="{StaticResource CmbRedondo}" 
+                          SelectionChanged="CmbCategorias_SelectionChanged"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10,0">
-                <ItemsControl x:Name="ItemsControlProductos" Focusable="False">
+                <ItemsControl x:Name="ItemsControlProductos">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Width="280" Height="380" Background="White" CornerRadius="15" Margin="15" BorderBrush="#F0F0F0" BorderThickness="1" Effect="{StaticResource cardShadow}">
@@ -140,7 +151,7 @@
 
                                     <Border Grid.Row="0" CornerRadius="15,15,0,0">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding ImagenProducto}" Stretch="UniformToFill"/>
+                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding ImagenProducto, FallbackValue={x:Null}}"/>
                                         </Border.Background>
                                         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" CornerRadius="10" Padding="10,4">
                                             <Border.Style>
@@ -160,10 +171,12 @@
                                     <StackPanel Grid.Row="1" Margin="15,10,15,0">
                                         <TextBlock Text="{Binding Nombre}" FontSize="18" FontWeight="Bold" Foreground="#333" TextTrimming="CharacterEllipsis"/>
                                         <TextBlock Text="{Binding Precio, StringFormat={}{0:C}}" FontSize="16" Foreground="#F06292" FontWeight="SemiBold" Margin="0,5,0,0"/>
-                                        <TextBlock Text="{Binding Descripcion}" FontSize="12" Foreground="#888" TextTrimming="CharacterEllipsis" MaxHeight="40" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Descripcion}" FontSize="12" Foreground="#888" TextTrimming="CharacterEllipsis" MaxHeight="40" TextWrapping="Wrap"/>
                                     </StackPanel>
 
-                                    <Button Grid.Row="2" Content="Ver Detalle" Style="{StaticResource btnAddCart}" Margin="15,0,15,15" Click="BtnVerDetalle_Click" Tag="{Binding}"/>
+                                    <Button Grid.Row="2" Content="Ver Detalle" Margin="15,0,15,15" 
+                                            Style="{StaticResource btnAddCart}" 
+                                            Click="BtnVerDetalle_Click" Tag="{Binding}"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -201,19 +214,19 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Button Grid.Row="0" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnCerrarModal_Click">
+                        <Button Grid.Row="0" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Click="BtnCerrarModal_Click">
                             <fa:IconImage Icon="Times" Foreground="#999" Height="20"/>
                         </Button>
 
-                        <TextBlock x:Name="TxtDetalleNombre" Grid.Row="1" Text="Nombre Producto" FontSize="28" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="TxtDetalleNombre" Grid.Row="1" FontSize="28" FontWeight="Bold" Foreground="#333"/>
 
                         <ScrollViewer Grid.Row="2" Margin="0,15">
-                            <TextBlock x:Name="TxtDetalleDescripcion" Text="Descripción..." FontSize="14" Foreground="#666" TextWrapping="Wrap" LineHeight="22"/>
+                            <TextBlock x:Name="TxtDetalleDescripcion" FontSize="14" Foreground="#666" TextWrapping="Wrap" LineHeight="22"/>
                         </ScrollViewer>
 
                         <StackPanel Grid.Row="3" HorizontalAlignment="Right" Margin="0,0,0,15">
-                            <TextBlock Text="Total:" FontSize="12" Foreground="#999" HorizontalAlignment="Right"/>
-                            <TextBlock x:Name="TxtDetallePrecioTotal" Text="$0.00" FontSize="32" FontWeight="Bold" Foreground="#F06292"/>
+                            <TextBlock Text="Total:" FontSize="12" Foreground="#999"/>
+                            <TextBlock x:Name="TxtDetallePrecioTotal" FontSize="32" FontWeight="Bold" Foreground="#F06292"/>
                         </StackPanel>
 
                         <Grid Grid.Row="4">
@@ -222,18 +235,45 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="25" Height="50" Width="140">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Content="-" Width="40" Background="Transparent" BorderThickness="0" FontSize="20" FontWeight="Bold" Foreground="#F06292" Click="BtnMenos_Click"/>
-                                    <TextBlock x:Name="TxtCantidad" Text="1" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
-                                    <Button Content="+" Width="40" Background="Transparent" BorderThickness="0" FontSize="20" FontWeight="Bold" Foreground="#F06292" Click="BtnMas_Click"/>
-                                </StackPanel>
+                            <Border BorderBrush="#E0E0E0" BorderThickness="1"
+                                    CornerRadius="25" Height="50" Width="140">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" Content="-" 
+                                            Background="Transparent" BorderThickness="0"
+                                            FontSize="20" FontWeight="Bold" 
+                                            Foreground="#F06292"
+                                            VerticalContentAlignment="Center"
+                                            Click="BtnMenos_Click"/>
+
+                                    <TextBlock Grid.Column="1" x:Name="TxtCantidad" Text="1"
+                                               FontSize="18" FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+
+                                    <Button Grid.Column="2" Content="+" 
+                                            Background="Transparent" BorderThickness="0"
+                                            FontSize="20" FontWeight="Bold" 
+                                            Foreground="#F06292"
+                                            VerticalContentAlignment="Center"
+                                            Click="BtnMas_Click"/>
+                                </Grid>
                             </Border>
 
-                            <Button x:Name="BtnAgregarConfirmar" Grid.Column="1" Margin="20,0,0,0" Style="{StaticResource btnAddCart}" Height="50" Click="BtnAgregarAlPedido_Click">
-                                <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BtnAgregarConfirmar"
+                                    Grid.Column="1" Margin="20,0,0,0"
+                                    Height="50"
+                                    Style="{StaticResource btnAddCart}"
+                                    Click="BtnAgregarAlPedido_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <fa:IconImage Icon="CartPlus" Foreground="White" Height="20" Margin="0,0,10,0"/>
-                                    <TextBlock Text="AGREGAR AL PEDIDO" VerticalAlignment="Center" FontWeight="Bold"/>
+                                    <TextBlock Text="AGREGAR AL PEDIDO" FontWeight="Bold"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -243,4 +283,3 @@
         </Grid>
     </Grid>
 </Page>
-    
