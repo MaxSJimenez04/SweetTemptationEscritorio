@@ -1,6 +1,7 @@
-using sweet_temptation_clienteEscritorio.vista.producto;
 using sweet_temptation_clienteEscritorio.model;
 using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.producto;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,8 +34,9 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
 
         private void BtnCarrito_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Mi Carrito - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            Pedido pedido = new Pedido();
+            pedido.id = 0;
+            NavigationService.Navigate(new wPedido(pedido));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
