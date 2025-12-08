@@ -470,14 +470,151 @@
     <DropShadowEffect x:Key="SombraSuave"
                   Color="Gray" BlurRadius="15" ShadowDepth="3"/>
 
-
+    <!-- Etiquetas tipo Label-->
     <Style x:Key="lbTexto" TargetType="Label">
         <Setter Property="Foreground" Value="#282828"/>
         <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
         <Setter Property="FontSize" Value="20"/>
     </Style>
+    
+    <!-- ComboBox -->
+    <Style x:Key="cbEstandar" TargetType="ComboBox">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#FF70B5"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Foreground" Value="#FF70B5"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Foreground" Value="#FF70B5"/>
+                            <!-- ← Color del texto -->
+                            <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
+                            <Setter Property="Padding" Value="6"/>
 
+                            <!-- Hover -->
+                            <Setter Property="Background" Value="White"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FFE05FA5"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Grid>
+                        <!-- Cuerpo del ComboBox -->
+                        <Border x:Name="ComboBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="40">
+                            <Grid Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
+                                <!-- Placeholder -->
+                                <TextBlock x:Name="PlaceholderText"
+                                       Grid.Column="0"
+                                       Margin="{TemplateBinding Padding}"
+                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       Foreground="#FFB0B0B0"
+                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"
+                                       Visibility="Collapsed"/>
+
+                                <!-- Texto / contenido seleccionado -->
+                                <ContentPresenter x:Name="ContentPresenter"
+                                              Grid.Column="0"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+
+                                <!-- Botón de desplegar -->
+                                <ToggleButton x:Name="DropDownToggle"
+                                          Grid.Column="1"
+                                          Focusable="False"
+                                          ClickMode="Press"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Padding="8,0,12,0"
+                                          IsChecked="{Binding IsDropDownOpen,
+                                                             RelativeSource={RelativeSource TemplatedParent},
+                                                             Mode=TwoWay}">
+                                    <Path Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Stretch="Uniform"
+                                      Width="10"
+                                      Height="6"
+                                      Fill="{TemplateBinding Foreground}"/>
+                                </ToggleButton>
+                            </Grid>
+                        </Border>
+
+                        <!-- Popup con los ítems -->
+                        <Popup x:Name="PART_Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                            <Grid>
+                                <Border Background="White"
+                                    BorderBrush="#FF70B5"
+                                    BorderThickness="2"
+                                    CornerRadius="10"
+                                    SnapsToDevicePixels="True">
+                                    <ScrollViewer Margin="2"
+                                              SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+
+                    
+
+                    <ControlTemplate.Triggers>
+                        <!-- Mostrar placeholder cuando no hay selección -->
+                        <Trigger Property="SelectedItem" Value="{x:Null}">
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="ContentPresenter" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+
+                        <Trigger Property="SelectedItem" Value="{x:Null}"  >
+                            <!-- Nada extra, solo asegura el estado base -->
+                        </Trigger>
+
+                        <!-- Hover del combo -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ComboBorder" Property="Background" Value="#FF70B5"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+
+                        <!-- Cuando el desplegable está abierto -->
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="ComboBorder" Property="Background" Value="#CCFF70B5"/>
+                            <Setter TargetName="ComboBorder" Property="BorderBrush" Value="#CCFF70B5"/>
+                        </Trigger>
+
+                        <!-- Deshabilitado -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ComboBorder" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+<!-- Item Pedido ListBox -->
     <Style x:Key="PedidoItemStyle" TargetType="ListBoxItem">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="0,0,0,10"/>

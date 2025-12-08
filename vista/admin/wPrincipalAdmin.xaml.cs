@@ -1,3 +1,4 @@
+using sweet_temptation_clienteEscritorio.vista.Estadisticas;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -25,8 +26,7 @@ namespace sweet_temptation_clienteEscritorio.vista.admin
 
         private void BtnEstadisticasProductos_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Estadísticas de Productos - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wEstadisticasProductos());
         }
 
         private void BtnGestionCuentas_Click(object sender, RoutedEventArgs e)
