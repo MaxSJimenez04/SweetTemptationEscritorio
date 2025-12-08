@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Linq;
@@ -23,6 +24,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Color = System.Windows.Media.Color;
 
 
 namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
@@ -188,7 +190,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             {
                 if (respuesta.estadisticas.Count > 0)
                 {
-                    MessageBox.Show("Total Estadisticas: " + respuesta.estadisticas.Count);
                     _estadisticasProducto.Clear();
                     foreach (var estadistica in respuesta.estadisticas)
                     {
@@ -240,7 +241,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             List<string> fechas = new List<string>();
             foreach (var item in datos)
             {
-                fechas.Add(item.fecha.ToString());
+                fechas.Add(item.fecha.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
             }
             
             List<int> ventas = new List<int>();
@@ -249,16 +250,19 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                 ventas.Add(item.ventasPorDia);
             }
 
-            
+
             SeriesCollection = new SeriesCollection
             {
                 new LineSeries
                 {
-                    Title = "Venta",
+                    Title = "Ventas: ",
                     Values = new ChartValues<int>(ventas),
-                    LineSmoothness = 0
+                    LineSmoothness = 0,
+                    Fill = new SolidColorBrush(Color.FromRgb(251, 161, 183)),
+                    Stroke = new SolidColorBrush(Color.FromRgb(255, 112, 181))
+
                 },
-                
+
             };
 
             Labels = fechas.ToArray();
@@ -285,11 +289,10 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             }
 
             string opcion = cbRangoFecha.SelectedItem?.ToString() ?? string.Empty;
+            
             RangoFecha fechas = CalcularRangoFecha(opcion);
 
             await ObtenerEstadisticasProductoAsync(fechas.FechaInicio, fechas.FechaFin, idSeleccionado);
-
-            MessageBox.Show("Total Estadisticas: " + _estadisticasProducto.Count);
 
            if (_estadisticasProducto != null && _estadisticasProducto.Any())
             {
