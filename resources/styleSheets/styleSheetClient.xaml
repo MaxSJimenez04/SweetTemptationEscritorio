@@ -476,7 +476,59 @@
         <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
         <Setter Property="FontSize" Value="20"/>
     </Style>
-    
+
+
+    <Style x:Key="PedidoItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+
+                    <Border BorderBrush="#FF70B5"
+                        BorderThickness="2"
+                        CornerRadius="20"
+                        Padding="10"
+                        Margin="50,0,50,40"
+                        MinHeight="90">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding id}"
+                                   FontSize="18"
+                                   VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="1"
+                                   Text="{Binding fechaCompra}"
+                                   FontSize="18"
+                                   VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="2"
+                                   Text="{Binding total}"
+                                   FontSize="18"
+                                   VerticalAlignment="Center"/>
+
+                            <Button Grid.Column="3"
+                                Content="Ver"
+                                Margin="10,15,15,20"
+                                Padding="10,4"
+                                FontSize="16"
+                                Cursor="Hand"/>
+                        </Grid>
+
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 
 </ResourceDictionary>
