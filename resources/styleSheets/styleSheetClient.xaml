@@ -476,7 +476,7 @@
         <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
         <Setter Property="FontSize" Value="20"/>
     </Style>
-    
+
     <!-- ComboBox -->
     <Style x:Key="cbEstandar" TargetType="ComboBox">
         <Setter Property="Background" Value="White"/>
@@ -487,18 +487,20 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <!-- IMPORTANTE: este template es para ComboBox NO editable -->
+        <Setter Property="IsEditable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
+
+                    <!-- Estilo de los ítems del dropdown -->
                     <ControlTemplate.Resources>
                         <Style TargetType="ComboBoxItem">
                             <Setter Property="Foreground" Value="#FF70B5"/>
-                            <!-- ← Color del texto -->
                             <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
                             <Setter Property="Padding" Value="6"/>
-
-                            <!-- Hover -->
                             <Setter Property="Background" Value="White"/>
+
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#FFE05FA5"/>
@@ -507,6 +509,7 @@
                             </Style.Triggers>
                         </Style>
                     </ControlTemplate.Resources>
+
                     <Grid>
                         <!-- Cuerpo del ComboBox -->
                         <Border x:Name="ComboBorder"
@@ -520,7 +523,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Placeholder -->
+                                <!-- Placeholder: usa Tag del ComboBox -->
                                 <TextBlock x:Name="PlaceholderText"
                                        Grid.Column="0"
                                        Margin="{TemplateBinding Padding}"
@@ -572,7 +575,8 @@
                                     BorderBrush="#FF70B5"
                                     BorderThickness="2"
                                     CornerRadius="10"
-                                    SnapsToDevicePixels="True">
+                                    SnapsToDevicePixels="True"
+                                    Width="{TemplateBinding ActualWidth}">
                                     <ScrollViewer Margin="2"
                                               SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True"
@@ -583,17 +587,11 @@
                         </Popup>
                     </Grid>
 
-                    
-
                     <ControlTemplate.Triggers>
-                        <!-- Mostrar placeholder cuando no hay selección -->
-                        <Trigger Property="SelectedItem" Value="{x:Null}">
+                        <!-- Mostrar placeholder cuando NO hay selección -->
+                        <Trigger Property="SelectedIndex" Value="-1">
                             <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="ContentPresenter" Property="Visibility" Value="Collapsed"/>
-                        </Trigger>
-
-                        <Trigger Property="SelectedItem" Value="{x:Null}"  >
-                            <!-- Nada extra, solo asegura el estado base -->
                         </Trigger>
 
                         <!-- Hover del combo -->
@@ -613,8 +611,101 @@
                             <Setter TargetName="ComboBorder" Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-<!-- Item Pedido ListBox -->
+
+    <!-- Estilo de las filas -->
+    <Style x:Key="dgRowEstandar" TargetType="DataGridRow">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="#FF70B5"/>
+        <Setter Property="BorderBrush" Value="#FF70B5"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
+        <Setter Property="FontSize" Value="22"/>
+
+        <Style.Triggers>
+            <!-- Hover: cuando el mouse está sobre cualquier parte de la fila -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <!-- Tono ligeramente más oscuro que el rosa base -->
+                <Setter Property="Background" Value="#FFE05FA5"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+
+            <!-- Seleccionado -->
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#FF70B5"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+
+            <!-- Deshabilitado -->
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Estilo de las celdas (para que la fila controle el fondo) -->
+    <Style x:Key="dgCellEstandar" TargetType="DataGridCell">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="6,3"/>
+        <Setter Property="Foreground" Value="#FF70B5"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#poppins"/>
+        <Setter Property="FontSize" Value="20"/>
+
+        <Style.Triggers>
+            <!-- Que la selección de celda respete el estilo de la fila -->
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Estilo de encabezados de columna -->
+    <Style x:Key="dgHeaderEstandar" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="#FF70B5"/>
+        <Setter Property="BorderBrush" Value="#FF70B5"/>
+        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/resources/fonts/#prata"/>
+        <Setter Property="FontSize" Value="19"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="6,4"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF70B5"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Estilo general del DataGrid -->
+    <Style x:Key="dgEstandar" TargetType="DataGrid">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#FF70B5"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Foreground" Value="#FF70B5"/>
+        <Setter Property="RowBackground" Value="White"/>
+        <Setter Property="AlternatingRowBackground" Value="#FFFDF4FB" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="#FFECCFEF"/>
+        <Setter Property="VerticalGridLinesBrush" Value="#FFECCFEF"/>
+        <Setter Property="HeadersVisibility" Value="All"/>
+        <Setter Property="RowStyle" Value="{StaticResource dgRowEstandar}"/>
+        <Setter Property="CellStyle" Value="{StaticResource dgCellEstandar}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource dgHeaderEstandar}"/>
+    </Style>
+
+
+    <!-- Item Pedido ListBox -->
     <Style x:Key="PedidoItemStyle" TargetType="ListBoxItem">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="0,0,0,10"/>
