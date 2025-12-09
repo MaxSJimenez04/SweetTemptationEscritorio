@@ -32,8 +32,8 @@
                  Margin="25" />
 
         <ComboBox x:Name="cbRangoFecha" Grid.Column="1" Grid.Row="0" Height="60" Width="550" HorizontalAlignment="Right" Margin="10"
-                  Focusable="True" IsEditable="True" IsReadOnly="True" Text=" Seleccionar Rango " Style="{StaticResource cbEstandar}"
-                  SelectionChanged="cbRangoFecha_SelectionChanged"/>
+                  Focusable="True" Tag=" Selecciona un Rango de tiempo"
+                  SelectionChanged="cbRangoFecha_SelectionChanged" Style="{StaticResource cbEstandar}"/>
 
         <Grid Grid.Column="0" Grid.Row="1">
             <TextBlock x:Name="txtPeriodo" Text="Periodo: " FontSize="25" Style="{StaticResource TxtTitulo}" Margin="10"/>
@@ -52,7 +52,7 @@
                         Header="Veces comprado"
                         Binding="{Binding ventas}"
                         CellStyle="{StaticResource dgCellEstandar}"
-                        Width="0.5*"/>
+                        Width="0.8*"/>
                 </DataGrid.Columns>
             </DataGrid>
 
@@ -72,7 +72,8 @@
                         Header="Veces comprado"
                         Binding="{Binding ventas}"
                         CellStyle="{StaticResource dgCellEstandar}"
-                        Width="0.5*"/>
+                        Width="0.8*"
+                        />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -81,8 +82,8 @@
                    Margin="10"/>
         <ComboBox x:Name="cbNombreProducto" Grid.Column="1" Grid.Row="1"
                   Height="50" Width="640" HorizontalAlignment="Center" VerticalAlignment="Top"
-                  Margin="10,50,0,0" IsEditable="True" Focusable="True" IsReadOnly="True" Text="Selecciona un producto"
-                  DisplayMemberPath="Nombre" SelectedValuePath="IdProducto" Style="{StaticResource cbEstandar}" SelectionChanged="cbNombreProducto_SelectionChanged"/>
+                  Margin="10,50,0,0" Focusable="True" Tag="Selecciona un Producto"
+                  DisplayMemberPath="Nombre" SelectedValuePath="IdProducto" SelectionChanged="cbNombreProducto_SelectionChanged" Style="{StaticResource cbEstandar}"/>
 
         <Grid Grid.Row="1" Grid.Column="1" Margin="10,100,0,0" Width="700" Height="450">
             <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" >

@@ -238,6 +238,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
         private void crearGrafico(List<EstadisticaVentaProductoDTO> datos)
         {
+            
             List<string> fechas = new List<string>();
             foreach (var item in datos)
             {
@@ -250,6 +251,10 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                 ventas.Add(item.ventasPorDia);
             }
 
+            if(SeriesCollection != null)
+            {
+                SeriesCollection.Clear();
+            }
 
             SeriesCollection = new SeriesCollection
             {
@@ -266,13 +271,14 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             };
 
             Labels = fechas.ToArray();
-            YFormatter = value => value.ToString("C");
+            YFormatter = value => value.ToString("N0");
 
+            DataContext = null;
             DataContext = this;
         }
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
-        public Func<int, string> YFormatter { get; set; }
+        public Func<double, string> YFormatter { get; set; }
         
 
         private async void cbNombreProducto_SelectionChanged(object sender, SelectionChangedEventArgs e)
