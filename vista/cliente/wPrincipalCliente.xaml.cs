@@ -41,7 +41,10 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            if (NavigationService != null)
+            {
+                NavigationService.Navigate(new wConsultarProductos());
+            }
         }
     }
 }

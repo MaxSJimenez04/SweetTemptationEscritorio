@@ -29,7 +29,7 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
                 ventana.fmPrincipal.Navigate(new wAdministrarProductos());
             }
         }
-
+         
         private void BtnGestionarPedidos_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new wPedidos());

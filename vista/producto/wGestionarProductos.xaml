@@ -286,7 +286,7 @@
                             </DataGridTemplateColumn>
 
                             <!-- Fecha de registro -->
-                            <DataGridTextColumn Header="Fec. Registro"
+                            <DataGridTextColumn Header="Fecha de Registro"
                                                 Binding="{Binding FechaRegistro, StringFormat={}{0:dd/MM/yyyy}}"
                                                 Width="130"
                                                 ElementStyle="{StaticResource RightAlignedText}"

@@ -48,23 +48,85 @@
             <Setter Property="FontSize" Value="16"/>
         </Style>
 
-        <Style x:Key="FilterControlStyle" TargetType="{x:Type Control}">
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="1"/>
+        <Style TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Control}">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
+                    <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                        <Border x:Name="PART_ContentHost"
+                                Focusable="False"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5">
-                            <ContentPresenter/>
-                        </Border>
+                                BorderBrush="{TemplateBinding BorderBrush}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ComboToggleButton" TargetType="{x:Type ToggleButton}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="8" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" />
+                <Path x:Name="Arrow" Grid.Column="1" Fill="#F06292" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M0,0 L4,4 L8,0 Z"/>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="RoundedComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="15,0,0,0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                          Template="{StaticResource ComboToggleButton}" 
+                                          Grid.Column="2" 
+                                          Focusable="false" 
+                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" 
+                                          ClickMode="Press"/>
+                            <ContentPresenter Name="ContentSite" 
+                                              IsHitTestVisible="False" 
+                                              Content="{TemplateBinding SelectionBoxItem}" 
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                              Margin="15,0,30,0" 
+                                              VerticalAlignment="Center" 
+                                              HorizontalAlignment="Left" />
+                            <Popup Name="Popup" Placement="Bottom" 
+                                   IsOpen="{TemplateBinding IsDropDownOpen}" 
+                                   AllowsTransparency="True" 
+                                   Focusable="False" 
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" 
+                                      MinWidth="{TemplateBinding ActualWidth}" 
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" 
+                                            Background="White" 
+                                            BorderThickness="1" 
+                                            BorderBrush="#E0E0E0" 
+                                            CornerRadius="8" 
+                                            Margin="0,5,0,0">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                                        </Border.Effect>
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -82,7 +144,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}"
-                                BorderBrush="#FF70B5"
+                                BorderBrush="#FF5A8F"
                                 BorderThickness="1"
                                 CornerRadius="8">
                             <Border.Effect>
@@ -154,27 +216,62 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="220"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Content="Fecha Inicial:" Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
-                    <DatePicker x:Name="dpFechaInicial" Grid.Column="1" Style="{StaticResource FilterControlStyle}"/>
+                    <Border Grid.Column="1"
+                            Width="220" Height="40"
+                            Background="White" 
+                            BorderBrush="#CCCCCC" 
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <DatePicker x:Name="dpFechaInicial" 
+                                    VerticalAlignment="Center" 
+                                    Margin="5,0,0,0"/>
+                    </Border>
 
                     <Label Content="Fecha Final:" Grid.Column="3" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
-                    <DatePicker x:Name="dpFechaFinal" Grid.Column="4" Style="{StaticResource FilterControlStyle}"/>
+                    <Border Grid.Column="4"
+                            Width="220" Height="40"
+                            Background="White" 
+                            BorderBrush="#CCCCCC" 
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <DatePicker x:Name="dpFechaFinal" 
+                                    VerticalAlignment="Center" 
+                                    Margin="5,0,0,0"/>
+                    </Border>
 
                     <Label Content="Estado:" Grid.Column="6" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
-                    <ComboBox x:Name="cbEstadoVenta" Grid.Column="7" SelectedIndex="0" Style="{StaticResource FilterControlStyle}">
+                    <ComboBox x:Name="cbEstadoVenta" 
+                              Grid.Column="7" 
+                              SelectedIndex="0" 
+                              Style="{StaticResource RoundedComboBoxStyle}"
+                              Width="220" Height="40">
                         <ComboBoxItem Content="Todas"/>
                         <ComboBoxItem Content="Completada"/>
                         <ComboBoxItem Content="Cancelada"/>
                     </ComboBox>
 
+                    <Button x:Name="BtnLimpiar"
+                            Grid.Column="9"
+                            Width="40"
+                            Height="40"
+                            Margin="5"
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="#E0E0E0"
+                            Click="BtnLimpiar_Click">
+                        <fa:IconImage Icon="Eraser" Foreground="#555" Width="20" Height="20"/>
+                    </Button>
+
                     <Button x:Name="btnBuscar" 
-                            Grid.Column="9" 
+                            Grid.Column="10" 
                             Content="Buscar" 
                             Style="{StaticResource ModernButtonStyle}"
-                            Background="#FF70B5"/>
+                            Background="#FF70B5"
+                            Click="btnBuscar_Click"/>
                 </Grid>
             </Border>
 
@@ -185,7 +282,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Resultados de Ventas" 
+                <TextBlock Text="Ventas realizadas" 
                            Grid.Row="0"
                            FontSize="24" 
                            FontWeight="Bold" 
@@ -206,26 +303,25 @@
                           RowStyle="{StaticResource DataGridRowStyle}">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID Pedido" 
-                                            Binding="{Binding IdPedido}" 
-                                            Width="0.5*" 
-                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
-
-                        <DataGridTextColumn Header="Fecha de Compra" 
-                                            Binding="{Binding FechaCompra, StringFormat='dd/MM/yyyy HH:mm'}" 
+                        <DataGridTextColumn Header="Tipo de Pedido" 
+                                            Binding="{Binding TipoPedido}" 
                                             Width="*" 
                                             ElementStyle="{StaticResource CenteredColumnStyle}"/>
 
-                        <DataGridTextColumn Header="Total" 
-                                            Binding="{Binding Total, StringFormat='C'}" 
-                                            Width="0.7*" 
-                                            ElementStyle="{StaticResource RightAlignedColumnStyle}"/>
+                        <DataGridTextColumn Header="Fecha de Compra" 
+                                            Binding="{Binding FechaCompra, StringFormat='dd/MM/yyyy'}" 
+                                            Width="*" 
+                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
 
                         <DataGridTextColumn Header="Estado" 
                                             Binding="{Binding Estado}" 
                                             Width="*"
                                             ElementStyle="{StaticResource CenteredColumnStyle}"/>
 
+                        <DataGridTextColumn Header="Total" 
+                                            Binding="{Binding Total, StringFormat='C'}" 
+                                            Width="0.8*" 
+                                            ElementStyle="{StaticResource RightAlignedColumnStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -251,4 +347,3 @@
         </Grid>
     </Grid>
 </Page>
-    

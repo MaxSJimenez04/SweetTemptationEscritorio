@@ -140,5 +140,41 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
 
         }
+
+        // para ventas
+        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ConsultarVentasAsync(
+            DateTime inicio, DateTime fin, string estado, string token)
+        {
+            // Aseguramos que el token se use en esta petición específica
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // 1. Formatear las fechas como YYYY-MM-DD para el endpoint de Java
+            string fechaInicioStr = inicio.ToString("yyyy-MM-dd");
+            string fechaFinStr = fin.ToString("yyyy-MM-dd");
+
+            // 2. Construir la URL con el endpoint de consulta de tu API
+            string url = $"pedido/consultar?fechaInicio={fechaInicioStr}&fechaFin={fechaFinStr}&estado={estado}";
+
+            var respuesta = await _httpClient.GetAsync(url);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                // Maneja 204 No Content (no hay resultados, pero la llamada fue exitosa)
+                if (respuesta.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return (new List<PedidoDTO>(), respuesta.StatusCode, "No se encontraron resultados.");
+                }
+
+                // Lee la lista de PedidoDTO
+                var pedidos = await respuesta.Content.ReadFromJsonAsync<List<PedidoDTO>>();
+                return (pedidos, respuesta.StatusCode, null);
+            }
+            else
+            {
+                // Manejo de errores (como el 403 Forbidden que viste)
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return (null, respuesta.StatusCode, mensaje);
+            }
+        }
     }
 }
