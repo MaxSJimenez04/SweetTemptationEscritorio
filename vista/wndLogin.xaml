@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Sweet Temptation - Login" 
-        Height="800" Width="1280"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        WindowStyle="SingleBorderWindow">
-    
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen">
+
     <Window.Resources>
         <!-- Colores -->
         <Color x:Key="PinkPrimary">#FF70B5</Color>
@@ -18,7 +18,7 @@
         <SolidColorBrush x:Key="PinkPrimaryBrush" Color="{StaticResource PinkPrimary}"/>
         <SolidColorBrush x:Key="PinkLightBrush" Color="{StaticResource PinkLight}"/>
         <SolidColorBrush x:Key="PinkDarkBrush" Color="{StaticResource PinkDark}"/>
-        
+
         <!-- Estilo para TextBox -->
         <Style x:Key="LoginTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="54"/>
@@ -44,7 +44,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Estilo para PasswordBox -->
         <Style x:Key="LoginPasswordBoxStyle" TargetType="PasswordBox">
             <Setter Property="Height" Value="54"/>
@@ -70,7 +70,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Estilo para el botón de login -->
         <Style x:Key="LoginButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="54"/>
@@ -107,7 +107,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <!-- Fondo principal con gradiente -->
     <Grid>
         <Grid.Background>
@@ -116,20 +116,20 @@
                 <GradientStop Color="#FFFFFF" Offset="0.25"/>
             </LinearGradientBrush>
         </Grid.Background>
-        
+
         <!-- Fondo con patrón de iconos -->
         <Image Source="/resources/images/login/Fondo.png" 
                Stretch="UniformToFill" 
                Opacity="0.66"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"/>
-        
+
         <!-- Imágenes decorativas izquierda -->
         <Canvas>
             <!-- Chispas -->
             <Image Source="/resources/images/login/Chispas.png"
                    Width="256" Height="146"
-                   Canvas.Left="98" Canvas.Top="20">
+                   Canvas.Left="336" Canvas.Top="69" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Image.RenderTransform>
                     <RotateTransform Angle="-12"/>
                 </Image.RenderTransform>
@@ -137,11 +137,11 @@
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
                 </Image.Effect>
             </Image>
-            
+
             <!-- Crema/Frosting -->
             <Image Source="/resources/images/login/Crema.png"
                    Width="273" Height="220"
-                   Canvas.Left="180" Canvas.Top="160">
+                   Canvas.Left="473" Canvas.Top="141" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image.RenderTransform>
                     <RotateTransform Angle="17"/>
                 </Image.RenderTransform>
@@ -149,11 +149,11 @@
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
                 </Image.Effect>
             </Image>
-            
+
             <!-- Bizcocho -->
             <Image Source="/resources/images/login/Bizcocho.png"
                    Width="244" Height="154"
-                   Canvas.Left="91" Canvas.Top="420">
+                   Canvas.Left="288" Canvas.Top="412">
                 <Image.RenderTransform>
                     <RotateTransform Angle="-14"/>
                 </Image.RenderTransform>
@@ -161,11 +161,11 @@
                     <DropShadowEffect BlurRadius="20" ShadowDepth="15" Direction="270" Opacity="0.25"/>
                 </Image.Effect>
             </Image>
-            
+
             <!-- Envoltura -->
             <Image Source="/resources/images/login/Envoltura.png"
                    Width="280" Height="213"
-                   Canvas.Left="187" Canvas.Top="560">
+                   Canvas.Left="418" Canvas.Top="586" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Image.RenderTransform>
                     <RotateTransform Angle="-22"/>
                 </Image.RenderTransform>
@@ -174,7 +174,7 @@
                 </Image.Effect>
             </Image>
         </Canvas>
-        
+
         <!-- Card de Login -->
         <Border Width="454" Height="677"
                 HorizontalAlignment="Right"
@@ -187,7 +187,7 @@
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30" ShadowDepth="10" Direction="270" Opacity="0.15"/>
             </Border.Effect>
-            
+
             <Grid>
                 <!-- Efecto de goteo rosa -->
                 <Grid Height="130"
@@ -207,13 +207,13 @@
                 <!-- Contenido del card -->
                 <StackPanel VerticalAlignment="Center" 
                             Margin="45,80,45,40">
-                    
+
                     <!-- Logo -->
                     <Image Source="/resources/images/login/logo_cupcake.png"
                            Width="80" Height="108"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,5"/>
-                    
+
                     <!-- Título -->
                     <TextBlock Text="SweetTemptation"
                                FontFamily="Pacifico, Segoe Script, Segoe UI"
@@ -221,7 +221,7 @@
                                Foreground="{StaticResource PinkDarkBrush}"
                                HorizontalAlignment="Center"
                                Margin="0,0,0,50"/>
-                    
+
                     <!-- Campo Usuario -->
                     <Grid Margin="0,0,0,20">
                         <TextBox x:Name="txtUsuario"
@@ -247,7 +247,7 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </Grid>
-                    
+
                     <!-- Campo Contraseña -->
                     <Grid Margin="0,0,0,40">
                         <PasswordBox x:Name="txtContrasena"
@@ -262,14 +262,14 @@
                                    x:Name="placeholderContrasena"
                                    Visibility="Visible"/>
                     </Grid>
-                    
+
                     <!-- Botón Iniciar Sesión -->
                     <Button x:Name="btnIniciarSesion"
                             Content="Iniciar sesión"
                             Style="{StaticResource LoginButtonStyle}"
                             HorizontalAlignment="Center"
                             Click="btnIniciarSesion_Click"/>
-                    
+
                     <!-- Link Olvidaste Contraseña -->
                     <TextBlock x:Name="linkOlvidasteContrasena"
                                Text="¿Olvidaste tu contraseña?"
@@ -290,7 +290,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    
+
                 </StackPanel>
             </Grid>
         </Border>

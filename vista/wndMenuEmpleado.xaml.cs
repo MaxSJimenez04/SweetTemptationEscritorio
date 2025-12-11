@@ -1,4 +1,6 @@
 ﻿using sweet_temptation_clienteEscritorio.vista.empleado;
+using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System.Windows;
 
 namespace sweet_temptation_clienteEscritorio.vista
@@ -11,18 +13,6 @@ namespace sweet_temptation_clienteEscritorio.vista
             fmPrincipal.Navigate(new wPrincipalEmpleado());
         }
 
-        private void BtnClickRegresar(object sender, RoutedEventArgs e)
-        {
-            if (fmPrincipal.CanGoBack)
-            {
-                fmPrincipal.GoBack();
-            }
-            else
-            {
-                fmPrincipal.Navigate(new wPrincipalEmpleado());
-            }
-        }
-
         private void BtnClickCerrarSesion(object sender, RoutedEventArgs e)
         {
             App.Current.Properties.Clear();
@@ -30,9 +20,19 @@ namespace sweet_temptation_clienteEscritorio.vista
             this.Close();
         }
 
-        private void fmPrincipal_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        private void BtnInventarioClick(object sender, RoutedEventArgs e)
         {
+            fmPrincipal.Navigate(new wAdministrarProductos());
+        }
 
+        private void BtnHistorialClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wHistorialPedidos());
+        }
+
+        private void BtnPedidosClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wPedidos());
         }
     }
 }
