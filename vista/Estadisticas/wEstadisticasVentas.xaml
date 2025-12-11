@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.Estadisticas"
       xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="wEstadisticasVentas">
@@ -124,11 +125,20 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
+            
+            <Button x:Name="BtnRegresar" 
+                Grid.Column="0"
+                Height="30" Width="60"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Margin="5,50,0,0"
+                Style="{StaticResource iconButton}" Click="BtnRegresarClick">
+                <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+            </Button>
+            
             <Border Grid.Row="0"
                     Background="White"
                     CornerRadius="10"
-                    Margin="20,20,20,20">
+                    Margin="70,20,20,20">
                 <Border.Effect>
                     <DropShadowEffect Color="#CCCCCC" Direction="270" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
                 </Border.Effect>

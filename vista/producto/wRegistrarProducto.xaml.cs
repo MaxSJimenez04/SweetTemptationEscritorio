@@ -182,5 +182,11 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             var ventana = Window.GetWindow(this) as wndMenuEmpleado;
             ventana.fmPrincipal.Navigate(new wAdministrarProductos());
         }
+
+        private void BtnClickRegresar(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
     }
 }

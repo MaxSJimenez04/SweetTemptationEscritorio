@@ -303,6 +303,12 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private void TxtBuscar_GotFocus(object sender, RoutedEventArgs e) { if (TxtBuscar.Text == "Buscar postre...") TxtBuscar.Text = ""; }
         private void TxtBuscar_LostFocus(object sender, RoutedEventArgs e) { if (string.IsNullOrWhiteSpace(TxtBuscar.Text)) TxtBuscar.Text = "Buscar postre..."; }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
     }
 
     public class ProductoVistaItem : INotifyPropertyChanged

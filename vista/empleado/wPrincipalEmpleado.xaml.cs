@@ -26,7 +26,7 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
 
             if (ventana != null)
             {
-                ventana.fmPrincipal.Navigate(new sweet_temptation_clienteEscritorio.vista.producto.wAdministrarProductos());
+                ventana.fmPrincipal.Navigate(new wAdministrarProductos());
             }
         }
 
@@ -37,14 +37,12 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
 
         private void BtnProductos_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Ver Productos - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wConsultarProductos());
         }
 
         private void BtnPedidosRecientes_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Pedidos Recientes - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wHistorialPedidos());
         }
     }
 }

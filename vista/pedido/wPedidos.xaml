@@ -23,7 +23,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,5,5"
+        <Button x:Name="BtnRegresar" 
+            Grid.Row="0"
+            Height="35" Width="60"
+            VerticalAlignment="Top" HorizontalAlignment="Left"
+            Margin="10,35,0,0"
+            Style="{StaticResource BtnRegresar}" Click="BtnRegresarClick">
+               <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+        </Button>
+        
+        <TextBlock Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="85,25,5,5"
                Style="{StaticResource TxtTitulo}" Text="Pedidos" />
         <Button x:Name="btnNuevo" Grid.Row="0" Height="80" Width="80"
                 VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="{x:Null}"

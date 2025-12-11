@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Sweet Temptation - Nueva Contraseña" 
-        Height="800" Width="1280"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
         <Color x:Key="PinkPrimary">#FF70B5</Color>

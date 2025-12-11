@@ -1,4 +1,6 @@
 using sweet_temptation_clienteEscritorio.vista.Estadisticas;
+using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -20,8 +22,7 @@ namespace sweet_temptation_clienteEscritorio.vista.admin
 
         private void BtnEstadisticasVenta_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Estadísticas de Ventas - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wEstadisticasVentas());
         }
 
         private void BtnEstadisticasProductos_Click(object sender, RoutedEventArgs e)
@@ -36,14 +37,12 @@ namespace sweet_temptation_clienteEscritorio.vista.admin
 
         private void BtnGestionProductos_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Gestión de Productos - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wAdministrarProductos());
         }
 
         private void BtnGestionPedidos_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Gestión de Pedidos - Próximamente", 
-                "En desarrollo", MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService.Navigate(new wHistorialPedidos());
         }
     }
 }

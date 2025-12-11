@@ -25,7 +25,14 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <TextBlock FontSize="50" Margin="10" Style="{StaticResource TxtTitulo}" Text="Tu Pedido"/>
+            <Button x:Name="BtnRegresar" 
+                Height="35" Width="60"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Margin="10,20,0,0"
+                Style="{StaticResource BtnRegresar}" Click="BtnRegresarClick">
+                  <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+            </Button>
+            <TextBlock FontSize="50" Margin="80,10,10,10" Style="{StaticResource TxtTitulo}" Text="Tu Pedido"/>
             <Button x:Name="btnEditar" Margin="8,8,25,8" Height="50" 
                     Width="50" HorizontalAlignment="Right" Background="{x:Null}" 
                     BorderBrush="{x:Null}" Foreground="{x:Null}" Click="btnClickEditar" >
