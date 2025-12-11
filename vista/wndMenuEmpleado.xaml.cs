@@ -34,5 +34,10 @@ namespace sweet_temptation_clienteEscritorio.vista
         {
             fmPrincipal.Navigate(new wPedidos());
         }
+
+        private void BtnHomeClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wPrincipalEmpleado());
+        }
     }
 }

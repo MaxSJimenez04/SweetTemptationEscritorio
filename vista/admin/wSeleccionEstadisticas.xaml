@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.admin"
       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d" 
-      Title="Seleccionar Estadísticas">
+      Title="Seleccionar Estadísticas"
+      d:DesignHeight="700" d:DesignWidth="1280">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -16,8 +17,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="#FFF7F7"
-          Height="1080" Width="1920">
+    <Grid Background="#FFF7F7">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -26,9 +26,9 @@
 
         <Button x:Name="BtnRegresar" 
                 Grid.Column="0"
-                Height="75" Width="75"
+                Height="50" Width="50"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="25,50,0,0"
+                Margin="20,50,0,0"
                 Style="{StaticResource iconButton}" 
                 Click="BtnRegresarClick">
             <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
@@ -37,7 +37,7 @@
         <TextBlock Grid.Column="0"
                    Text="Seleccionar Estadisticas"
                    Style="{StaticResource TxtTitulo}"
-                   Margin="125,50,0,0"/>
+                   Margin="75,50,0,0"/>
 
         <Button x:Name="BtnVentas"
                 Grid.Column="0"

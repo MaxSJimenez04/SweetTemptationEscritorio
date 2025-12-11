@@ -53,7 +53,8 @@
                         Height="56"
                         Width="221"
                         Background="Transparent"
-                        BorderBrush="Transparent">
+                        BorderBrush="Transparent" 
+                        Click="BtnHomeClick">
                         <Image 
                             Source="/resources/images/logo_sweettemptation2.png" 
                             Stretch="UniformToFill" 
