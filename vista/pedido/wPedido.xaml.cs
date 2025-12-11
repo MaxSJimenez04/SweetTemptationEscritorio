@@ -347,5 +347,11 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 return null;
             }
         }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
     }
 }

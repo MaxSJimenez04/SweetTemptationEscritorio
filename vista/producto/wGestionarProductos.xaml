@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:fa="clr-namespace:FontAwesome.Sharp;assembly=FontAwesome.Sharp"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="Administración de Productos"
@@ -117,6 +118,16 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnRegresar" 
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Height="35" Width="60"
+                    VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Margin="10,0,10,0"
+                    Style="{StaticResource iconButton}" 
+                    Click="BtnRegresarClick">
+                    <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+                </Button>
                 <fa:IconImage Icon="Boxes" Foreground="#F06292" Height="25" Margin="0,0,10,0"/>
                 <TextBlock Text="Inventario y Gestión de Productos"
                            FontSize="26" FontWeight="Bold" Foreground="#333"/>

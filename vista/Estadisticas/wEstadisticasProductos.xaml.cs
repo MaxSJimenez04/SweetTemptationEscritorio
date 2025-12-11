@@ -50,6 +50,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                 await ObtenerProductosAsync();
 
             };
+            cbNombreProducto.IsEnabled = false;
         }
 
         private void setRangosFecha()
@@ -225,12 +226,15 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             switch (opcion)
             {
                 case "Mes pasado":
+                    cbNombreProducto.IsEnabled = true;
                     await ObtenerEstadisticasProductosAsync(fechas.FechaInicio, fechas.FechaFin);
                     break;
                 case "Semana pasada":
+                    cbNombreProducto.IsEnabled = true;
                     await ObtenerEstadisticasProductosAsync(fechas.FechaInicio, fechas.FechaFin);
                     break;
                 case "Quincena pasada":
+                    cbNombreProducto.IsEnabled = true;
                     await ObtenerEstadisticasProductosAsync(fechas.FechaInicio, fechas.FechaFin);
                     break;
             }
@@ -305,6 +309,12 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                 crearGrafico(_estadisticasProducto);
             }
 
+        }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
         }
     }
 }

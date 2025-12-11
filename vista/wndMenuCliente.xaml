@@ -10,7 +10,7 @@
         ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Title="Sweet Temptation - Menú Principal">
+        Title="Sweet Temptation">
 
     <Window.Resources>
         <ResourceDictionary>

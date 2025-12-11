@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.producto"
       xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="Catálogo de Productos"
@@ -100,6 +101,14 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="BtnRegresar" 
+                        Height="35" Width="60"
+                        VerticalAlignment="Top" HorizontalAlignment="Left"
+                        Margin="10,0,10,0"
+                        Style="{StaticResource iconButton}" 
+                        Click="BtnRegresarClick">
+                        <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+                    </Button>
                     <fa:IconImage Icon="Store" Foreground="#F06292" Height="25" Margin="0,0,10,0"/>
                     <TextBlock Text="Elige nuestros postres" FontSize="26" FontWeight="Bold" Foreground="#333"/>
                 </StackPanel>

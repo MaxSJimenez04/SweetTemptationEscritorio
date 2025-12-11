@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista"
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
-        Title="Sweet Temptation - Menú Principal" 
+        Title="Sweet Temptation" 
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize"
         WindowState="Maximized"

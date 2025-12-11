@@ -55,5 +55,11 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
             System.Windows.MessageBox.Show("Funcionalidad pendiente: Se iniciaría la descarga del reporte.", "Descarga de Reporte");
         }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
     }
 }

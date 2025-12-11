@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.producto"
       xmlns:fa="clr-namespace:FontAwesome.Sharp;assembly=FontAwesome.Sharp"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
       d:DesignHeight="700"
       d:DesignWidth="1280"
@@ -65,11 +66,19 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <Button x:Name="BtnRegresar" 
+                Height="35" Width="60"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Margin="0,5,0,0"
+                Style="{StaticResource iconButton}" 
+                Click="BtnClickRegresar">
+                <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+            </Button>
             <TextBlock Text="Registro de Nuevo Producto"
                        FontSize="34"
                        FontWeight="Bold"
                        Foreground="#FF5A8F"
-                       Margin="0,0,0,20"
+                       Margin="75,0,0,20"
                        Grid.ColumnSpan="2"/>
 
             <!-- Formulario -->
