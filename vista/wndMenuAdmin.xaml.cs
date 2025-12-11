@@ -1,4 +1,5 @@
 ﻿using sweet_temptation_clienteEscritorio.vista.admin;
+using sweet_temptation_clienteEscritorio.vista.pedido;
 using System.Windows;
 
 namespace sweet_temptation_clienteEscritorio.vista
@@ -35,12 +36,29 @@ namespace sweet_temptation_clienteEscritorio.vista
             this.Close();
         }
 
-        private void BtnClickRegresar(object sender, RoutedEventArgs e)
+        private void BtnEstadisticasClick(object sender, RoutedEventArgs e)
         {
-            if (fmPrincipal.CanGoBack)
-            {
-                fmPrincipal.GoBack();
-            }
+            fmPrincipal.Navigate(new wSeleccionEstadisticas());
+        }
+
+        private void BtnCuentasClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wGestionCuentas());
+        }
+
+        private void BtnProductosClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnPedidosClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wHistorialPedidos());
+        }
+
+        private void BtnHomeClick(object sender, RoutedEventArgs e)
+        {
+            fmPrincipal.Navigate(new wPrincipalAdmin());
         }
     }
 }

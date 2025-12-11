@@ -6,57 +6,81 @@
         xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista"
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
-        Title="wndMenuEmpleado" Height="800" Width="1280">
+        Title="wndMenuEmpleado"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    
     <Grid Background="#FFF7F7">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="87"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Background="#FFFFD2F7" Grid.Row="0" Width="1280" Height="100" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="340"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Border 
+      Grid.Row="0"
+      BorderThickness="0,0,0,3" BorderBrush="#FF70B5">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240"/>
+                    <ColumnDefinition Width="540"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="btnRegresar" Width="45" Height="55" HorizontalAlignment="Left"
-                        Margin="25,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" 
-                        Foreground="{x:Null}" Click="BtnClickRegresar" >
-                    <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
-                </Button>
-                <Button x:Name="btnCerrarSesion" Content="Cerrar Sesión" 
-                        Margin="15,0,0,0" Padding="10,5" 
-                        Background="#FFE91E63" Foreground="White" 
-                        BorderBrush="{x:Null}" FontSize="12" Cursor="Hand"
-                        Click="BtnClickCerrarSesion"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1"  Orientation="Horizontal">
-                <Image Source="/resources/images/logo_sweettemptation.png" Stretch="Uniform" Margin="10"/>
-                <Label FontFamily="French Script MT" FontSize="40" Foreground="HotPink"
-           VerticalAlignment="Center" HorizontalAlignment="Left">Sweet Temptation</Label>
-            </StackPanel>
-
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-
-                <Button x:Name="btnProductos" Width="45" Height="55" HorizontalAlignment="Right"
-                    Margin="200,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                    <svgc:SvgViewbox Source="/resources/icons/icon_productos.svg"/>
+                <Button          
+                     Grid.Column="0"
+                     x:Name="Home"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Height="56"
+                     Width="221"
+                     Background="Transparent"
+                     BorderBrush="Transparent" Click="BtnHomeClick">
+                        <Image Source="/resources/images/logo_sweettemptation2.png" Stretch="UniformToFill"/>
                 </Button>
 
-                <Button x:Name="btnPedidoCustom" Width="45" Height="55" HorizontalAlignment="Right"
-                    Margin="50,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                    <svgc:SvgViewbox Source="/resources/icons/icon_customPedidos.svg"/>
-                </Button>
+                <Button x:Name="BtnInventario" 
+                     Grid.Column="2"
+                     Content="Inventario"
+                     Margin="2"
+                     Style="{StaticResource BtnMenuStyle}" 
+                     Click="BtnInventarioClick"/>
 
-                <Button x:Name="btnPerfil" Width="45" Height="55" HorizontalAlignment="Right"
-                    Margin="50,20,0,20" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                    <svgc:SvgViewbox Source="/resources/icons/ph_perfil.svg"/>
-                </Button>
-            </StackPanel>
-        </Grid>
-        <Frame Grid.Row="1" Name="fmPrincipal" NavigationUIVisibility="Hidden" Navigated="fmPrincipal_Navigated" />
+                <Button x:Name="BtnHistorial"
+                     Grid.Column="3"
+                     Content="Historial"
+                     Margin="8"
+                     Style="{StaticResource BtnMenuStyle}" 
+                     Click="BtnHistorialClick"/>
+
+                <Button x:Name="BtnPedidos"
+                     Grid.Column="4"
+                     Content="Pedidos"
+                     Margin="8"
+                     Style="{StaticResource BtnMenuStyle}" 
+                     Click="BtnPedidosClick"/>
+
+                <Button x:Name="BtnCuenta"
+                     Grid.Column="5"
+                     Margin="8"
+                     Content="Mi Cuenta"
+                     Style="{StaticResource BtnMenuCuentaStyle}"/>
+            </Grid>
+        </Border>
+        <Frame Grid.Row="1" Name="fmPrincipal" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>
