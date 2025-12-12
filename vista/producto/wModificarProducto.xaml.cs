@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using sweet_temptation_clienteEscritorio.dto;
+using sweet_temptation_clienteEscritorio.resources;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -8,8 +11,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json;
-using sweet_temptation_clienteEscritorio.dto;
 
 namespace sweet_temptation_clienteEscritorio.vista.producto
 {
@@ -23,9 +24,9 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private bool _isEditing = false;
 
-        private static readonly string API_PRODUCTOS = "http://localhost:8080/producto";
-        private static readonly string API_ARCHIVO = "http://localhost:8080/archivo";
-        private static readonly string API_CATEGORIAS = "http://localhost:8080/categoria/todos";
+        private static readonly string API_PRODUCTOS = Constantes.URL + "producto";
+        private static readonly string API_ARCHIVO = Constantes.URL + "archivo";
+        private static readonly string API_CATEGORIAS = Constantes.URL + "categoria/todos";
 
         private readonly string _token;
 

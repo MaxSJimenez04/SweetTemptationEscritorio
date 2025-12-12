@@ -25,7 +25,8 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         private ArchivoService _servicioArchivo;
 
         private string _token;
-        private int _idUsuario = 3; 
+        private int _idUsuario;
+        private string _rolUsuario;
 
         // Variables para el modal
         private decimal _precioUnitarioActual;
@@ -47,6 +48,37 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             if (App.Current.Properties.Contains("Token"))
                 _token = (string?)App.Current.Properties["Token"];
+
+            if (App.Current.Properties.Contains("Id"))
+            {
+                if (App.Current.Properties["Id"] is int id)
+                {
+                    _idUsuario = id;
+                }
+                else if (App.Current.Properties["Id"] is string idString && int.TryParse(idString, out int idConverted))
+                {
+                    _idUsuario = idConverted;
+                }
+                else
+                {
+                    MessageBox.Show("Error de sesión: El formato de la ID de usuario no es válido.");
+                    _idUsuario = -1;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Error de sesión: No se encontró la ID de usuario.");
+                _idUsuario = -1;
+            }
+
+            if (App.Current.Properties.Contains("Rol"))
+            {
+                _rolUsuario = (string?)App.Current.Properties["Rol"];
+            }
+            else
+            {
+                _rolUsuario = "Cliente";
+            }
 
             ListaProductos = new ObservableCollection<ProductoVistaItem>();
             ItemsControlProductos.ItemsSource = ListaProductos;
@@ -234,23 +266,68 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 BtnAgregarConfirmar.IsEnabled = false;
 
                 var pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
-                int idPedido;
 
                 if (pedidoRes.pedidoActual == null)
                 {
-                    await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
-                    pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                    // Decidir qué método de creación usar basado en el rol
+                    if (_rolUsuario == "Empleado")
+                    {
+                        // El método CrearPedidoEmpleadoAsync devuelve el PedidoDTO directamente
+                        var resultadoCreacion = await _servicioPedido.CrearPedidoEmpleadoAsync(_idUsuario, _token);
+
+                        if (resultadoCreacion.codigo == System.Net.HttpStatusCode.OK || resultadoCreacion.codigo == System.Net.HttpStatusCode.Created)
+                        {
+                            pedidoRes.pedidoActual = resultadoCreacion.pedido; // Asignar el pedido creado
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error al crear el pedido (Empleado): {resultadoCreacion.mensaje}", "Error de Creación", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+                    else if (_rolUsuario == "Cliente")
+                    {
+                        // Usamos la versión de Cliente (ajustada para el paso 1 anterior)
+                        var creacionExitosa = await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
+
+                        // Suponiendo que CrearPedidoClienteAsync SÍ lanza excepción o devuelve el mensaje de error del backend
+                        // Si solo devuelve un bool (como en tu código original), mantenemos la lógica de re-obtención:
+                        if (creacionExitosa)
+                        {
+                            // Si la creación fue exitosa (true), intentamos obtener el pedido de nuevo.
+                            pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error al crear el pedido (Cliente). Revise el backend.", "Error de Creación", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Rol de usuario no reconocido. No se puede crear el pedido.", "Error de Rol", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
 
-                idPedido = pedidoRes.pedidoActual.id;
+                // Verificación de éxito FINAL (se mantiene)
+                if (pedidoRes.pedidoActual == null)
+                {
+                    MessageBox.Show("Error: No fue posible obtener o crear un pedido activo para el usuario.", "Error de Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
+                int idPedido = pedidoRes.pedidoActual.id;
 
+                // 3. BLOQUE DE URL MANUAL MANTENIDO POR SOLICITUD
                 using (var client = new HttpClient())
                 {
-                    string baseUrl = Constantes.URL;
+                    string baseUrl = sweet_temptation_clienteEscritorio.resources.Constantes.URL;
 
+                    // Asegurar que la URL base no termine en slash doble si la constante ya lo tiene
                     if (baseUrl.EndsWith("/")) baseUrl = baseUrl.TrimEnd('/');
 
+                    // Construcción manual de la URL
                     string urlCorrecta = $"{baseUrl}/pedido/{idPedido}/?idProducto={_idProductoActual}&idPedido={idPedido}&cantidad={cantidad}";
 
                     client.DefaultRequestHeaders.Authorization =

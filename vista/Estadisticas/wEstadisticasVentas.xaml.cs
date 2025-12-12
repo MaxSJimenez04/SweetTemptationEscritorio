@@ -7,22 +7,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
-// -------------------------------------------------------------
-// CLASE MODELO WPF PARA EL DATAGRID (SIN NOMBRE CLIENTE)
-// -------------------------------------------------------------
+-
 public class Venta
 {
-    // ❗ PROPIEDAD NombreCliente ELIMINADA ❗
     public string TipoPedido { get; set; }
     public DateTime FechaCompra { get; set; }
     public string Estado { get; set; }
     public decimal Total { get; set; }
 }
 
-// -------------------------------------------------------------
-// INICIO DEL CODE-BEHIND
-// -------------------------------------------------------------
 namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 {
     public partial class wEstadisticasVentas : Page
@@ -30,12 +23,12 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
         private PedidoService _servicioPedido;
         private string _token;
 
-        // Diccionario para traducir IDs de Estado de la API a texto para la UI
+        // TODO verificar estados
         private readonly Dictionary<int, string> _estadosApiMap = new Dictionary<int, string>
         {
-            { 3, "Completada" }, // Asumido 3 en la API
-            { 4, "Cancelada" },  // Asumido 4 en la API
-            { 2, "Pendiente" }  // Asumido 2 en la API
+            { 3, "Completada" }, 
+            { 4, "Cancelada" },  
+            { 2, "Pendiente" }  
         };
 
         public wEstadisticasVentas()
@@ -54,9 +47,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             };
         }
 
-        // ===================================================
-        // MANEJADORES DE EVENTOS
-        // ===================================================
 
         private async void btnBuscar_Click(object sender, RoutedEventArgs e)
         {
@@ -76,9 +66,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             await CargarVentas();
         }
 
-        // ===================================================
-        // LÓGICA DE CONEXIÓN Y CONSULTA REAL
-        // ===================================================
 
         private async Task CargarVentas()
         {
@@ -91,37 +78,26 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                     return;
                 }
 
-                // --------------------------------------------------
-                // ❗ 1. VALIDACIONES DE FECHA ❗
-                // --------------------------------------------------
-
-                // Usamos DateTime.Today para comparaciones, ignorando la hora
                 DateTime hoy = DateTime.Today;
 
-                // Capturar fechas seleccionadas (Si es nulo, usamos valores por defecto para no romper el flujo)
                 DateTime? fechaInicialSeleccionada = dpFechaInicial.SelectedDate;
                 DateTime? fechaFinalSeleccionada = dpFechaFinal.SelectedDate;
 
-                // Si ambas están seleccionadas, validamos el orden lógico.
                 if (fechaInicialSeleccionada.HasValue && fechaFinalSeleccionada.HasValue)
                 {
                     if (fechaInicialSeleccionada.Value > fechaFinalSeleccionada.Value)
                     {
                         MessageBox.Show("La Fecha Inicial no puede ser posterior a la Fecha Final.", "Error de Filtro", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return; // Detiene la ejecución
+                        return; 
                     }
                 }
 
-                // Validar que la Fecha Final no sea una fecha futura
                 if (fechaFinalSeleccionada.HasValue && fechaFinalSeleccionada.Value > hoy)
                 {
                     MessageBox.Show("No se pueden consultar ventas de fechas futuras.", "Error de Filtro", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return; // Detiene la ejecución
+                    return; 
                 }
 
-                // --------------------------------------------------
-                // 2. Obtener y preparar filtros
-                // Si el DatePicker es nulo, usamos valores amplios/seguros para la API.
                 DateTime fechaInicial = fechaInicialSeleccionada ?? DateTime.Today.AddYears(-1);
                 DateTime fechaFinal = fechaFinalSeleccionada ?? DateTime.Today;
 
@@ -129,7 +105,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
                 try
                 {
-                    // 3. Obtener datos reales de la API
                     var (pedidosDTO, codigo, mensaje) = await _servicioPedido.ConsultarVentasAsync(
                         fechaInicial, fechaFinal, estadoFiltroTexto, _token
                     );
@@ -148,10 +123,8 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                         return;
                     }
 
-                    // 4. Transformar PedidoDTO a Venta
                     var ventasParaMostrar = pedidosDTO.Select(p => new Venta
                     {
-                        // Mapeo
                         TipoPedido = p.personalizado ? "Personalizado" : "Vitrina",
                         Estado = _estadosApiMap.GetValueOrDefault(p.estado, "Desconocido"),
 
@@ -159,7 +132,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                         Total = p.total
                     }).ToList();
 
-                    // 5. Asignar al DataGrid
                     dgVentas.ItemsSource = ventasParaMostrar;
                 }
                 catch (Exception ex)
