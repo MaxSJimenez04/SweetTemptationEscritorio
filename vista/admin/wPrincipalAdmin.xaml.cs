@@ -23,6 +23,7 @@ namespace sweet_temptation_clienteEscritorio.vista.admin
         private void BtnEstadisticasVenta_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new wEstadisticasVentas());
+
         }
 
         private void BtnEstadisticasProductos_Click(object sender, RoutedEventArgs e)
@@ -38,6 +39,7 @@ namespace sweet_temptation_clienteEscritorio.vista.admin
         private void BtnGestionProductos_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new wAdministrarProductos());
+
         }
 
         private void BtnGestionPedidos_Click(object sender, RoutedEventArgs e)

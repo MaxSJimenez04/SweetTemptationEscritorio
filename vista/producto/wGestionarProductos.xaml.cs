@@ -163,12 +163,21 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
             if (producto == null) return;
 
-            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
-            if (ventana != null)
+            dynamic ventanaContenedora = null;
+
+            ventanaContenedora = Window.GetWindow(this) as wndMenuAdmin;
+
+            if (ventanaContenedora == null)
+            {
+                ventanaContenedora = Window.GetWindow(this) as wndMenuEmpleado;
+            }
+
+            if (ventanaContenedora != null)
             {
                 var pagina = new wModificarProducto(producto);
                 pagina.ProductoActualizado += OnProductoActualizado;
-                ventana.fmPrincipal.Navigate(pagina);
+
+                ventanaContenedora.fmPrincipal.Navigate(pagina);
             }
         }
 
@@ -205,10 +214,18 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private void BtnAgregarProducto_Click(object sender, RoutedEventArgs e)
         {
-            var ventana = Window.GetWindow(this) as wndMenuEmpleado;
-            if (ventana != null)
+            dynamic ventanaContenedora = null;
+
+            ventanaContenedora = Window.GetWindow(this) as wndMenuAdmin;
+
+            if (ventanaContenedora == null)
             {
-                ventana.fmPrincipal.Navigate(
+                ventanaContenedora = Window.GetWindow(this) as wndMenuEmpleado;
+            }
+
+            if (ventanaContenedora != null)
+            {
+                ventanaContenedora.fmPrincipal.Navigate(
                     new sweet_temptation_clienteEscritorio.vista.producto.wRegistrarProducto()
                 );
             }

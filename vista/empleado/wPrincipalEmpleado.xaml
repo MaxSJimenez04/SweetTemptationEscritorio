@@ -104,13 +104,7 @@
                     Style="{StaticResource BtnMenuEmpleado}"
                     Background="#FF70B5"
                     Click="BtnGestionarPedidos_Click"/>
-            
-            <Button x:Name="btnProductos" 
-                    Content="📋  Ver Productos"
-                    Style="{StaticResource BtnMenuEmpleado}"
-                    Background="#E91E63"
-                    Click="BtnProductos_Click"/>
-            
+
             <Button x:Name="btnPedidosRecientes" 
                     Content="🕐  Pedidos Recientes"
                     Style="{StaticResource BtnMenuEmpleado}"
