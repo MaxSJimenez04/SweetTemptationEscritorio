@@ -89,9 +89,9 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        // PUT - Actualizar producto
-        // RUTA API: /producto/{id}
-        public async Task<(ProductoDTO productoActualizado, HttpStatusCode codigo, string mensaje)> ActualizarProductoAsync(int idProducto, ProductoDTO productoActualizado, string token)
+        // PUT - Actualizar producto
+        // RUTA API: /producto/{id}
+        /*public async Task<(ProductoDTO productoActualizado, HttpStatusCode codigo, string mensaje)> ActualizarProductoAsync(int idProducto, ProductoDTO productoActualizado, string token)
         {
             ConfigurarToken(token);
 
@@ -106,6 +106,56 @@ namespace sweet_temptation_clienteEscritorio.servicios
             {
                 var mensaje = await respuesta.Content.ReadAsStringAsync();
                 return (null, respuesta.StatusCode, mensaje);
+            }
+        }*/
+
+        /// <summary>
+        /// Actualiza los datos del producto y opcionalmente su imagen, utilizando multipart/form-data.
+        /// RUTA API: /producto/{id}
+        /// </summary>
+        /// <param name="idProducto">ID del producto a actualizar.</param>
+        /// <param name="productoDatos">DTO con los datos del producto (JSON part).</param>
+        /// <param name="rutaArchivoImagen">Ruta completa del archivo de imagen local. Null o Empty si no se cambia la imagen.</param>
+        /// <param name="token">Token de autenticación.</param>
+        public async Task<(ProductoDTO productoActualizado, HttpStatusCode codigo, string mensaje)>
+            ActualizarProductoAsync(int idProducto, ProductoDTO productoDatos, string rutaArchivoImagen, string token)
+        {
+            ConfigurarToken(token);
+
+            try
+            {
+                var jsonProducto = System.Text.Json.JsonSerializer.Serialize(productoDatos);
+
+                using var contenidoMultipart = new MultipartFormDataContent();
+
+                var contenidoJson = new StringContent(jsonProducto);
+                contenidoJson.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                contenidoMultipart.Add(contenidoJson, "producto");
+
+                if (!string.IsNullOrEmpty(rutaArchivoImagen) && System.IO.File.Exists(rutaArchivoImagen))
+                {
+                    var bytesArchivo = await System.IO.File.ReadAllBytesAsync(rutaArchivoImagen);
+                    var contenidoArchivo = new ByteArrayContent(bytesArchivo);
+
+                    contenidoMultipart.Add(contenidoArchivo, "imagen", System.IO.Path.GetFileName(rutaArchivoImagen));
+                }
+
+                var respuesta = await _httpClient.PutAsync($"producto/{idProducto}", contenidoMultipart);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var producto = await respuesta.Content.ReadFromJsonAsync<ProductoDTO>();
+                    return (producto, respuesta.StatusCode, null);
+                }
+                else
+                {
+                    var mensaje = await respuesta.Content.ReadAsStringAsync();
+                    return (null, respuesta.StatusCode, mensaje);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, HttpStatusCode.InternalServerError, "Error al actualizar el producto (Cliente): " + ex.Message);
             }
         }
 

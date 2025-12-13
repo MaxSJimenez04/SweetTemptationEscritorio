@@ -31,7 +31,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
             string endpoint = $"archivo/detalle?idProducto={idProducto}";
 
-            Console.WriteLine("➡ Llamando a: " + _httpClient.BaseAddress + endpoint);
+            Console.WriteLine("Llamando a: " + _httpClient.BaseAddress + endpoint);
 
             try
             {
@@ -40,17 +40,17 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 if (respuesta.IsSuccessStatusCode)
                 {
                     var detalles = await respuesta.Content.ReadFromJsonAsync<DetallesArchivoDTO>();
-                    Console.WriteLine("✔ Datos recibidos. Ruta/ID: " + detalles?.ruta);
+                    Console.WriteLine("Datos recibidos. Ruta/ID: " + detalles?.ruta);
                     return (detalles, respuesta.StatusCode, null);
                 }
 
                 string mensaje = await respuesta.Content.ReadAsStringAsync();
-                Console.WriteLine($"❌ Error obteniendo detalles: {respuesta.StatusCode}");
+                Console.WriteLine($"Error obteniendo detalles: {respuesta.StatusCode}");
                 return (null, respuesta.StatusCode, mensaje);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Excepción: " + ex.Message);
+                Console.WriteLine("Excepción: " + ex.Message);
                 return (null, HttpStatusCode.InternalServerError, ex.Message);
             }
         }

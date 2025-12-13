@@ -262,7 +262,7 @@
                                Cursor="Hand"
                                HorizontalAlignment="Center"
                                Margin="0,40,0,0"
-                               MouseLeftButtonDown="linkVolverLogin_Click">
+                               MouseLeftButtonDown="linkVolverLogin_Click" Height="35">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>

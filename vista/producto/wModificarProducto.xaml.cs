@@ -20,9 +20,8 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
 
         private ProductoVistaAdminItem _productoOriginal;
         private byte[] _imagenOriginal; 
-
-
         private bool _isEditing = false;
+        private string _rutaNuevaImagen = string.Empty;
 
         private static readonly string API_PRODUCTOS = Constantes.URL + "producto";
         private static readonly string API_ARCHIVO = Constantes.URL + "archivo";
@@ -55,7 +54,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             txtDescripcion.Text = _productoOriginal.Descripcion;
             txtPrecioUnitario.Text = _productoOriginal.Precio.ToString("N2");
             txtUnidades.Text = _productoOriginal.Unidades.ToString();
-            txtFechaRegistro.Text = _productoOriginal.FechaRegistro?.ToString("dd/MM/yyyy HH:mm");
+            txtFechaRegistro.Text = _productoOriginal.FechaRegistro?.ToString("dd/MM/yyyy");
 
             cmbDisponible.SelectedIndex = _productoOriginal.Disponible ? 0 : 1;
         }
@@ -170,6 +169,8 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             cmbDisponible.IsEnabled = isEditing;
 
             btnAccion.Content = isEditing ? "Guardar Cambios" : "Modificar";
+
+            btnModificarImagen.Visibility = isEditing ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void btnAccion_Click(object sender, RoutedEventArgs e)
@@ -180,7 +181,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 GuardarCambiosProducto();
         }
 
-        private bool ValidarCampos(out decimal precio, out int unidades)
+        private bool ValidarCampos(out decimal precio, out int unidades)
         {
             precio = 0; unidades = 0;
 
@@ -190,19 +191,20 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (!int.TryParse(txtUnidades.Text, out unidades) || unidades < 0) return Msg("Unidades inválidas.");
             if (cmbCategoria.SelectedValue == null) return Msg("Seleccione categoría.");
 
-            if (_imagenOriginal == null)
-                return Msg("El producto debe tener una imagen previa cargada.");
+            if (_imagenOriginal == null && string.IsNullOrEmpty(_rutaNuevaImagen))
+                return Msg("Debe seleccionar una imagen para este producto.");
+
 
             return true;
         }
 
         private bool Msg(string m) { MessageBox.Show(m); return false; }
 
-        private async void GuardarCambiosProducto()
+        private async void GuardarCambiosProducto()
         {
             if (!ValidarCampos(out decimal nuevoPrecio, out int nuevasUnidades)) return;
 
-            var productoActualizado = new
+            var productoDatos = new
             {
                 nombre = txtNombreProducto.Text,
                 descripcion = txtDescripcion.Text,
@@ -215,50 +217,99 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             try
             {
                 using var client = new HttpClient();
-                client.DefaultRequestHeaders.Authorization =
-                  new AuthenticationHeaderValue("Bearer", _token);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
 
-                var json = JsonConvert.SerializeObject(productoActualizado);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                using var contenidoMultipart = new MultipartFormDataContent();
 
-                var response = await client.PutAsync($"{API_PRODUCTOS}/{_productoOriginal.IdProducto}", content);
+                var json = JsonConvert.SerializeObject(productoDatos);
+                var contenidoJson = new StringContent(json);
+                contenidoJson.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                contenidoMultipart.Add(contenidoJson, "producto");
+
+                if (!string.IsNullOrEmpty(_rutaNuevaImagen) && File.Exists(_rutaNuevaImagen))
+                {
+                    var bytesArchivo = await File.ReadAllBytesAsync(_rutaNuevaImagen);
+                    var contenidoArchivo = new ByteArrayContent(bytesArchivo);
+
+                    contenidoMultipart.Add(contenidoArchivo, "imagen", Path.GetFileName(_rutaNuevaImagen));
+                }
+                var response = await client.PutAsync($"{API_PRODUCTOS}/{_productoOriginal.IdProducto}", contenidoMultipart);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Error al actualizar datos del producto.");
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Error al actualizar producto: {response.StatusCode}\nDetalle: {error}", "Error de Actualización");
                     return;
                 }
 
+                _rutaNuevaImagen = string.Empty; 
 
-                MessageBox.Show("Producto modificado correctamente.");
+                MessageBox.Show("Producto modificado correctamente.");
 
-                ProductoActualizado?.Invoke(_productoOriginal.IdProducto);
+                ProductoActualizado?.Invoke(_productoOriginal.IdProducto);
 
                 SetEditMode(false);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error al guardar los cambios: " + ex.Message);
             }
         }
 
-        private void btnCancelar_Click(object sender, RoutedEventArgs e)
+        private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             if (_isEditing)
             {
                 CargarDatosProductoEnPantalla();
+
+                _rutaNuevaImagen = string.Empty; 
+
                 if (_imagenOriginal != null)
                     imgProducto.Source = ConvertBytesToImage(_imagenOriginal);
                 else
                     imgProducto.Source = null;
 
-
-                SetEditMode(false);
+                SetEditMode(false);
             }
-            else
+
+            MessageBox.Show("La modificacion del producto ha sido cancelada");
+
+            //if (NavigationService.CanGoBack)
+            //{
+            //    NavigationService.GoBack();
+            //}
+        }
+
+        private void btnModificarImagen_Click(object sender, RoutedEventArgs e)
+        {
+
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
-                if (NavigationService.CanGoBack)
-                    NavigationService.GoBack();
+                Filter = "Archivos de Imagen|*.jpg;*.jpeg;*.png;*.bmp",
+                Title = "Seleccionar Nueva Imagen para el Producto"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    _rutaNuevaImagen = openFileDialog.FileName;
+
+                    imgProducto.Source = new BitmapImage(new Uri(_rutaNuevaImagen));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cargar la imagen: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _rutaNuevaImagen = string.Empty;
+                }
+            }
+        }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
             }
         }
     }
