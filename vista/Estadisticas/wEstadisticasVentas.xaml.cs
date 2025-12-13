@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
--
+
 public class Venta
 {
     public string TipoPedido { get; set; }

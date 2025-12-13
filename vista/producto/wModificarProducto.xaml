@@ -9,10 +9,36 @@
       d:DesignHeight="700" d:DesignWidth="1280"
       Title="wModificarProducto">
 
-    <!-- Recursos -->
     <Page.Resources>
+        <Style x:Key="ImageActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#A0A0A0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- Etiquetas -->
+        <Style x:Key="BackButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
         <Style x:Key="FormLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="DarkGray"/>
             <Setter Property="FontSize" Value="22"/>
@@ -21,7 +47,6 @@
             <Setter Property="Margin" Value="5,18,0,8"/>
         </Style>
 
-        <!-- Base de los datos -->
         <Style x:Key="FormBaseInput" TargetType="Control">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontFamily" Value="Montserrat"/>
@@ -32,7 +57,6 @@
             <Setter Property="Margin" Value="5,0,0,10"/>
         </Style>
 
-        <!-- TextBox -->
         <Style x:Key="FormTextBox" TargetType="TextBox" BasedOn="{StaticResource FormBaseInput}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Style.Triggers>
@@ -43,7 +67,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- ComboBox -->
         <Style x:Key="FormComboBox" TargetType="ComboBox" BasedOn="{StaticResource FormBaseInput}">
             <Setter Property="Padding" Value="5,0,0,0"/>
             <Style.Triggers>
@@ -54,7 +77,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Boton -->
         <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
             <Border Background="{TemplateBinding Background}"
                     Width="220" Height="60"
@@ -67,19 +89,34 @@
 
     </Page.Resources>
 
-    <!--  Scroll -->
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
 
         <StackPanel Background="#FFF7F7" Margin="0,0,0,30">
 
-            <TextBlock Text="Modificación de Producto"
-                       FontSize="40"
-                       FontWeight="Bold"
-                       Foreground="#FF5A8F"
-                       Margin="80,45,0,10"/>
+            <Grid Margin="80,45,80,10" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
+                <Button x:Name="BtnRegresar" 
+        Height="35" Width="60"
+        VerticalAlignment="Top" HorizontalAlignment="Left"
+        Margin="10,13,-3,0"
+        Style="{StaticResource iconButton}" 
+        Click="BtnRegresarClick"
+        Foreground="#FF5A8F"> <svgc:SvgViewbox Source="/resources/icons/icon_regresar.svg"/>
+</Button>
 
-            <!-- Grid principal -->
+                <TextBlock Text="Modificación de Producto"
+                           Grid.Column="1"
+                           FontSize="40"
+                           FontWeight="Bold"
+                           Foreground="#FF5A8F"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+            </Grid>
             <Grid Margin="70,20,70,0">
 
                 <Grid.ColumnDefinitions>
@@ -88,7 +125,6 @@
                 </Grid.ColumnDefinitions>
 
 
-                <!-- Imagen -->
                 <StackPanel Grid.Column="0"
                             Orientation="Vertical"
                             HorizontalAlignment="Center"
@@ -112,13 +148,18 @@
                                Stretch="UniformToFill"/>
                     </Border>
 
-                    
+                    <Button x:Name="btnModificarImagen"
+                            Content="Modificar Imagen"
+                            Style="{StaticResource ImageActionButton}"
+                            Background="#FF70B5"
+                            Click="btnModificarImagen_Click"
+                            Margin="0,0,0,30"
+                            Visibility="Collapsed"/>
 
                 </StackPanel>
 
 
 
-                <!--Formulario-->
                 <StackPanel Grid.Column="1"
                             Margin="40,0,0,0">
 
@@ -148,7 +189,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                            <TextBlock Text="Precio Unitario" Style="{StaticResource FormLabel}"/>
+                            <TextBlock Text="Precio Unitario (MXN)" Style="{StaticResource FormLabel}"/>
                             <TextBox x:Name="txtPrecioUnitario"
                                      Style="{StaticResource FormTextBox}"
                                      IsReadOnly="True"/>
@@ -178,8 +219,8 @@
                 </StackPanel>
 
             </Grid>
-            
-            
+
+
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Margin="0,40,70,0">
@@ -212,4 +253,3 @@
     </ScrollViewer>
 
 </Page>
-
