@@ -303,6 +303,10 @@
                           RowStyle="{StaticResource DataGridRowStyle}">
 
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="Usuario"
+                                            Binding="{Binding NombreRol}"
+                                            Width="*"
+                                            ElementStyle="{StaticResource CenteredColumnStyle}"/>
                         <DataGridTextColumn Header="Tipo de Pedido" 
                                             Binding="{Binding TipoPedido}" 
                                             Width="*" 
@@ -318,7 +322,7 @@
                                             Width="*"
                                             ElementStyle="{StaticResource CenteredColumnStyle}"/>
 
-                        <DataGridTextColumn Header="Total" 
+                        <DataGridTextColumn Header="Total (MXN)" 
                                             Binding="{Binding Total, StringFormat='C'}" 
                                             Width="0.8*" 
                                             ElementStyle="{StaticResource RightAlignedColumnStyle}"/>

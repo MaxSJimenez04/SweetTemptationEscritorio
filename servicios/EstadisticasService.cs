@@ -65,5 +65,35 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 return(null, respuesta.StatusCode,mensaje);
             }
         }
+
+        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ConsultarVentasAsync(
+      DateTime inicio, DateTime fin, string estado, string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            string fechaInicioStr = inicio.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            string fechaFinStr = fin.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            // CORRECCIÓN CLAVE: Apunta al endpoint correcto en el Controller de Java
+            string url = $"estadisticas/ventas?fechaInicio={fechaInicioStr}&fechaFin={fechaFinStr}&estado={estado}";
+
+            var respuesta = await _httpClient.GetAsync(url);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                if (respuesta.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return (new List<PedidoDTO>(), respuesta.StatusCode, "No se encontraron resultados.");
+                }
+
+                var pedidos = await respuesta.Content.ReadFromJsonAsync<List<PedidoDTO>>();
+                return (pedidos, respuesta.StatusCode, null);
+            }
+            else
+            {
+                string mensaje = await respuesta.Content.ReadAsStringAsync();
+                return (null, respuesta.StatusCode, mensaje);
+            }
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace sweet_temptation_clienteEscritorio.dto
         public int estado { get; set; }
         public Boolean personalizado { get; set; }
         public int idCliente { get; set; }
+        public int idRol { get; set; }
     }
 }

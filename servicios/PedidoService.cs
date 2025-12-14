@@ -142,7 +142,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
         // para ventas
-        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ConsultarVentasAsync(
+        /*public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ConsultarVentasAsync(
             DateTime inicio, DateTime fin, string estado, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -169,6 +169,6 @@ namespace sweet_temptation_clienteEscritorio.servicios
                 string mensaje = await respuesta.Content.ReadAsStringAsync();
                 return (null, respuesta.StatusCode, mensaje);
             }
-        }
+        }*/
     }
 }
