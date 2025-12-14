@@ -23,7 +23,7 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
 
         private void BtnVerCatalogo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new wConsultarProductos());
+            NavigationService.Navigate(new wConsultarProductos(0));
         }
 
         private void BtnVerPedidos_Click(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace sweet_temptation_clienteEscritorio.vista.cliente
         {
             if (NavigationService != null)
             {
-                NavigationService.Navigate(new wConsultarProductos());
+                NavigationService.Navigate(new wConsultarProductos(0));
             }
         }
     }

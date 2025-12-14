@@ -23,6 +23,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         private ProductoPedidoService _servicioProductoPedido;
         private PedidoService _servicioPedido;
         private ArchivoService _servicioArchivo;
+        private readonly int _idPedidoEmpleado;
 
         private string _token;
         private int _idUsuario;
@@ -36,7 +37,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         public ObservableCollection<ProductoVistaItem> ListaProductos { get; set; }
         private List<ProductoVistaItem> _listaCompletaCache;
 
-        public wConsultarProductos()
+        public wConsultarProductos(int idPedidoSeleccionado)
         {
             InitializeComponent();
 
@@ -45,6 +46,7 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             _servicioProductoPedido = new ProductoPedidoService(http);
             _servicioPedido = new PedidoService(http);
             _servicioArchivo = new ArchivoService(http);
+            _idPedidoEmpleado = idPedidoSeleccionado;
 
             if (App.Current.Properties.Contains("Token"))
                 _token = (string?)App.Current.Properties["Token"];
@@ -265,90 +267,52 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             {
                 BtnAgregarConfirmar.IsEnabled = false;
 
-                var pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
-
-                if (pedidoRes.pedidoActual == null)
+                if (_rolUsuario == "Empleado")
                 {
-                    // Decidir qué método de creación usar basado en el rol
-                    if (_rolUsuario == "Empleado")
+                    if (_idPedidoEmpleado <= 0)
                     {
-                        // El método CrearPedidoEmpleadoAsync devuelve el PedidoDTO directamente
-                        var resultadoCreacion = await _servicioPedido.CrearPedidoEmpleadoAsync(_idUsuario, _token);
-
-                        if (resultadoCreacion.codigo == System.Net.HttpStatusCode.OK || resultadoCreacion.codigo == System.Net.HttpStatusCode.Created)
-                        {
-                            pedidoRes.pedidoActual = resultadoCreacion.pedido; // Asignar el pedido creado
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Error al crear el pedido (Empleado): {resultadoCreacion.mensaje}", "Error de Creación", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
+                        MessageBox.Show("Por favor selecciona un pedido");
+                        return;
                     }
-                    else if (_rolUsuario == "Cliente")
-                    {
-                        // Usamos la versión de Cliente (ajustada para el paso 1 anterior)
-                        var creacionExitosa = await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
 
-                        // Suponiendo que CrearPedidoClienteAsync SÍ lanza excepción o devuelve el mensaje de error del backend
-                        // Si solo devuelve un bool (como en tu código original), mantenemos la lógica de re-obtención:
-                        if (creacionExitosa)
-                        {
-                            // Si la creación fue exitosa (true), intentamos obtener el pedido de nuevo.
-                            pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Error al crear el pedido (Cliente). Revise el backend.", "Error de Creación", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
+                    var respuesta = await _servicioProductoPedido.crearProductoAsync(prod.IdProducto, _idPedidoEmpleado, cantidad, _token);
+                    if (respuesta.codigo == System.Net.HttpStatusCode.OK && respuesta.productoNuevo != null)
+                    {
+                        MessageBox.Show("Producto agregado");
                     }
                     else
                     {
-                        MessageBox.Show("Rol de usuario no reconocido. No se puede crear el pedido.", "Error de Rol", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Error al guardar el producto al carrito: Error " + respuesta.mensaje);
+                    }
+
+                }
+                else if (_rolUsuario == "Cliente")
+                {
+                    var pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                    if (pedidoRes.pedidoActual == null)
+                    {
+                        MessageBox.Show("Error: No fue posible obtener o crear un pedido activo para el usuario.", "Error de Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-                }
 
-                // Verificación de éxito FINAL (se mantiene)
-                if (pedidoRes.pedidoActual == null)
+                    int idPedido = pedidoRes.pedidoActual.id;
+
+                    var respuestaCliente = await _servicioProductoPedido.crearProductoAsync(prod.IdProducto, idPedido, cantidad, _token);
+                    if (respuestaCliente.codigo == System.Net.HttpStatusCode.OK)
+                    {
+                        MessageBox.Show("Producto agregado");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al guardar el producto al carrito");
+                    }
+                }
+                else
                 {
-                    MessageBox.Show("Error: No fue posible obtener o crear un pedido activo para el usuario.", "Error de Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Rol de usuario no reconocido. No se puede crear el pedido.", "Error de Rol", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                int idPedido = pedidoRes.pedidoActual.id;
-
-                // 3. BLOQUE DE URL MANUAL MANTENIDO POR SOLICITUD
-                using (var client = new HttpClient())
-                {
-                    string baseUrl = sweet_temptation_clienteEscritorio.resources.Constantes.URL;
-
-                    // Asegurar que la URL base no termine en slash doble si la constante ya lo tiene
-                    if (baseUrl.EndsWith("/")) baseUrl = baseUrl.TrimEnd('/');
-
-                    // Construcción manual de la URL
-                    string urlCorrecta = $"{baseUrl}/pedido/{idPedido}/?idProducto={_idProductoActual}&idPedido={idPedido}&cantidad={cantidad}";
-
-                    client.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
-
-                    var content = new StringContent("", Encoding.UTF8, "application/json");
-
-                    // Enviar
-                    var respuesta = await client.PostAsync(urlCorrecta, content);
-
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("¡Producto agregado al carrito con éxito!");
-                        OverlayDetalle.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        string errorMsg = await respuesta.Content.ReadAsStringAsync();
-                        MessageBox.Show("No se pudo agregar: " + errorMsg);
-                    }
-                }
             }
             catch (Exception ex)
             {

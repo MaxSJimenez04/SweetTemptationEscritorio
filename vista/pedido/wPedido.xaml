@@ -50,7 +50,7 @@
                     VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
             <Label FontSize="25">No hay productos seleccionados. Empieza seleccionando un producto</Label>
             <Button x:Name="btnProductos" Content="Productos" FontSize="25"
-                    Height="40" Width="250" Background="#FBA1B7" 
+                    Height="40" Width="250" Style="{StaticResource BtnRosaStyle}"
                     Click="BtnClickProductos">
             </Button>
         </StackPanel>

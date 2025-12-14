@@ -100,9 +100,8 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         }
 
         private void btnClickRegresar(object sender, RoutedEventArgs e) {
-            if(this.NavigationService != null) {
-                this.NavigationService.Navigate(new wPrincipalCliente());
-            }
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
         }
     }
 }

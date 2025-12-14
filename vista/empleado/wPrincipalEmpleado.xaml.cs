@@ -37,7 +37,7 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
 
         private void BtnProductos_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new wConsultarProductos());
+            NavigationService.Navigate(new wConsultarProductos(0));
         }
 
         private void BtnPedidosRecientes_Click(object sender, RoutedEventArgs e)
