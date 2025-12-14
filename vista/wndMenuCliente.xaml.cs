@@ -32,7 +32,7 @@ namespace sweet_temptation_clienteEscritorio.vista
         }
         private void btnClickProductos(object sender, RoutedEventArgs e) {
             if(fmPrincipal.NavigationService != null) {
-                fmPrincipal.NavigationService.Navigate(new wConsultarProductos());
+                fmPrincipal.NavigationService.Navigate(new wConsultarProductos(0));
             }
         }
 

@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace sweet_temptation_clienteEscritorio.servicios
 {
@@ -42,7 +43,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
         public async Task<(ProductoPedidoDTO productoNuevo, HttpStatusCode codigo, string mensaje)> crearProductoAsync(int idProducto, int idPedido, int cantidad, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var respuesta = await _httpClient.PostAsync($"{idPedido}/?idProducto={idProducto}&idPedido={idPedido}&cantidad={cantidad}", null);
+            var respuesta = await _httpClient.PostAsync($"{Constantes.URL}pedido/{idProducto}/?idProducto={idProducto}&idPedido={idPedido}&cantidad={cantidad}", null);
 
             if (respuesta.IsSuccessStatusCode)
             {

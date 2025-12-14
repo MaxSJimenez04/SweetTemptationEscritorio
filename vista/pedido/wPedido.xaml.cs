@@ -28,6 +28,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     {
         private PedidoService _servicioPedido;
         private ProductoPedidoService _servicioProductoPedido;
+        private readonly string _rolUsuario;
 
 
         private TicketGrpcService _ticketGrpcService;
@@ -181,7 +182,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void BtnClickProductos(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new wConsultarProductos());
+            NavigationService.Navigate(new wConsultarProductos(_pedido.id));
         }
 
         public async Task ObtenerPedidoActualAsync()
@@ -297,9 +298,9 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 IdProducto = detalles.idProducto
             };
             var respuesta = await _servicioProductoPedido.actualizarProductoAsync(_pedido.id, pedido, _token);
-            if(respuesta.productoActualizado == null)
+            if(respuesta.codigo != HttpStatusCode.OK && respuesta.mensaje != null)
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("Error al modificar la cantidad del producto");
             }
         }
         
