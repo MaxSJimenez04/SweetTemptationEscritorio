@@ -140,26 +140,5 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
 
         }
-
-        // Método nuevo para crear pedido y recibir el ID (Estilo Tuple)
-        public async Task<(PedidoDTO pedido, HttpStatusCode codigo, string mensaje)> CrearPedidoClienteAutomaticoAsync(int idCliente, string token)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            // Hacemos el POST a la nueva ruta
-            var respuesta = await _httpClient.PostAsync($"pedido/crear/cliente/auto/{idCliente}", null);
-
-            if (respuesta.IsSuccessStatusCode)
-            {
-                // Deserializamos el pedido que nos devuelve el backend (aquí viene el ID)
-                var pedido = await respuesta.Content.ReadFromJsonAsync<PedidoDTO>();
-                return (pedido, respuesta.StatusCode, null);
-            }
-            else
-            {
-                string mensaje = await respuesta.Content.ReadAsStringAsync();
-                return (null, respuesta.StatusCode, mensaje);
-            }
-        }
     }
 }
