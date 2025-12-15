@@ -288,45 +288,35 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
                 }
                 else if (_rolUsuario == "Cliente")
                 {
-                    int idPedidoDestino = 0;
-
-                    // 1. Intentamos buscar si ya tiene un pedido abierto
                     var pedidoRes = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
-
-                    if (pedidoRes.pedidoActual != null)
+                    if (pedidoRes.pedidoActual == null)
                     {
-                        // Si existe, usamos ese ID
-                        idPedidoDestino = pedidoRes.pedidoActual.id;
+                       var creado = _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
+                       var pedidoNuevo = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
+                       int idPedido = pedidoNuevo.pedidoActual.id;
+                       var respuestaCliente = await _servicioProductoPedido.crearProductoAsync(prod.IdProducto, idPedido, cantidad, _token);
+                       if (respuestaCliente.codigo == System.Net.HttpStatusCode.OK)
+                       {
+                          MessageBox.Show("Producto agregado");
+                       }
+                       else
+                       {
+                          MessageBox.Show("Error al guardar el producto al carrito");
+                       }
                     }
                     else
                     {
-                        // 2. ¡AQUÍ EL CAMBIO! Si no existe (es null), lo creamos automáticamente
-                        var (pedidoNuevo, codigo, mensaje) = await _servicioPedido.CrearPedidoClienteAutomaticoAsync(_idUsuario, _token);
+                        int idPedido = pedidoRes.pedidoActual.id;
 
-                        if (codigo == System.Net.HttpStatusCode.OK && pedidoNuevo != null)
+                        var respuestaCliente = await _servicioProductoPedido.crearProductoAsync(prod.IdProducto, idPedido, cantidad, _token);
+                        if (respuestaCliente.codigo == System.Net.HttpStatusCode.OK)
                         {
-                            // Usamos el ID del pedido recién creado
-                            idPedidoDestino = pedidoNuevo.id;
+                            MessageBox.Show("Producto agregado");
                         }
                         else
                         {
-                            // Solo si falla la creación mostramos error
-                            MessageBox.Show($"No se pudo iniciar un pedido nuevo: {mensaje}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
+                            MessageBox.Show("Error al guardar el producto al carrito");
                         }
-                    }
-
-                    // 3. Ahora que SEGURO tenemos un idPedidoDestino, agregamos el producto
-                    var respuestaCliente = await _servicioProductoPedido.crearProductoAsync(prod.IdProducto, idPedidoDestino, cantidad, _token);
-
-                    if (respuestaCliente.codigo == System.Net.HttpStatusCode.OK)
-                    {
-                        MessageBox.Show("Producto agregado correctamente");
-                        OverlayDetalle.Visibility = Visibility.Collapsed; // Opcional: cierra el modal
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error al guardar el producto: " + respuestaCliente.mensaje);
                     }
                 }
                 else

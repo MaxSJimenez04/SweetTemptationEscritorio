@@ -36,7 +36,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private ArchivoService _archivoService;
         private Pedido _pedido;
-        private int _idUsuario = 3;
+        private int _idUsuario;
         private List<DetallesProducto> _detallesProductos;
         string _token;
         public wPedido(Pedido pedido)
@@ -45,6 +45,27 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             _servicioPedido = new PedidoService(new HttpClient());
             _servicioProductoPedido = new ProductoPedidoService(new HttpClient());
             _archivoService = new ArchivoService(new HttpClient());
+            if (App.Current.Properties.Contains("Id"))
+            {
+                if (App.Current.Properties["Id"] is int id)
+                {
+                    _idUsuario = id;
+                }
+                else if (App.Current.Properties["Id"] is string idString && int.TryParse(idString, out int idConverted))
+                {
+                    _idUsuario = idConverted;
+                }
+                else
+                {
+                    MessageBox.Show("Error de sesión: El formato de la ID de usuario no es válido.");
+                    _idUsuario = -1;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Error de sesión: No se encontró la ID de usuario.");
+                _idUsuario = -1;
+            }
 
 
             _ticketGrpcService = new TicketGrpcService();
