@@ -29,11 +29,6 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         private PedidoService _servicioPedido;
         private ProductoPedidoService _servicioProductoPedido;
         private readonly string _rolUsuario;
-
-
-        private TicketGrpcService _ticketGrpcService;
-
-
         private ArchivoService _archivoService;
         private Pedido _pedido;
         private int _idUsuario;
@@ -67,10 +62,14 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 _idUsuario = -1;
             }
 
-
-            _ticketGrpcService = new TicketGrpcService();
-
-
+            if (App.Current.Properties.Contains("Rol"))
+            {
+                _rolUsuario = (string?)App.Current.Properties["Rol"];
+            }
+            else
+            {
+                _rolUsuario = "Cliente";
+            }
             _token = (string?)App.Current.Properties["Token"];
             _pedido = pedido;
             _detallesProductos = new List<DetallesProducto>();
@@ -142,34 +141,22 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
         private async void btnClickCancelar(object sender, RoutedEventArgs e)
         {
             await CancelarPedidoAsync();
-            await CrearPedidoClienteAsync();
-            await ObtenerProductosAsync();
+            switch (_rolUsuario)
+            {
+                case "Empleado":
+                    break;
+                case "Cliente":
+                    await CrearPedidoClienteAsync();
+                    await ObtenerProductosAsync();
+                    break;
+            }
+
+           
         }
-
-        //TODO: IMPLEMENTARLO EN WPAGOTARJETA & WPAGOEFECTIVO
-
         private async void btnClickRealizar(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new wTipoPago(_pedido.id));
-            await GenerarTicketAsync();
-
-
+            NavigationService.Navigate(new wTipoPago(_pedido));
         }
-        //TODO: BORRAR IMPLEMENTACIÓN DE PRUEBA
-        private async Task GenerarTicketAsync()
-        {
-            var respuesta = await _ticketGrpcService.DescargarTicketAsync(_pedido.id);
-
-            if (respuesta != null)
-            {
-                MessageBox.Show("Ticket descargado en" + respuesta);
-            }
-            else
-            {
-                MessageBox.Show("ERROR: ocurrió un problema al generar el ticket");
-            }
-        }
-
 
         private void btnClickEditar(object sender, RoutedEventArgs e)
         {
