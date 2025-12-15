@@ -23,8 +23,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
             _httpClient.BaseAddress = new Uri(Constantes.URL);
         }
 
-        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)>
-      ObtenerDetallesArchivoAsync(int idProducto, string token)
+        public async Task<(DetallesArchivoDTO detalles, HttpStatusCode codigo, string mensaje)> ObtenerDetallesArchivoAsync(int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
               new AuthenticationHeaderValue("Bearer", token);
@@ -55,8 +54,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
             }
         }
 
-        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)>
-      ObtenerImagenAsync(string ruta, string token)
+        public async Task<(BitmapImage imagen, HttpStatusCode codigo, string mensaje)> ObtenerImagenAsync(string ruta, string token)
         {
             if (string.IsNullOrWhiteSpace(ruta))
                 return (null, HttpStatusCode.BadRequest, "Ruta vacía");
@@ -142,8 +140,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
             return imagen;
         }
 
-        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)>
-      GuardarArchivoAsync(ArchivoDTO archivo, string token)
+        public async Task<(int idArchivo, HttpStatusCode codigo, string mensaje)> GuardarArchivoAsync(ArchivoDTO archivo, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
               new AuthenticationHeaderValue("Bearer", token);
@@ -167,8 +164,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
         }
 
 
-        public async Task<(HttpStatusCode codigo, string mensaje)>
-      AsociarArchivoAsync(int idArchivo, int idProducto, string token)
+        public async Task<(HttpStatusCode codigo, string mensaje)> AsociarArchivoAsync(int idArchivo, int idProducto, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
               new AuthenticationHeaderValue("Bearer", token);

@@ -221,14 +221,18 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 case HttpStatusCode.OK:
                     VaciarDatosPedido();
                     wpProductos.Children.Clear();
-                    MessageBox.Show("Pedido cancelado con éxito");
+                    MessageBox.Show("Pedido cancelado con éxito", "Cancelar Pedido", MessageBoxButton.OK);
                     break;
                 case HttpStatusCode.BadRequest:
-                    MessageBox.Show("ERROR: ID no válido");
+                    MessageBox.Show("ERROR: ID del pedido inválida", "Cancelar Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
                 case HttpStatusCode.NotFound:
-                    MessageBox.Show("ERROR: No se encontró el pedido actual");
+                    MessageBox.Show("ERROR: No se encontró el pedido actual", "Cancelar Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
+                case HttpStatusCode.InternalServerError:
+                    MessageBox.Show("Ocurrió un error al cancelar el pedido. Por favor intentelo más tarde", "Cancelar Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+
             }
         }
 
@@ -241,7 +245,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show("ERROR: Ocurrió un error al cancelar el pedido");
+                MessageBox.Show("ERROR: Ocurrió un error al crear un nuevo pedido", "Cancelar Pedido", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -291,7 +295,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show("ERROR: " + respuesta.mensaje);
+                MessageBox.Show("Ocurrió un error al calcular el total del producto", "Pedido", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -308,7 +312,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             var respuesta = await _servicioProductoPedido.actualizarProductoAsync(_pedido.id, pedido, _token);
             if(respuesta.codigo != HttpStatusCode.OK && respuesta.mensaje != null)
             {
-                MessageBox.Show("Error al modificar la cantidad del producto");
+                MessageBox.Show("Error al modificar la cantidad del producto", "Pedido", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         
@@ -318,10 +322,11 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             switch (respuesta.codigo)
             {
                 case HttpStatusCode.BadRequest:
-                    MessageBox.Show(respuesta.mensaje);
+                    MessageBox.Show("El producto ya se ha eliminado", "Eliminar Producto", MessageBoxButton.OK, MessageBoxImage.Hand);
                     break;
                 case HttpStatusCode.InternalServerError:
-                    MessageBox.Show(respuesta.mensaje);
+                    MessageBox.Show("Ocurrió un error al eliminar el producto seleccionado, por favor inténtelo más tarde","Eliminar producto", 
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
             }
         }
@@ -337,7 +342,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("No se pudo obtener la ruta del producto", "Recuperar producto", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return detalles.ruta;
             }
             
@@ -352,7 +357,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("No se pudo obtener la imagen del producto", "Detalles del producto", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }
