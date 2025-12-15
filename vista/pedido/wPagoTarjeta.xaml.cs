@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using sweet_temptation_clienteEscritorio.model;
 
 namespace sweet_temptation_clienteEscritorio.vista.pedido {
     public partial class wPagoTarjeta : Page, INotifyPropertyChanged {
@@ -17,7 +18,10 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         private string _vencimiento;
         private string _cvc;
         private bool _isFormatting = false;
-        private TicketGrpcService _ticketGrpcService;
+        private Pedido _pedido;
+        private readonly PagoService pagoService;
+        private readonly ProductoPedidoService productoPedidoService;
+        private TicketGrpcService ticketService;
 
         public string NumeroTarjeta {
             get => _numeroTarjeta;
@@ -50,9 +54,13 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
             }
         }
 
-        public wPagoTarjeta() {
+        public wPagoTarjeta(Pedido pedido) {
             InitializeComponent();
             DataContext = this;
+            _pedido = pedido;
+            pagoService = new PagoService(new HttpClient());
+            productoPedidoService = new ProductoPedidoService(new HttpClient());
+            ticketService = new TicketGrpcService();
             LlenarDatosPedido();
         }
 
@@ -221,7 +229,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
 
         private async void BtnClickPagar(object sender, RoutedEventArgs e) {
             string token = App.Current.Properties["Token"]?.ToString();
-            int idPedido = (int)App.Current.Properties["IdPedidoActual"];
+            int idPedido = _pedido.id;
 
             var servicioPago = new PagoService(new HttpClient());
 
@@ -234,19 +242,45 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
                                  $" | {Titular} | {Vencimiento} | CVC:{CVC}"
             };
 
-            var (pago, codigo, mensaje) = await servicioPago.RegistrarPagoAsync(idPedido, request, token);
 
-            if(codigo == HttpStatusCode.OK) {
-                MessageBox.Show("Pago realizado con éxito:\n" + pago.MensajeConfirmacion);
-            } else {
-                MessageBox.Show("Error al pagar: " + mensaje);
+
+            List<DetallesProductoDTO> productosComprados;
+            var respuestaProductos = await productoPedidoService.obtenerProductosAsync(idPedido, token);
+            if (respuestaProductos.productos != null && respuestaProductos.codigo == HttpStatusCode.OK)
+            {
+                productosComprados = respuestaProductos.productos;
+                var respuesta = await productoPedidoService.comprarProductosAsync(idPedido, productosComprados, token);
+                if (respuesta.codigo == HttpStatusCode.OK)
+                {
+                    var (pago, codigo, mensaje) =
+                    await pagoService.RegistrarPagoAsync(idPedido, request, token);
+
+                    if (codigo == HttpStatusCode.OK || codigo == HttpStatusCode.Created)
+                    {
+                        MessageBox.Show("Pago exitoso", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                        await GenerarTicketAsync();
+                        NavigationService?.GoBack();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error al registrar el pago:\n{mensaje}", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Uno o varios productos han agotado sus existencias", "Cantidad insuficiente", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se han seleccionado productos", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
 
         public void LlenarDatosPedido() {
-            var pedido = (PedidoDTO)App.Current.Properties["PedidoActual"];
-            txtTotal.Text = pedido.total.ToString("0.00");
+            txtTotal.Text = _pedido.total.ToString("0.00");
         }
 
         public void VaciarDatosPedido() {
@@ -254,7 +288,19 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         }
 
 
+        private async Task GenerarTicketAsync()
+        {
+            var respuesta = await ticketService.DescargarTicketAsync(_pedido.id);
 
+            if (respuesta != null)
+            {
+                MessageBox.Show("Ticket descargado en" + respuesta);
+            }
+            else
+            {
+                MessageBox.Show("ERROR: ocurrió un problema al generar el ticket");
+            }
+        }
 
     }
 }

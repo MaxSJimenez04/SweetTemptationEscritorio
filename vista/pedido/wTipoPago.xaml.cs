@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sweet_temptation_clienteEscritorio.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,25 +21,28 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     /// </summary>
     public partial class wTipoPago : Page
     {
-        public wTipoPago()
+        private Pedido _pedidoPago;
+        public wTipoPago(Pedido pedidoAPagar)
         {
             InitializeComponent();
+            _pedidoPago = pedidoAPagar;
         }
 
         private void btnClickEfectivo(object sender, RoutedEventArgs e) {
             if(this.NavigationService != null) {
-                this.NavigationService.Navigate(new wPagoEfectivo());
+                this.NavigationService.Navigate(new wPagoEfectivo(_pedidoPago));
             }
         }
 
         private void btnClickTarjeta(object sender, RoutedEventArgs e) {
             if(this.NavigationService != null) {
-                this.NavigationService.Navigate(new wPagoTarjeta());
+                this.NavigationService.Navigate(new wPagoTarjeta(_pedidoPago));
             }
         }
 
         private void btnClickRegresar(object sender, RoutedEventArgs e) {
 
         }
+
     }
 }

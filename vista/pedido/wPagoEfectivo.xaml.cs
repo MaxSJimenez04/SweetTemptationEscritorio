@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using sweet_temptation_clienteEscritorio.model;
 
 namespace sweet_temptation_clienteEscritorio.vista.pedido
 {
@@ -25,19 +26,24 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     public partial class wPagoEfectivo : Page {
         private decimal total;
         private int idPedido;
+        private Pedido _pedido;
 
         private readonly PagoService pagoService;
+        private readonly ProductoPedidoService productoPedidoService;
+        private TicketGrpcService ticketService;
 
-        public wPagoEfectivo() {
+        public wPagoEfectivo(Pedido pedido) {
             InitializeComponent();
+            _pedido = pedido;
             pagoService = new PagoService(new HttpClient());
+            productoPedidoService = new ProductoPedidoService(new HttpClient());
+            ticketService = new TicketGrpcService();
             CargarDatos();
         }
 
         private void CargarDatos() {
-            var pedido = (PedidoDTO)App.Current.Properties["PedidoActual"];
-            total = pedido.total;
-            idPedido = pedido.id;
+            total = _pedido.total;
+            idPedido = _pedido.id;
         }
 
         private async void BtnClickPagar(object sender, RoutedEventArgs e) {
@@ -70,16 +76,52 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                 MontoPagado = cantidadIngresada,
             };
 
-            var (pago, codigo, mensaje) =
-                await pagoService.RegistrarPagoAsync(idPedido, request, token);
+            List<DetallesProductoDTO> productosComprados;
+            var respuestaProductos = await productoPedidoService.obtenerProductosAsync(idPedido, token);
+            if (respuestaProductos.productos != null && respuestaProductos.codigo == HttpStatusCode.OK)
+            {
+                productosComprados = respuestaProductos.productos;
+                var respuesta = await productoPedidoService.comprarProductosAsync(idPedido, productosComprados, token);
+                if (respuesta.codigo == HttpStatusCode.OK)
+                {
+                    var (pago, codigo, mensaje) =
+                    await pagoService.RegistrarPagoAsync(idPedido, request, token);
 
-            if(codigo == HttpStatusCode.OK || codigo == HttpStatusCode.Created) {
-                MessageBox.Show("Pago exitoso", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (codigo == HttpStatusCode.OK || codigo == HttpStatusCode.Created)
+                    {
+                        MessageBox.Show("Pago exitoso", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                        await GenerarTicketAsync();
+                        NavigationService?.GoBack();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error al registrar el pago:\n{mensaje}", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Uno o varios productos han agotado sus existencias", "Cantidad insuficiente", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se han seleccionado productos", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
+        }
 
-                NavigationService?.GoBack();
-            } else {
-                MessageBox.Show($"Error al registrar el pago:\n{mensaje}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+        private async Task GenerarTicketAsync()
+        {
+            var respuesta = await ticketService.DescargarTicketAsync(_pedido.id);
+
+            if (respuesta != null)
+            {
+                MessageBox.Show("Ticket descargado en" + respuesta);
+            }
+            else
+            {
+                MessageBox.Show("ERROR: ocurrió un problema al generar el ticket");
             }
         }
     }

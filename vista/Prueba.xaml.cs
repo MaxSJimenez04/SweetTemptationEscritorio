@@ -23,7 +23,6 @@ namespace sweet_temptation_clienteEscritorio.vista
         public Prueba()
         {
             InitializeComponent();
-            MainFramee.Navigate(new wTipoPago());
         }
     }
 }
