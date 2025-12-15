@@ -92,7 +92,7 @@ namespace sweet_temptation_clienteEscritorio.servicios
         public async Task<(HttpStatusCode codigo, string mensaje)> comprarProductosAsync(int idPedido, List<DetallesProductoDTO> productoDTOs, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var respuesta = await _httpClient.PutAsJsonAsync<List<DetallesProductoDTO>>($"{idPedido}/?", productoDTOs);
+            var respuesta = await _httpClient.PutAsJsonAsync<List<DetallesProductoDTO>>($"{idPedido}/comprar", productoDTOs);
             if (respuesta.IsSuccessStatusCode)
             {
                 return (respuesta.StatusCode, null);

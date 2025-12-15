@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sweet_temptation_clienteEscritorio.resources;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -12,7 +13,6 @@ namespace sweet_temptation_clienteEscritorio.vista
     public partial class wndLogin : Window
     {
         private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "http://localhost:8080";
 
         public wndLogin()
         {
@@ -106,7 +106,7 @@ namespace sweet_temptation_clienteEscritorio.vista
             var json = JsonSerializer.Serialize(loginRequest);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{API_BASE_URL}/auth/login", content);
+            var response = await _httpClient.PostAsync($"{Constantes.URL}auth/login", content);
 
             if (response.IsSuccessStatusCode)
             {
