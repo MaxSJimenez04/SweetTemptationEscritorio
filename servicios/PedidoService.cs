@@ -141,28 +141,19 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
         }
 
-        // para ventas
-        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ConsultarVentasAsync(
-            DateTime inicio, DateTime fin, string estado, string token)
+        // Método nuevo para crear pedido y recibir el ID (Estilo Tuple)
+        public async Task<(PedidoDTO pedido, HttpStatusCode codigo, string mensaje)> CrearPedidoClienteAutomaticoAsync(int idCliente, string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            string fechaInicioStr = inicio.ToString("yyyy-MM-dd");
-            string fechaFinStr = fin.ToString("yyyy-MM-dd");
-
-            string url = $"pedido/consultar?fechaInicio={fechaInicioStr}&fechaFin={fechaFinStr}&estado={estado}";
-
-            var respuesta = await _httpClient.GetAsync(url);
+            // Hacemos el POST a la nueva ruta
+            var respuesta = await _httpClient.PostAsync($"pedido/crear/cliente/auto/{idCliente}", null);
 
             if (respuesta.IsSuccessStatusCode)
             {
-                if (respuesta.StatusCode == HttpStatusCode.NoContent)
-                {
-                    return (new List<PedidoDTO>(), respuesta.StatusCode, "No se encontraron resultados.");
-                }
-
-                var pedidos = await respuesta.Content.ReadFromJsonAsync<List<PedidoDTO>>();
-                return (pedidos, respuesta.StatusCode, null);
+                // Deserializamos el pedido que nos devuelve el backend (aquí viene el ID)
+                var pedido = await respuesta.Content.ReadFromJsonAsync<PedidoDTO>();
+                return (pedido, respuesta.StatusCode, null);
             }
             else
             {
