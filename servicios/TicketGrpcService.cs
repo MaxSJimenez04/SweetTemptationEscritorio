@@ -24,7 +24,8 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
             var respuesta = await cliente.generarTicketAsync(peticionGrpc);
             byte[] pdfBytes = respuesta.Pdf.ToByteArray();
-            string path = "C:/Users/Maxim/Downloads/" + respuesta.FileName;
+            string rutaDescargas = Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Downloads");
+            string path = Path.Combine(rutaDescargas, respuesta.FileName);
 
             File.WriteAllBytes(path, pdfBytes);
             return (path);

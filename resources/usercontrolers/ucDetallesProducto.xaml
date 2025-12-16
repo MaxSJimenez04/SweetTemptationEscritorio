@@ -32,7 +32,7 @@
             </Button>
 
             <StackPanel Grid.Row="1" Orientation="Vertical" Margin="2">
-                    <Label x:Name="lbNombre" Height="30" Style="{StaticResource lbTexto}" FontSize="15"/>
+                    <Label x:Name="lbNombre" Height="30" Style="{StaticResource lbTexto}" FontSize="12"/>
                     <Label x:Name="lbPrecio" Height="30" Style="{StaticResource lbTexto}" FontSize="15"/>
                     <Label Name="lbCantidad" Height="30" Style="{StaticResource lbTexto}" FontSize="15" Visibility="Visible"/>
                 <StackPanel x:Name="spSpinner" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">

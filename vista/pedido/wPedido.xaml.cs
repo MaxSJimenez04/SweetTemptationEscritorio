@@ -198,7 +198,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             var respuesta = await _servicioPedido.ObtenerPedidoActualAsync(_idUsuario, _token);
             if (respuesta.pedidoActual == null)
             {
-                MessageBox.Show(respuesta.mensaje);
+                await _servicioPedido.CrearPedidoClienteAsync(_idUsuario, _token);
             }
             else
             {
