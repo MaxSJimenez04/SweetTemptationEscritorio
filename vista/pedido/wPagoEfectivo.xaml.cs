@@ -1,10 +1,12 @@
 ﻿using sweet_temptation_clienteEscritorio.dto;
+using sweet_temptation_clienteEscritorio.model;
 using sweet_temptation_clienteEscritorio.servicios;
+using sweet_temptation_clienteEscritorio.vista.producto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +18,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using sweet_temptation_clienteEscritorio.model;
 
 namespace sweet_temptation_clienteEscritorio.vista.pedido
 {
@@ -43,6 +44,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         private void CargarDatos() {
             total = _pedido.total;
+            txtTotal.Text = $"Total: ${total.ToString("0.00")}";
             idPedido = _pedido.id;
         }
 
@@ -91,7 +93,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
                     {
                         MessageBox.Show("Pago exitoso", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                         await GenerarTicketAsync();
-                        NavigationService?.GoBack();
+                        NavigationService.Navigate(new wConsultarProductos(0));
                     }
                     else
                     {
@@ -123,6 +125,12 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             {
                 MessageBox.Show("ERROR: ocurrió un problema al generar el ticket");
             }
+        }
+
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
         }
     }
 }

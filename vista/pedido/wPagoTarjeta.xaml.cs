@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using sweet_temptation_clienteEscritorio.model;
+using sweet_temptation_clienteEscritorio.vista.producto;
 
 namespace sweet_temptation_clienteEscritorio.vista.pedido {
     public partial class wPagoTarjeta : Page, INotifyPropertyChanged {
@@ -233,7 +234,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
 
             var servicioPago = new PagoService(new HttpClient());
 
-            decimal monto = Convert.ToDecimal(txtTotal.Text);
+            decimal monto = Convert.ToDecimal(_pedido.total);
 
             var request = new PagoRequestDTO {
                 TipoPago = "Tarjeta",
@@ -259,7 +260,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
                     {
                         MessageBox.Show("Pago exitoso", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                         await GenerarTicketAsync();
-                        NavigationService?.GoBack();
+                        NavigationService.Navigate(new wConsultarProductos(0));
                     }
                     else
                     {
@@ -280,7 +281,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
 
 
         public void LlenarDatosPedido() {
-            txtTotal.Text = _pedido.total.ToString("0.00");
+            txtTotal.Text = $"Total: ${_pedido.total.ToString("0.00")}";
         }
 
         public void VaciarDatosPedido() {
@@ -302,5 +303,10 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
             }
         }
 
+        private void BtnRegresarClick(object sender, RoutedEventArgs e)
+        {
+            if(NavigationService.CanGoBack)
+                NavigationService.GoBack();
+        }
     }
 }
