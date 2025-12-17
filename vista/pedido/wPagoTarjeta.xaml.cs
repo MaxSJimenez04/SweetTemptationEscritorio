@@ -227,11 +227,15 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
 
             decimal monto = Convert.ToDecimal(txtTotal.Text);
 
+            string ultimosDigitos = NumeroTarjeta.Length >= 4
+            ? NumeroTarjeta.Substring(NumeroTarjeta.Length - 4)
+            : NumeroTarjeta;
+
             var request = new PagoRequestDTO {
                 TipoPago = "Tarjeta",
                 MontoPagado = monto,
-                DetallesCuenta = NumeroTarjeta.Replace(" ", "") +
-                                 $" | {Titular} | {Vencimiento} | CVC:{CVC}"
+                // Enviamos algo como "Tarjeta ****1234" que mide 16 caracteres (menor a 18)
+                DetallesCuenta = "**** " + ultimosDigitos
             };
 
             var (pago, codigo, mensaje) = await servicioPago.RegistrarPagoAsync(idPedido, request, token);
