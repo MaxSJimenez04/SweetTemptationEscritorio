@@ -140,5 +140,30 @@ namespace sweet_temptation_clienteEscritorio.servicios
 
 
         }
+
+        public async Task<(List<PedidoDTO> pedidos, HttpStatusCode codigo, string mensaje)> ObtenerHistorialAsync(int idCliente, string token) {
+            try {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Llamada al nuevo endpoint especializado
+                var respuesta = await _httpClient.GetAsync($"pedido/historial?idCliente={idCliente}");
+
+                if(respuesta.IsSuccessStatusCode) {
+                    // Si el servidor devuelve 204 No Content, el ReadFromJsonAsync podría fallar, 
+                    // así que validamos si hay contenido.
+                    if(respuesta.StatusCode == HttpStatusCode.NoContent) {
+                        return (new List<PedidoDTO>(), respuesta.StatusCode, null);
+                    }
+
+                    var pedidos = await respuesta.Content.ReadFromJsonAsync<List<PedidoDTO>>();
+                    return (pedidos, respuesta.StatusCode, null);
+                } else {
+                    string mensaje = await respuesta.Content.ReadAsStringAsync();
+                    return (null, respuesta.StatusCode, mensaje);
+                }
+            } catch(Exception ex) {
+                return (null, HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
     }
 }

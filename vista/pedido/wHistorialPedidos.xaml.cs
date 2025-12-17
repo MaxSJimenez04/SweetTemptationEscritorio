@@ -4,6 +4,7 @@ using sweet_temptation_clienteEscritorio.vista.cliente;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -52,10 +53,12 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
         }
 
         private async void CargarPedidos() {
-            var (pedidos, codigo, mensaje) = await _pedidoService.ObtenerPedidosAsync(IdCliente, Token);
+            var (pedidos, codigo, mensaje) = await _pedidoService.ObtenerHistorialAsync(IdCliente, Token);
 
             if(pedidos == null) {
-                MessageBox.Show("No se pudieron obtener los pedidos.\n" + mensaje);
+                if(codigo != HttpStatusCode.NoContent) {
+                    MessageBox.Show("No se pudieron obtener los pedidos.\n" + mensaje);
+                }
                 return;
             }
 
@@ -65,6 +68,10 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido {
 
             _paginaActual = 1;
             MostrarPagina();
+
+            if(_todosLosPedidos.Count == 0) {
+                txtPagina.Text = "No tienes pedidos anteriores.";
+            }
         }
 
         private void MostrarPagina() {

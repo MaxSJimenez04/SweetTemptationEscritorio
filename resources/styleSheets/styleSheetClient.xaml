@@ -734,32 +734,28 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding id}"
-                                   FontSize="18"
-                                   VerticalAlignment="Center"/>
+                                   FontSize="20"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
 
                             <TextBlock Grid.Column="1"
                                    Text="{Binding fechaCompra}"
-                                   FontSize="18"
-                                   VerticalAlignment="Center"/>
+                                   FontSize="20"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
 
                             <TextBlock Grid.Column="2"
                                    Text="{Binding total}"
-                                   FontSize="18"
-                                   VerticalAlignment="Center"/>
+                                   FontSize="20"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
 
-                            <Button Grid.Column="3"
-                                Content="Ver"
-                                Margin="10,15,15,20"
-                                Padding="10,4"
-                                FontSize="16"
-                                Cursor="Hand"/>
                         </Grid>
 
                     </Border>
