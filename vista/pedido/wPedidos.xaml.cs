@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
     {
         private int _idUsuario;
         private PedidoService _servicio;
+        private ProductoPedidoService _productoPedidoService;
         public ObservableCollection<Pedido> _pedidos;
         string _token;
         public wPedidos()
@@ -32,6 +34,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             _servicio = new PedidoService(new HttpClient());
             _pedidos = new ObservableCollection<Pedido>();
             _token = (string?)App.Current.Properties["Token"];
+            _productoPedidoService = new ProductoPedidoService(new HttpClient());
 
             InitializeComponent();
             Loaded += async (s, e) =>
@@ -124,6 +127,15 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
 
         public async Task EliminarPedidoAsync(Pedido pedido)
         {
+            var detallesProductosPedido = await _productoPedidoService.obtenerProductosAsync(pedido.id, _token);
+            if (detallesProductosPedido.codigo == HttpStatusCode.OK && detallesProductosPedido.productos != null)
+            {
+                foreach (var item in detallesProductosPedido.productos)
+                {
+                   await _productoPedidoService.eliminarProductoAsync(pedido.id, item.id, _token);
+                }
+            }
+
             var respuesta = await _servicio.EliminarPedidoAsync(pedido.id, _token);
             if (respuesta.mensaje != null)
             {
