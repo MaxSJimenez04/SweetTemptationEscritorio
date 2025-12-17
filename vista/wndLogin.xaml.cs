@@ -64,6 +64,7 @@ namespace sweet_temptation_clienteEscritorio.vista
                     App.Current.Properties["Id"] = loginResponse.Id;
                     App.Current.Properties["Nombre"] = loginResponse.Nombre;
                     App.Current.Properties["Correo"] = loginResponse.Correo;
+                    App.Current.Properties["Telefono"] = loginResponse.Telefono;
                     App.Current.Properties["Rol"] = loginResponse.Rol;
 
                     Window menuWindow = loginResponse.Rol switch
@@ -145,6 +146,7 @@ namespace sweet_temptation_clienteEscritorio.vista
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Correo { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
         public string Rol { get; set; } = string.Empty;
     }
 }

@@ -76,12 +76,20 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
         private bool ValidarCampos(out decimal precio, out int unidades)
         {
             precio = 0; unidades = 0;
+            int longitudNombre = txtNombreProducto.Text.Length;
+            int longitudDescripcion = txtDescripcion.Text.Length;
 
             if (string.IsNullOrWhiteSpace(txtNombreProducto.Text))
                 return Error("El nombre es obligatorio.");
 
+            if (longitudNombre < 3 || longitudNombre > 100)
+                return Error("El nombre debe tener entre 3 y 100 caracteres.");
+
             if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
                 return Error("La descripción es obligatoria.");
+
+            if (longitudDescripcion < 10 || longitudDescripcion > 500)
+                return Error("La descripción debe tener entre 10 y 500 caracteres.");
 
             if (cmbCategoria.SelectedValue == null)
                 return Error("Debe seleccionar una categoría.");
@@ -89,8 +97,14 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (!decimal.TryParse(txtPrecioUnitario.Text, out precio))
                 return Error("Precio inválido.");
 
+            if (!decimal.TryParse(txtPrecioUnitario.Text, out precio) || precio <= 0)
+                return Error("El precio debe ser un número válido y mayor a 0.");
+
             if (!int.TryParse(txtUnidades.Text, out unidades))
                 return Error("Unidades inválidas.");
+
+            if (!int.TryParse(txtUnidades.Text, out unidades) || unidades < 0) // en el registro debe haber unidades disponibles
+                return Error("Las unidades deben ser un número entero válido y no negativo.");
 
             if (_imagenBytes == null)
                 return Error("Debe cargar una imagen.");

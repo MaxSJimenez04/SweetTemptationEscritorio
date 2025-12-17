@@ -5,7 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.pedido"
       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
+      d:DesignHeight="700" d:DesignWidth="1280"
       Title="wTipoPago"
       Background="White">
 
@@ -18,87 +19,15 @@
     </Page.Resources>
 
 
-    <Viewbox
-    Stretch="Uniform">
-        <Grid Background="#FFFFFF" Height="1080" Width="1920">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="87"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <!--TOP MENU-->
-            <Border
-                    Grid.Row="0"
-                    BorderThickness="0,0,0,3" BorderBrush="#FF70B5">
-                <Grid
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Height="87"
-                        Width="1920">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="240"/>
-                        <ColumnDefinition Width="522"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="180"/>
-                    </Grid.ColumnDefinitions>
-                    <Button          
-                            Grid.Column="0"
-                            x:Name="Home"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Height="56"
-                            Width="221"
-                            Background="Transparent"
-                            BorderBrush="Transparent">
-                        <Image 
-                                Source="/resources/images/logo_sweettemptation2.png" 
-                                Stretch="UniformToFill" 
-                            />
-                    </Button>
+    <Grid Background="#FFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                    <Button 
-                            Grid.Column="2"
-                            Content="Menú" 
-                            Style="{StaticResource BtnMenuStyle}"/>
-                    <Button 
-                            Grid.Column="3"
-                            Content="Conócenos" 
-                            Style="{StaticResource BtnMenuStyle}"/>
-                    <Button 
-                            Grid.Column="4"
-                            Content="Cotizar" 
-                            Style="{StaticResource BtnMenuStyle}"/>
-                    <Button 
-                            Grid.Column="5"
-                            Content="Mi Cuenta" 
-                            Style="{StaticResource BtnMenuCuentaStyle}"/>
-
-                    <Button 
-                            Grid.Column="6"
-                            Style="{StaticResource BtnCarritoDeCompra}">
-                        <svgc:SvgViewbox 
-                                Source="/resources/icons/icon_carrito.svg"
-                                Width="28"
-                                Height="28"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                />
-                    </Button>
-
-                </Grid>
-            </Border>
-
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Button 
+            <Button 
                     Grid.Column="0"
                     Style="{StaticResource BtnRegresar}"
                     Width="70"
@@ -107,16 +36,16 @@
                     HorizontalAlignment="Left"
                     Margin="10,40,0,0"
                     Click="btnClickRegresar">
-                    <svgc:SvgViewbox 
+                <svgc:SvgViewbox 
                         Source="/resources/icons/icon_regresar.svg"
                         Width="28"
                         Height="28"
                         Stretch="Uniform"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"/>
-                </Button>
+            </Button>
 
-                <Button 
+            <Button 
                     Grid.Column="0"
                     Style="{StaticResource BtnTipoPago}"
                     Width="410"
@@ -126,13 +55,13 @@
                     Margin="10,40,0,0"
                     Click="btnClickEfectivo">
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <svgc:SvgViewbox 
+                    <svgc:SvgViewbox 
                             Grid.Row="0"
                             Source="/resources/icons/icon_efectivo.svg"
                             Width="250" 
@@ -142,7 +71,7 @@
                             HorizontalAlignment="Center"
                             Margin="0,0,0,0"/>
 
-                        <TextBlock 
+                    <TextBlock 
                             Grid.Row="1"
                             Text="Efectivo" 
                             HorizontalAlignment="Center"
@@ -150,10 +79,10 @@
                             Margin="0,0,0,0" FontSize="35" FontWeight="Bold"
                             Foreground="Black"
                             FontFamily="pack://application:,,,/resources/fonts/#poppins"/>
-                    </Grid>
-                </Button>
+                </Grid>
+            </Button>
 
-                <Button 
+            <Button 
                     Grid.Column="1"
                     Style="{StaticResource BtnTipoPago}"
                     Width="410"
@@ -163,13 +92,13 @@
                     Margin="10,40,0,0"
                     Click="btnClickTarjeta">
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <svgc:SvgViewbox 
+                    <svgc:SvgViewbox 
                             Grid.Row="0"
                             Source="/resources/icons/icon_tarjeta.svg"
                             Width="250" 
@@ -179,7 +108,7 @@
                             HorizontalAlignment="Center"
                             Margin="0,0,0,0"/>
 
-                        <TextBlock 
+                    <TextBlock 
                             Grid.Row="1"
                             Text="Tarjeta" 
                             HorizontalAlignment="Center"
@@ -187,16 +116,15 @@
                             Margin="0,0,0,0" FontSize="35" FontWeight="Bold"
                             Foreground="Black"
                             FontFamily="pack://application:,,,/resources/fonts/#poppins"/>
-                                    </Grid>
-                </Button>
+                </Grid>
+            </Button>
 
 
 
-                <StackPanel VerticalAlignment="Top" Width="1000" HorizontalAlignment="Left" Margin="90,0,0,0">
-                    <TextBlock Text="Seleccionar Método de Pago" Style="{StaticResource TxtTitulo}" Margin="0,30,0,20"/>
-                </StackPanel>
-            </Grid>
-
+            
         </Grid>
-    </Viewbox>
+        <StackPanel VerticalAlignment="Top" Width="1000" HorizontalAlignment="Left" Margin="90,0,0,0">
+            <TextBlock Text="Seleccionar Método de Pago" Style="{StaticResource TxtTitulo}" Margin="0,30,0,20"/>
+        </StackPanel>
+    </Grid>
 </Page>

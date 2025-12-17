@@ -92,7 +92,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("No se encontraron pedidos", "Pedidos", MessageBoxButton.OK);
             }
         }
 
@@ -118,7 +118,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             }
             else
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("Ocurrió un error al crear un pedido", "Crear pedido", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -127,7 +127,7 @@ namespace sweet_temptation_clienteEscritorio.vista.pedido
             var respuesta = await _servicio.EliminarPedidoAsync(pedido.id, _token);
             if (respuesta.mensaje != null)
             {
-                MessageBox.Show(respuesta.mensaje);
+                MessageBox.Show("Ocurrió un error al eliminar el pedido", "Eliminar pedido", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {

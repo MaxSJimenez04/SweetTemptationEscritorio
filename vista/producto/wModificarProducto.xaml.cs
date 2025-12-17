@@ -189,10 +189,10 @@ namespace sweet_temptation_clienteEscritorio.vista.producto
             if (txtDescripcion.Text.Length < 10) return Msg("Descripción muy corta.");
             if (!decimal.TryParse(txtPrecioUnitario.Text, out precio) || precio <= 0) return Msg("Precio inválido.");
             if (!int.TryParse(txtUnidades.Text, out unidades) || unidades < 0) return Msg("Unidades inválidas.");
-            if (cmbCategoria.SelectedValue == null) return Msg("Seleccione categoría.");
+            if (cmbCategoria.SelectedValue == null) return Msg("Seleccione la categoría.");
 
             if (_imagenOriginal == null && string.IsNullOrEmpty(_rutaNuevaImagen))
-                return Msg("Debe seleccionar una imagen para este producto.");
+                return Msg("Debe seleccionar una imagen para el producto que desea modificar.");
 
 
             return true;
