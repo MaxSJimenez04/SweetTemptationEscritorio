@@ -1,3 +1,4 @@
+using sweet_temptation_clienteEscritorio.resources;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -11,7 +12,6 @@ namespace sweet_temptation_clienteEscritorio.vista
     public partial class wndRecuperarContrasena : Window
     {
         private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "http://localhost:8080";
 
         public wndRecuperarContrasena()
         {
@@ -81,7 +81,7 @@ namespace sweet_temptation_clienteEscritorio.vista
             var json = JsonSerializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{API_BASE_URL}/auth/forgot-password", content);
+            var response = await _httpClient.PostAsync($"{Constantes.URL}auth/forgot-password", content);
 
             if (response.IsSuccessStatusCode)
             {
