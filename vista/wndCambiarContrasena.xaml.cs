@@ -1,3 +1,4 @@
+using sweet_temptation_clienteEscritorio.resources;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -11,7 +12,6 @@ namespace sweet_temptation_clienteEscritorio.vista
     public partial class wndCambiarContrasena : Window
     {
         private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "http://localhost:8080";
 
         public wndCambiarContrasena()
         {
@@ -133,7 +133,7 @@ namespace sweet_temptation_clienteEscritorio.vista
             var json = JsonSerializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{API_BASE_URL}/auth/reset-password", content);
+            var response = await _httpClient.PostAsync($"{Constantes.URL}auth/reset-password", content);
 
             if (response.IsSuccessStatusCode)
             {
