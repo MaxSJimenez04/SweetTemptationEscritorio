@@ -1,0 +1,155 @@
+﻿<Page x:Class="sweet_temptation_clienteEscritorio.vista.pedidoPersonalizado.wDetallePedidoPersonalizado"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:sweet_temptation_clienteEscritorio.vista.pedidoPersonalizado"
+      mc:Ignorable="d" 
+      Title="wDetallePedidoPersonalizado">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resources/styleSheets/styleSheetClient.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Viewbox
+        Stretch="Uniform">
+        <Grid Background="#FFFFFF" Height="993" Width="1920">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="700"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="0">
+
+                <TextBlock Style="{StaticResource TxtTitulo}"
+                           Text="Diseña tu Pastel"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,40"/>
+
+                <Border Width="750"
+                    Height="750"
+                    BorderBrush="#FF70B5"
+                    BorderThickness="3"
+                    CornerRadius="20"
+                    Effect="{StaticResource SombraSuave}">
+
+                    <Grid>
+                        <svgc:SvgViewbox x:Name="iconPlaceholder"
+                         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+                         Source="/resources/icons/icon_productos.svg"
+                         Width="300" 
+                         Height="300"
+                         Stretch="Uniform"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"
+                         Opacity="0.5"/>
+
+                        <Image x:Name="imgPastel"
+                            Source="{x:Null}" 
+                            Stretch="UniformToFill"
+                            Visibility="Collapsed" 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+
+                    </Grid>
+                </Border>
+                <TextBlock Style="{StaticResource TxtEtiqueta}" 
+                           Text="Imágen de referencia" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,20,0,10"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="0,0,150,0" Height="950">
+
+                <TextBlock Style="{StaticResource TxtTitulo}"
+                           Text="Especificaciones"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,20"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Sabor del Bizcocho:" Margin="0,0,0,10"/>
+                <TextBox x:Name="txtSaborBizcocho"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding saborBizcocho}" 
+                         Height="50"
+                         FontSize="28"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Center"
+                         Margin="0,0,0,10"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Cobertura:" Margin="0,0,0,10"/>
+                <TextBox x:Name="txtCobertura"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding cobertura}" 
+                         Height="50"
+                         FontSize="28"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Center"
+                         Margin="0,0,0,10"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Relleno:" Margin="0,0,0,10"/>
+                <TextBox x:Name="txtRelleno"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding relleno}" 
+                         Height="50"
+                         FontSize="28"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Center"
+                         Margin="0,0,0,10"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Tamaño:" Margin="0,0,0,10"/>
+                <TextBox x:Name="txtTamaño"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding tamano}" 
+                         Height="50"
+                         FontSize="28"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Center"
+                         Margin="0,0,0,10"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Especificaciones Adicionales: (Opcional)" Margin="0,0,0,10"/>
+                <TextBox x:Name="txtEspecificaciones"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding especificaciones}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Height="110"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Top"
+                         Padding="10"/>
+
+                <TextBlock Style="{StaticResource TxtEtiqueta}" Text="Teléfono de Contacto:" Margin="0,20,0,10"/>
+                <TextBox x:Name="txtTelefono"
+                         Style="{StaticResource TxtCampo}"
+                         Text="{Binding telefonoContacto}" 
+                         Height="60"
+                         FontSize="28"
+                         IsReadOnly="True"
+                         VerticalContentAlignment="Center"
+                         Margin="0,0,0,10"/>
+
+                <Button Content="Marcar como Atendido"
+                        Style="{StaticResource BtnRosaStyle}"
+                        Width="400"
+                        Height="70"
+                        FontSize="30"
+                        HorizontalAlignment="Left"
+                        Margin="0,15,0,0"
+                        Click="BtnAtendido_Click"
+                        Name="btnAtendido"/>
+
+            </StackPanel>
+
+        </Grid>
+    </Viewbox>
+</Page>

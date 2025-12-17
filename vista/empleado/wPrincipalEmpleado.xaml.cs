@@ -1,8 +1,10 @@
 using sweet_temptation_clienteEscritorio.vista.pedido;
 using sweet_temptation_clienteEscritorio.vista.producto;
+using sweet_temptation_clienteEscritorio.vista.pedidoPersonalizado;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace sweet_temptation_clienteEscritorio.vista.empleado
 {
@@ -43,6 +45,10 @@ namespace sweet_temptation_clienteEscritorio.vista.empleado
         private void BtnPedidosRecientes_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new wHistorialPedidos());
+        }
+
+        private void BtnPedidosPersonalizados_Click(object sender, RoutedEventArgs e) {
+            NavigationService.Navigate(new wSolicitudesPersonalizadas());
         }
     }
 }

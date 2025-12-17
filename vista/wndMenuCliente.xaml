@@ -78,7 +78,8 @@
                         Grid.Column="4"
                         Content="Cotizar" 
                         Margin="8"
-                        Style="{StaticResource BtnMenuStyle}"/>
+                        Style="{StaticResource BtnMenuStyle}"
+                        Click="btnClickCotizar"/>
                     
                     <Button 
                         Grid.Column="5"

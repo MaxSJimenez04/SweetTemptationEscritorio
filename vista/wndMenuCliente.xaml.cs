@@ -1,6 +1,7 @@
 ﻿using sweet_temptation_clienteEscritorio.model;
 using sweet_temptation_clienteEscritorio.vista.cliente;
 using sweet_temptation_clienteEscritorio.vista.pedido;
+using sweet_temptation_clienteEscritorio.vista.pedidoPersonalizado;
 using sweet_temptation_clienteEscritorio.vista.producto;
 using System.Windows;
 using System.Windows.Navigation;
@@ -39,6 +40,11 @@ namespace sweet_temptation_clienteEscritorio.vista
         private void BtnHomeClick(object sender, RoutedEventArgs e)
         {
             fmPrincipal.Navigate(new wPrincipalCliente());
+        }
+
+        private void btnClickCotizar(object sender, RoutedEventArgs e) {
+            fmPrincipal.Navigate(new wSolicitarPedidoPersonalziado());
+
         }
     }
 }

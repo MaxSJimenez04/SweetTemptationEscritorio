@@ -110,7 +110,13 @@
                     Style="{StaticResource BtnMenuEmpleado}"
                     Background="#C2185B"
                     Click="BtnPedidosRecientes_Click"/>
-            
+
+            <Button x:Name="btnPedidosPersonalizados" 
+                Content="🕐  Pedidos Personalizados"
+                Style="{StaticResource BtnMenuEmpleado}"
+                Background="#FF721B"
+                Click="BtnPedidosPersonalizados_Click"/>
+
         </StackPanel>
     </Grid>
 </Page>

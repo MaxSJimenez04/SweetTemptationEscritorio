@@ -161,29 +161,29 @@
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="Root" Background="Transparent">
                         <TextBlock x:Name="Label"
-                       Text="{TemplateBinding Content}"
-                       Foreground="{TemplateBinding Foreground}"
-                       FontWeight="Regular"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
+                           Text="{TemplateBinding Content}"
+                           Foreground="{TemplateBinding Foreground}"
+                           FontWeight="Regular"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
 
                         <Popup x:Name="popupCuenta"
-                   Placement="Bottom"
-                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                   AllowsTransparency="True"
-                   PopupAnimation="Fade"
-                   StaysOpen="True">
+                           Placement="Bottom"
+                           PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                           AllowsTransparency="True"
+                           PopupAnimation="Fade"
+                           StaysOpen="True">
                             <Border Background="#FFFFFF"
-                      BorderBrush="#FF70B5"
-                      BorderThickness="2"
-                      CornerRadius="8"
-                      SnapsToDevicePixels="True"
-                      Margin="0,6,0,0">
+                              BorderBrush="#FF70B5"
+                              BorderThickness="2"
+                              CornerRadius="8"
+                              SnapsToDevicePixels="True"
+                              Margin="0,6,0,0">
                                 <ListBox Width="170"
-                         Background="#FFFFFF"
-                         BorderThickness="0"
-                         Padding="4"
-                         IsTabStop="False">
+                                 Background="#FFFFFF"
+                                 BorderThickness="0"
+                                 Padding="4"
+                                 IsTabStop="False">
                                     <ListBox.Resources>
                                         <Style TargetType="ListBoxItem">
                                             <Setter Property="Background" Value="#FFFFFF"/>
@@ -196,12 +196,12 @@
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="ListBoxItem">
                                                         <Border x:Name="optionBorder"
-                                    Background="{TemplateBinding Background}"
-                                    CornerRadius="4">
+                                                            Background="{TemplateBinding Background}"
+                                                            CornerRadius="4">
                                                             <TextBlock Text="{TemplateBinding Content}"
-                                         Foreground="{TemplateBinding Foreground}"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"/>
+                                                                 Foreground="{TemplateBinding Foreground}"
+                                                                 HorizontalAlignment="Center"
+                                                                 VerticalAlignment="Center"/>
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
@@ -768,6 +768,61 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+<Style x:Key="PedidoPersonalizadoItemStyle" TargetType="ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0,0,0,10"/>
+    
+    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListButton_PreviewMouseDown"/>
+    
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="ListBoxItem">
+
+                <Border BorderBrush="#FF70B5"
+                    BorderThickness="2"
+                    CornerRadius="20"
+                    Padding="10"
+                    Margin="50,0,50,40"
+                    MinHeight="90">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding id}"
+                               FontSize="18"
+                               VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"
+                               Text="{Binding fechaFormateada}"
+                               FontSize="18"
+                               VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="2"
+                               Text="{Binding estadoTexto}"
+                               FontSize="18"
+                               VerticalAlignment="Center"/>
+
+                        <Button Grid.Column="3"
+                            Content="Ver"
+                            Margin="10,15,15,20"
+                            Padding="10,4"
+                            FontSize="16"
+                            Cursor="Hand"
+                            
+                            />
+                        
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
 
 
 
