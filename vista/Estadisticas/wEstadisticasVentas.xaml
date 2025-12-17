@@ -226,10 +226,10 @@
                             Background="White" 
                             BorderBrush="#CCCCCC" 
                             BorderThickness="1"
-                            CornerRadius="8">
+                            CornerRadius="0">
                         <DatePicker x:Name="dpFechaInicial" 
                                     VerticalAlignment="Center" 
-                                    Margin="5,0,0,0"/>
+                                    Margin="0,0,0,0"/>
                     </Border>
 
                     <Label Content="Fecha Final:" Grid.Column="3" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
@@ -238,10 +238,10 @@
                             Background="White" 
                             BorderBrush="#CCCCCC" 
                             BorderThickness="1"
-                            CornerRadius="8">
+                            CornerRadius="0">
                         <DatePicker x:Name="dpFechaFinal" 
                                     VerticalAlignment="Center" 
-                                    Margin="5,0,0,0"/>
+                                    Margin="0,0,0,0"/>
                     </Border>
 
                     <Label Content="Estado:" Grid.Column="6" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="16"/>
@@ -342,7 +342,7 @@
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <fa:IconImage Icon="Download" Width="20" Height="20" Margin="0,0,8,0"/>
-                                <TextBlock Text="Descargar CSV"/>
+                                <TextBlock Text="Descargar reporte"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>

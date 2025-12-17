@@ -30,17 +30,16 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
         private EstadisticasService _servicioEstadisticas;
         private string _token;
 
-        // TODO verificar estados
         private readonly Dictionary<int, string> _estadosApiMap = new Dictionary<int, string>
         {
-            { 3, "Completada" }, 
-            { 4, "Cancelada" },  
-            { 2, "Pendiente" }  
+            { 3, "Completada" },
+            { 4, "Cancelada" },
+            { 2, "Pendiente" }  // por el momento no se muestra en las ventas
         };
 
         private readonly Dictionary<int, string> _rolMap = new Dictionary<int, string>
         {
-            { 0, "Error Rol" }, 
+            { 0, "Error de Rol" }, // para pruebas
             { 1, "Administrador" },
             { 2, "Empleado" },
             { 3, "Cliente" }
@@ -70,14 +69,19 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
         private async void btnDescargar_Click(object sender, RoutedEventArgs e)
         {
-            // Usamos el formato ISO DATE (yyyy-MM-dd) que Java espera. Si no hay fecha, enviamos string.Empty.
+            if (!dpFechaInicial.SelectedDate.HasValue || !dpFechaFinal.SelectedDate.HasValue)
+            {
+                MessageBox.Show("Antes de descargar el reporte debe seleccionar una fecha de inicio y una fecha de fin.", "Rango de Fechas Requerido", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             string fechaInicio = dpFechaInicial.SelectedDate.HasValue
                 ? dpFechaInicial.SelectedDate.Value.ToString("yyyy-MM-dd")
-                : string.Empty; // Envía vacío si no hay fecha
+                : string.Empty;
 
             string fechaFin = dpFechaFinal.SelectedDate.HasValue
                 ? dpFechaFinal.SelectedDate.Value.ToString("yyyy-MM-dd")
-                : string.Empty; // Envía vacío si no hay fecha
+                : string.Empty;
 
             // Obtener el estado seleccionado
             string estado = (cbEstadoVenta.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -96,7 +100,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             {
                 $"fechaInicio={fechaInicio}",
                 $"fechaFin={fechaFin}",
-                $"estado={estado}" 
+                $"estado={estado}"
             };
 
             string urlCompleta = baseUrl + "?" + string.Join("&", queryParams);
@@ -165,7 +169,7 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
             {
                 if (string.IsNullOrEmpty(_token))
                 {
-                    MessageBox.Show("No se ha detectado una sesión activa para cargar ventas.", "Error de Autenticación", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("No se ha detectado una sesión de usuario para cargar ventas.", "Error de Autenticación", MessageBoxButton.OK, MessageBoxImage.Error);
                     dgVentas.ItemsSource = null;
                     return;
                 }
@@ -177,13 +181,13 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
                 // --- Validación de Fechas ---
                 bool soloUnaFechaSeleccionada =
-            (fechaInicialSeleccionada.HasValue && !fechaFinalSeleccionada.HasValue) ||
-            (!fechaInicialSeleccionada.HasValue && fechaFinalSeleccionada.HasValue);
+                (fechaInicialSeleccionada.HasValue && !fechaFinalSeleccionada.HasValue) ||
+                (!fechaInicialSeleccionada.HasValue && fechaFinalSeleccionada.HasValue);
 
                 if (soloUnaFechaSeleccionada)
                 {
                     MessageBox.Show(
-                        "Debe seleccionar tanto la Fecha Inicial como la Fecha Final para realizar la consulta.",
+                        "Debe seleccionar la Fecha Inicial como la Fecha Final para realizar la consulta.",
                         "Filtro Incompleto",
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning
@@ -212,15 +216,31 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
 
                 string estadoFiltroTexto = (cbEstadoVenta.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-                if (string.IsNullOrEmpty(estadoFiltroTexto) || estadoFiltroTexto == "Todas")
+                bool aplicarFiltroLocal = false;
+                string estadoParaApi = string.Empty;
+
+                if (estadoFiltroTexto == "Todas")
                 {
-                    estadoFiltroTexto = string.Empty; // Envía cadena vacía para que Java lo ignore.
+                    // Por el momento solo se muestran los estados pedido: completo y cancelado
+                    // filtro de manera local para excluir el estado pendiente o desconocido
+                    estadoParaApi = string.Empty;
+                    aplicarFiltroLocal = true;
+                }
+                else if (string.IsNullOrEmpty(estadoFiltroTexto))
+                {
+                    estadoParaApi = string.Empty;
+                    aplicarFiltroLocal = true;
+                }
+                else
+                {
+                    estadoParaApi = estadoFiltroTexto;
+                    aplicarFiltroLocal = false;
                 }
 
                 try
                 {
                     var (pedidosDTO, codigo, mensaje) = await _servicioEstadisticas.ConsultarVentasAsync(
-                        fechaInicial, fechaFinal, estadoFiltroTexto, _token
+                        fechaInicial, fechaFinal, estadoParaApi, _token
                     );
 
                     if (pedidosDTO == null || codigo != HttpStatusCode.OK && codigo != HttpStatusCode.NoContent)
@@ -229,7 +249,6 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                         if (codigo == HttpStatusCode.NotFound)
                         {
                             dgVentas.ItemsSource = null;
-                            // Mostrar aviso de que no se encontraron resultados
                             MessageBox.Show("No se encontraron ventas con los filtros seleccionados. Intenta con otro rango de fechas o estado.", "Sin Resultados", MessageBoxButton.OK, MessageBoxImage.Information);
                             return;
                         }
@@ -238,20 +257,28 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                         return;
                     }
 
-                    if (pedidosDTO.Count == 0)
+                    var pedidosFiltrados = pedidosDTO;
+
+                    if (aplicarFiltroLocal)
+                    {
+                        // Solo mantenemos los estados 3 (Completada) y 4 (Cancelada)
+                        pedidosFiltrados = pedidosDTO
+                            .Where(p => p.estado == 3 || p.estado == 4)
+                            .ToList();
+                    }
+
+                    if (pedidosFiltrados.Count == 0)
                     {
                         dgVentas.ItemsSource = null;
                         MessageBox.Show("No se encontraron ventas con los filtros seleccionados.", "Sin Resultados", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
                     }
 
-                    var ventasParaMostrar = pedidosDTO.Select(p => new Venta
+                    var ventasParaMostrar = pedidosFiltrados.Select(p => new Venta
                     {
                         TipoPedido = p.personalizado ? "Personalizado" : "Estandar",
                         Estado = _estadosApiMap.GetValueOrDefault(p.estado, "Desconocido"),
-
                         NombreRol = _rolMap.GetValueOrDefault(p.idRol, "Error al obtener el rol"),
-
                         FechaCompra = p.fechaCompra,
                         Total = p.total
                     }).ToList();
@@ -261,14 +288,14 @@ namespace sweet_temptation_clienteEscritorio.vista.Estadisticas
                 catch (Exception ex)
                 {
                     dgVentas.ItemsSource = null;
-                    MessageBox.Show($"Error fatal al cargar ventas: {ex.Message}", "Error Inesperado", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error al cargar ventas: {ex.Message}", "Error:", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
         }
 
         private void BtnRegresarClick(object sender, RoutedEventArgs e)
         {
-            if(NavigationService.CanGoBack)
+            if (NavigationService.CanGoBack)
                 NavigationService.GoBack();
         }
     }
