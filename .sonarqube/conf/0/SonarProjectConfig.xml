@@ -2,8 +2,8 @@
 <SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
   <AnalysisConfigPath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\.sonarqube\conf\SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
   <ProjectPath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\sweet-temptation-clienteEscritorio.csproj</ProjectPath>
-  <FilesToAnalyzePath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\.sonarqube\conf\1\FilesToAnalyze.txt</FilesToAnalyzePath>
-  <OutPath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\.sonarqube\out\1</OutPath>
+  <FilesToAnalyzePath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\.sonarqube\conf\0\FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>C:\Codigo\sweet-temptation\sweet-temptation-escritorio\sweet-temptation-clienteEscritorio\.sonarqube\out\0</OutPath>
   <ProjectType>Product</ProjectType>
   <TargetFramework>net8.0-windows</TargetFramework>
 </SonarProjectConfig>
